@@ -1,0 +1,52 @@
+@charset "UTF-8";
+@import "vars";
+
+// Font Awesome
+@import "fa";
+
+// Photon
+@import "photon/global";
+@import "photon/toolbar";
+@import "photon/buttons";
+@import "photon/form";
+@import "photon/pane";
+@import "photon/list";
+@import "photon/media";
+@import "photon/table";
+
+// Personal
+@import "scrollbar";
+@import "context-menu";
+@import "login";
+@import "search";
+
+.fa-heart { color: #fb1710; }
+.fa-archive { color: #fdbc40; }
+.fa-eye { color: #0a67ac; }
+.fa-eye-slash { color: darken(#0a67ac, 10%); }
+.fa-ban { color: #ff6347; }
+.fa-download { color: #885dbb; }
+.fa-file-alt { color: #91bb2b; }
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.season {
+  background-color: $sidebarbgc;
+  color: $navColor;
+  padding: 2px 5px;
+  border: 1px solid $sidebarBorder;
+  .date {
+    color: $navTitle;
+    font-style: italic;
+    padding-left: 3px;
+  }
+}
+.season .open {
+  color: $navActiveColor;
+}

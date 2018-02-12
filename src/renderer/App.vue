@@ -1,0 +1,125 @@
+<template>
+  <div id="app">
+    <div class="window">
+      <header class="toolbar toolbar-header">
+        <div class="toolbar-actions">
+          <div class="btn-group">
+            <router-link :to="{name: 'homepage'}" class="btn btn-default" :class="{active: $route.name === 'homepage'}">
+              <i class="fa fa-home"></i>
+            </router-link>
+            <router-link :to="{name: 'episodes'}" class="btn btn-default" :class="{active: $route.name === 'episodes'}">
+              <i class="fa fa-tasks"></i>
+            </router-link>
+            <router-link :to="{name: 'shows'}" class="btn btn-default" :class="{active: $route.name === 'shows'}">
+              <i class="fa fa-list"></i>
+            </router-link>
+            <router-link :to="{name: 'timeline'}" class="btn btn-default" :class="{active: $route.name === 'timeline'}">
+              <i class="fa fa-users"></i>
+            </router-link>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-default btn-dropdown dropdown" :class="{disabled: !history.length}">
+              <div class="dropdown-content" v-if="history.length">
+                <div class="dropdown-item" v-for="link in history">
+                  <router-link :to="link.path">{{ link.label }}</router-link>
+                </div>
+              </div>
+              <i class="fa fa-history"></i>
+            </button>
+          </div>
+
+          <div class="btn-group">
+            <router-link :to="{name: 'search'}" class="btn btn-default" :class="{active: $route.name === 'search'}">
+              <i class="fa fa-search"></i>
+            </router-link>
+          </div>
+
+          <div class="btn-group pull-right">
+            <button class="btn btn-default" @click="devTools()" :class="{active: devToolsOpen}">
+              <i class="fa fa-bug"></i>
+            </button>
+            <button class="btn btn-default" @click="disconnect()">
+              <i class="fa" :class="[isDisconnecting ? 'fa-spinner fa-spin' : 'fa-power-off']"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="window-content">
+        <router-view>&nbsp;</router-view>
+      </div>
+    </div>
+
+    <login-modal>&nbsp;</login-modal>
+  </div>
+</template>
+
+<script>
+  import { ipcRenderer, remote } from 'electron'
+  import { mapState } from 'vuex'
+
+  import LoginModal from './components/LoginModal'
+  import api from './api'
+  import { types, localStore } from './store'
+
+  export default {
+    components: { LoginModal },
+    data () {
+      return {
+        isDisconnecting: false,
+        devToolsOpen: false,
+      }
+    },
+    computed: {
+      ...mapState(['history']),
+    },
+    methods: {
+      // Disconnect the user
+      disconnect () {
+        this.isDisconnecting = true
+        this.$store.dispatch(types.ACTIONS.LOGOUT).then(() => {
+          this.isDisconnecting = false
+        })
+      },
+      // Toggle devtools
+      devTools () {
+        let currentWindow = remote.getCurrentWindow()
+        this.devToolsOpen = !currentWindow.isDevToolsOpened()
+        remote.getCurrentWindow().toggleDevTools()
+      },
+    },
+    mounted () {
+      console.info('[VUE] Mount App.vue')
+
+      // Dev tools
+      this.devToolsOpen = remote.getCurrentWindow().isDevToolsOpened()
+      remote.getCurrentWebContents().on('devtools-opened', () => { this.devToolsOpen = true })
+      remote.getCurrentWebContents().on('devtools-closed', () => { this.devToolsOpen = false })
+
+      // History
+      // localStore.set(localStore.key.HISTORY, [])
+      this.$store.commit(types.MUTATIONS.SET_HISTORY, localStore.get(localStore.key.HISTORY, []))
+
+      // Disable drag
+      window.ondragstart = () => { return false }
+
+      // Check auth
+      api.auth.isActive().then((token) => {
+        // OK => Save login and dispatch actions
+        this.$store.commit(types.MUTATIONS.LOGIN, token)
+        this.$store.dispatch(types.ACTIONS.ON_LOGIN).then(() => {
+          console.info('[SplashScreen] Hide')
+          ipcRenderer.send('app-ready')
+        })
+      }).catch(() => {
+        this.$store.commit(types.MUTATIONS.LOGOUT)
+        ipcRenderer.send('app-ready')
+      })
+    },
+  }
+</script>
+
+<style lang="scss">
+  @import "assets/scss/theme";
+</style>

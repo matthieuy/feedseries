@@ -1,0 +1,68 @@
+.show-item {
+  position: relative;
+  padding-bottom: 15px;
+  min-height: 170px;
+  .img-container {
+    display: flex;
+    height: 100%;
+    position: absolute;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    a {
+      overflow: visible;
+    }
+    img {
+      width: 100px;
+      min-height: 100px;
+      vertical-align: middle;
+      margin: auto;
+      box-shadow: 7px 6px 10px #181A1F;
+      display: inline-block;
+    }
+    .replace-img {
+      height: 147px;
+      width: 100px;
+      text-align: center;
+      background-color: #000;
+    }
+  }
+  .box-info-container {
+    margin-left: 100px;
+    margin-bottom: 10px;
+  }
+  .box-info {
+    width: 80%;
+    h2 {
+      font-weight: bold;
+      .date {
+        font-weight: normal;
+        font-size: 12px;
+        font-style: italic;
+        color: #666666;
+      }
+    }
+  }
+  .description {
+    padding-top: 10px;
+    padding-left: 15px;
+    width: 100%;
+    overflow: visible;
+    white-space: normal;
+  }
+  .right-panel {
+    width: 19%;
+    .icon {
+      padding-left: 5px;
+    }
+  }
+  .account-info {
+    color: #9DA5B4;
+    font-style: italic;
+  }
+  .fa,.far {
+    font-size: 10px;
+  }
+  .fa-circle {
+    font-size: 7px;
+  }
+}

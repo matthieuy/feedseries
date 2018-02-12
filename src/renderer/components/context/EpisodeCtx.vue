@@ -1,0 +1,107 @@
+<template>
+  <context-menu ref="ctx" @ctx-open="onOpen">
+    <li class="ctx-header">{{ episode.show.title }} - {{ episode.code }}</li>
+    <li class="ctx-divider" v-show="!episode.isSeen"></li>
+    <li class="ctx-item" v-show="!episode.isSeen && !episode.show.isArchived" @click="markView(episode)"><i class="fa fa-eye"></i> Marquer "vu"</li>
+    <li class="ctx-item" v-show="episode.isSeen && !episode.show.isArchived" @click="unmarkView(episode)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
+    <li class="ctx-item" v-show="!episode.isDownloaded && !episode.isSeen" @click="markDL(episode, true)"><i class="fa fa-download"></i> Marquer "récupéré"</li>
+    <li class="ctx-item" v-show="episode.isDownloaded && !episode.isSeen" @click="markDL(episode, false)">
+      <span class="fa-stack" style="font-size: 9px;">
+        <i class="fa fa-download fa-stack-1x" style="font-size: 12px;"></i>
+        <i class="fa fa-ban fa-stack-2x" style="opacity: 0.7;"></i>
+      </span> Marquer "non récupéré"
+    </li>
+    <li class="ctx-divider"></li>
+    <li class="ctx-item" v-show="!hideShow && !episode.show.isArchived" @click="archive(episode.show)"><i class="fa fa-archive"></i> Archiver la série</li>
+    <li class="ctx-divider" v-show="!hideShow"></li>
+    <li class="ctx-item" v-show="!hideShow" @click="gotoShow(episode.show)"><i class="fa fa-id-card"></i> Fiche de la série</li>
+    <li class="ctx-item" @click="openBS(episode)"><img src="static/links/bs.png" /> Voir l'épisode sur BS</li>
+    <li class="ctx-item" v-show="!hideShow" @click="openBS(episode.show)"><img src="static/links/bs.png" /> Voir la série sur BS</li>
+  </context-menu>
+</template>
+
+<script>
+  import { types } from '../../store'
+  import { Episode } from '../../db'
+
+  export default {
+    props: {
+      hideShow: { default: false }, // Hide show action
+    },
+    data () {
+      return {
+        episode: new Episode(),
+      }
+    },
+    methods: {
+      /**
+       * Mark episode as view
+       * @param {Episode} episode The episode
+       */
+      markView (episode) {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode)
+      },
+      /**
+       * Mark episode as no view
+       * @param {Episode} episode The episode
+       */
+      unmarkView (episode) {
+        this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode)
+      },
+      /**
+       * Mark episode as DL or not
+       * @param {Episode} episode The episode
+       * @param {Boolean} isDL is DL or not
+       */
+      markDL (episode, isDL) {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
+          episode: episode,
+          isDL: isDL,
+        })
+      },
+      /**
+       * Archive a show
+       * @param {Show} show The show
+       */
+      archive (show) {
+        this.$store.dispatch(types.shows.ACTIONS.ARCHIVE, show).then(() => {
+          // Update unseen episode from DB
+          Episode.getUnseen().then((episodes) => {
+            this.$store.commit(types.episodes.MUTATIONS.SET_EPISODES, episodes)
+          })
+        })
+      },
+      /**
+       * On open context menu
+       * @param {Episode} episode The episode selected
+       */
+      onOpen (episode) {
+        console.info('[CONTEXT]', episode)
+        this.episode = episode
+
+        // Close other context-menu
+        let parentRef = this.$parent.$refs
+        let thisTag = this.$options._componentTag
+        for (let i in parentRef) {
+          if (thisTag !== this.$parent.$refs[i].$options._componentTag) {
+            this.$parent.$refs[i].$refs.ctx.ctxVisible = false
+          }
+        }
+      },
+      /**
+       * Open show|episode on BS (external link)
+       * @param {Episode|Show} element The element
+       */
+      openBS (element) {
+        this.$store.dispatch(types.ACTIONS.OPEN_LINK, element)
+      },
+      /**
+       * Go to the show page
+       * @param show
+       */
+      gotoShow (show) {
+        this.$router.push({name: 'show', params: {id: show._id}})
+      },
+    },
+  }
+</script>

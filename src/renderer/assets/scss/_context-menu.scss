@@ -1,0 +1,56 @@
+.window {
+  .ctx-menu {
+    color: $ctxColor;
+    background-color: $ctxBg;
+    border: 1px solid rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 0 5px $ctxShadow;
+    -webkit-box-shadow: 0 0 5px $ctxShadow;
+    box-shadow: 0 0 5px $ctxShadow;
+  }
+
+  .ctx-divider {
+    background-color: $ctxDivider;
+  }
+
+  .ctx-item {
+    color: $ctxColor;
+    cursor: pointer;
+    padding: 3px 7px;
+    i.fa {
+      margin-right: 5px;
+    }
+    img {
+      margin-right: 3px;
+      vertical-align: middle;
+    }
+  }
+
+  .ctx-item:focus,
+  .ctx-item:hover {
+    color: $ctxHeader;
+    background-color: lighten($ctxBg, 5%);
+  }
+
+  .ctx-item.active,
+  .ctx-item.active:focus,
+  .ctx-item.active:hover {
+    color: #fff;
+    background-color: #0275d8;
+  }
+
+  .ctx-item.disabled,
+  .ctx-item.disabled:focus,
+  .ctx-item.disabled:hover {
+    color: #818a91;
+  }
+
+  .ctx-header {
+    color: $ctxHeader;
+  }
+
+  .ctx-menu-container {
+    border: 0 solid $ctxBg;
+    //background-color: whitesmoke;
+    box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  }
+}

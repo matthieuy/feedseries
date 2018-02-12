@@ -1,0 +1,14 @@
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: darken($sidebarbgc, 5%);
+  border-color: $sidebarbgc;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track-piece {
+  background-clip: padding-box;
+  border-radius: 6px;
+  background-color: $navActiveBg;
+  border-color: $navBtn;
+}

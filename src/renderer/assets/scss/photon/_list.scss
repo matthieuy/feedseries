@@ -1,0 +1,29 @@
+.list-group {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.list-group * {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-group-item {
+  padding: 10px;
+  font-size: 12px;
+  color: $txtColor;
+  border-top: 1px solid $sidebarBorder;
+  &:hover {
+    color: lighten($txtColor, 10%);
+    background-color: lighten($backgroundColor, 2%);
+  }
+}
+.list-group-item:first-child {
+  border-top: 0;
+}
+.list-group-header {
+  padding: 10px;
+}
