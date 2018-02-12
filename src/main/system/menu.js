@@ -67,9 +67,9 @@ let template = [
       },
       {
         label: 'Vérifier les mises à jour',
-        click () {
+        click (menuItem, browserWindow) {
           if (!updater.inited) {
-            updater.init()
+            updater.init(browserWindow)
           }
           updater.check(true)
         },

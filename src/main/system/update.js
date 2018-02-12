@@ -2,7 +2,7 @@ import { autoUpdater } from 'electron-updater'
 import { dialog } from 'electron'
 
 export default {
-  mainWindow: false,
+  mainWindow: null,
   byUser: false,
   inited: false,
   init (mainWindow) {
@@ -23,8 +23,8 @@ export default {
     this.byUser = byUser
     autoUpdater.checkForUpdates()
   },
-  startCheck (info) {
-    console.info('[UPDATE] Start check', info)
+  startCheck () {
+    console.info('[UPDATE] Start check')
   },
   noUpdate (info) {
     console.info('App is up-to-date', info)
@@ -54,6 +54,14 @@ export default {
   },
   downloaded (info) {
     console.info('downloaded', info)
+    dialog.showMessageBox(this.mainWindow, {
+      type: 'info',
+      buttons: ['OK'],
+      defaultId: 0,
+      cancelId: 0,
+      title: 'Mise à jour',
+      message: 'Téléchargement terminé : installation en cours...',
+    })
     autoUpdater.quitAndInstall()
   },
   progress (progress) {
