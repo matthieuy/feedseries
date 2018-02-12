@@ -64,6 +64,9 @@ export default {
     }
   },
   error (error) {
-    console.info('[UPDATE] Error', error)
+    if (this.byUser) {
+      console.info('[UPDATE] Error', error)
+      dialog.showErrorBox('Mise à jour', 'Impossible de vérifier les mises à jour !')
+    }
   },
 }

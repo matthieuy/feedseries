@@ -64,7 +64,9 @@ ipcMain.on('app-ready', () => {
 
   // Check update
   updater.init(mainWindow)
-  updater.check(false)
+  if (process.env.NODE_ENV !== 'development') {
+    updater.check(false)
+  }
 })
 
 /*******************
