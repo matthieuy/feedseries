@@ -26,17 +26,18 @@ const template = [
 export default {
   tray: null,
   contextMenu: null,
+  mainWindow: null,
   /**
    * Init : Create systray
    */
-  init () {
+  init (mainWindow) {
+    this.mainWindow = mainWindow
     this.tray = new Tray(`${__static}/icons/128x128.png`)
     this.contextMenu = Menu.buildFromTemplate(template)
 
     // Left click : show mainWindow
     this.tray.on('click', () => {
-      let mainWindow = BrowserWindow.fromId(2)
-      mainWindow.show()
+      this.mainWindow.show()
     })
 
     this.update()

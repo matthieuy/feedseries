@@ -60,7 +60,7 @@ ipcMain.on('app-ready', () => {
   }
 
   // Create systray
-  systray.init()
+  systray.init(mainWindow)
 
   // Check update
   updater.init(mainWindow)
