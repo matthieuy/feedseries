@@ -10,7 +10,7 @@ export default {
    * @return {Promise}
    */
   getShow (show) {
-    console.info('[API] Subtitles::getShow')
+    console.info('[API] Subtitles::getShow', show)
     return Vue.http.get('/subtitles/show', {
       params: {
         id: show._id,

@@ -53,7 +53,7 @@ export default {
    * @return {Promise}
    */
   getEpisodes (show) {
-    console.info('[API] Shows::episodes')
+    console.info('[API] Shows::episodes', show)
     return Vue.http.get('/shows/episodes', {
       params: {
         id: show._id,
@@ -99,12 +99,12 @@ export default {
 
     // Get from cache
     if (Cache.isValid(cacheId)) {
-      console.info('[API Cache] Shows::get')
+      console.info('[API Cache] Shows::get', showId)
       return Promise.resolve(Cache.get(cacheId, null))
     }
 
     // Request
-    console.info('[API] Shows::get')
+    console.info('[API] Shows::get', showId)
     return Vue.http.get('/shows/display', {
       params: {
         id: showId,
@@ -127,7 +127,7 @@ export default {
    * @return {Promise}
    */
   add (show) {
-    console.info('[API] Shows::add')
+    console.info('[API] Shows::add', show)
     return Vue.http.post('/shows/show', {
       id: show._id,
     })
@@ -146,7 +146,7 @@ export default {
    * @return {Promise}
    */
   delete (show) {
-    console.info('[API] Shows::delete')
+    console.info('[API] Shows::delete', show)
     Cache.invalidateByTags({show: show._id})
     return Vue.http.delete('/shows/show', {
       params: {
@@ -173,7 +173,7 @@ export default {
    * @return {Promise}
    */
   archive (show) {
-    console.info('[API] Shows::archive')
+    console.info('[API] Shows::archive', show)
     return Vue.http.post('/shows/archive', {
       id: show._id,
     })
@@ -192,7 +192,7 @@ export default {
    * @return {Promise}
    */
   unarchive (show) {
-    console.info('[API] Shows::unarchive')
+    console.info('[API] Shows::unarchive', show)
     return Vue.http.delete('/shows/archive', {
       params: {
         id: show._id,
@@ -213,7 +213,7 @@ export default {
    * @return {Promise}
    */
   favorite (show) {
-    console.info('[API] Shows::favorite')
+    console.info('[API] Shows::favorite', show)
     return Vue.http.post('/shows/favorite', {
       id: show._id,
     }).then((response) => {
@@ -230,7 +230,7 @@ export default {
    * @return {Promise}
    */
   unfavorite (show) {
-    console.info('[API] Shows::unfavorite')
+    console.info('[API] Shows::unfavorite', show)
     return Vue.http.delete('/shows/favorite', {
       params: {
         id: show._id,
@@ -251,12 +251,12 @@ export default {
   characters (show) {
     let cacheId = `characters-${show._id}`
     if (Cache.isValid(cacheId)) {
-      console.info('[API Cache] Shows::characters')
+      console.info('[API Cache] Shows::characters', show)
       return Promise.resolve(Cache.get(cacheId))
     }
 
     // Api request
-    console.info('[API] Shows::characters')
+    console.info('[API] Shows::characters', show)
     return Vue.http.get('/shows/characters', {
       params: {
         id: show._id,
@@ -276,12 +276,12 @@ export default {
   similars (show) {
     let cacheId = `similars-${show._id}`
     if (Cache.isValid(cacheId)) {
-      console.info('[API Cache] Shows::similars')
+      console.info('[API Cache] Shows::similars', show)
       return Promise.resolve(Cache.get(cacheId))
     }
 
     // API request
-    console.info('[API] Shows::similars')
+    console.info('[API] Shows::similars', show)
     return Vue.http.get('/shows/similars', {
       params: {
         id: show._id,
