@@ -13,7 +13,6 @@
 
 <script>
   import { mapState } from 'vuex'
-  import log from 'electron-log'
 
   import CharacterCtx from '../context/CharacterCtx'
   import { types } from '../../store'
@@ -32,7 +31,7 @@
       },
     },
     mounted () {
-      log.info('[VUE] Mount show:characters')
+      console.info('[VUE] Mount show:characters')
       this.loadCharacters(this.show)
     },
     beforeRouteUpdate (to, from, next) {
