@@ -232,7 +232,7 @@ const actions = {
     promises.addPromise(Show.archive(show, archive))
 
     promises.then((show) => {
-      Cache.invalidateByTags({show: show._id})
+      Cache.invalidateByTags({show: show.id})
       context.commit(types.MUTATIONS.UPDATE_SHOW, show)
     })
 
