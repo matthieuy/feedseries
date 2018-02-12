@@ -170,10 +170,10 @@
             url = `https://www.betaseries.com/serie/${this.show.slug}`
             break
           case 'tvdb':
-            url = `https://www.thetvdb.com/?tab=series&id=${this.show.thetvdb_id}`
+            url = `https://www.thetvdb.com/?tab=series&id=${this.show.tvdb}`
             break
           case 'imdb':
-            url = `http://www.imdb.com/title/${this.show.imdb_id}/episodes`
+            url = `http://www.imdb.com/title/${this.show.imdb}/episodes`
             break
           default:
             return false
@@ -188,6 +188,7 @@
       loadShow (route) {
         this.$store.dispatch(types.show.ACTIONS.LOAD_SHOW, route.params.id)
           .then((show) => {
+            console.log('Loading show', show)
             this.isLoading = false
             this.$store.commit(types.MUTATIONS.ADD_HISTORY, {
               show: show,
