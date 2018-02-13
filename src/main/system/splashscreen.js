@@ -41,7 +41,7 @@ export default {
       backgroundColor: '#36393E',
       movable: false,
       skipTaskbar: true,
-      icon: __static + '/icons/128x128.png',
+      icon: getIconPath(),
       alwaysOnTop: true,
       show: false,
     })
@@ -53,4 +53,10 @@ export default {
 
     return this
   },
+}
+
+function getIconPath () {
+  return process.platform === 'win32'
+    ? __static + '/icons/icon.ico'
+    : __static + '/icons/icon.png'
 }

@@ -81,7 +81,7 @@ function createWindow () {
     minWidth: 850,
     minHeight: 500,
     useContentSize: true,
-    icon: __static + '/icons/128x128.png',
+    icon: (process.platform === 'win32') ? __static + '/icons/icon.ico' : __static + '/icons/icon.png',
     center: true,
     title: app.getName(),
     backgroundColor: '#36393E',

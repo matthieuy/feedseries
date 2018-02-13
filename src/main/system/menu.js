@@ -1,5 +1,6 @@
 import { app, Menu, shell } from 'electron'
 
+import about from './about'
 import updater from './update'
 import { localStore } from '../../renderer/store'
 
@@ -72,6 +73,12 @@ let template = [
             updater.init(browserWindow)
           }
           updater.check(true)
+        },
+      },
+      {
+        label: 'A propos',
+        click (menuItem, browserWindow) {
+          about.init(browserWindow)
         },
       },
     ],
