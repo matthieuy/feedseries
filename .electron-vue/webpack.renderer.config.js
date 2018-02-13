@@ -24,7 +24,7 @@ let rendererConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
     index: path.join(__dirname, '../src/renderer/main.js'),
-    about: path.join(__dirname, '../src/renderer/about.js'),
+    modal: path.join(__dirname, '../src/renderer/modal.js'),
   },
   externals: [
     ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
@@ -131,8 +131,8 @@ let rendererConfig = {
 
 Object.keys(rendererConfig.entry).forEach(key => {
   const plugin = new HtmlWebpackPlugin({
-    filename: key + '.html',
-    template: path.resolve(__dirname, '../src/' + key + '.ejs'),
+    filename: `${key}.html`,
+    template: path.resolve(__dirname, `../src/${key}.ejs`),
     minify: {
       collapseWhitespace: true,
       removeAttributeQuotes: true,
