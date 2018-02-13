@@ -95,7 +95,7 @@ function createWindow () {
 
   // Load main window
   let localStore = require('../renderer/store/local').default
-  let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? global.winURL + '/index.html#' + localStore.get(localStore.key.ROUTE.LAST) : global.winURL
+  let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? global.winURL + '/index.html#' + localStore.get(localStore.key.ROUTE.LAST) : global.winURL + '/index.html'
   mainWindow.loadURL(mainWindowURL, {
     userAgent: userAgent,
   })
