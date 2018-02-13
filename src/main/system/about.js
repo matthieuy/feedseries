@@ -12,8 +12,8 @@ export default {
     const win = this.win = new BrowserWindow({
       title: 'A propos',
       backgroundColor: '#181A1F',
-      width: 400,
-      height: 400,
+      width: 300,
+      height: 350,
       useContentSize: true,
       center: true,
       resizable: false,

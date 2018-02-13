@@ -5,5 +5,19 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    mounted () {
+      // Disable drag
+      window.ondragstart = () => { return false }
+    },
+  }
 </script>
+
+<style lang="scss">
+  body {
+    -webkit-user-drag: text;
+    -webkit-user-select: none;
+    -webkit-box-sizing: border-box;
+    cursor: default;
+  }
+</style>
