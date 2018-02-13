@@ -45,43 +45,5 @@
 </script>
 
 <style lang="scss">
-  @import "../../assets/scss/vars";
-  .characters {
-    position: absolute;
-    width: calc(100% - 10px);
-    display: block;
-    clear: both;
-    &:after {
-      clear: both;
-    }
-  }
-  .character {
-    position: relative;
-    float: left;
-    width: 250px;
-    min-height: 375px;
-    margin: 10px;
-    img, .img-replace {
-      position: absolute;
-      width: 250px;
-      height: 375px;
-      top: 0;
-      background-color: $sidebarbgc;
-    }
-    .txt-img {
-      position: absolute;
-      text-align: center;
-      z-index: 5;
-      color: #fff;
-      background-color: #000;
-      opacity: 0.6;
-      width: 100%;
-    }
-    .name {
-      top: 0;
-    }
-    .actor {
-      bottom: 0;
-    }
-  }
+  @import "../../assets/scss/characters";
 </style>
