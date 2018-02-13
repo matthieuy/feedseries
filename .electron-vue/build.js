@@ -115,9 +115,9 @@ function greeting () {
   const cols = process.stdout.columns
   let text = ''
 
-  if (cols > 85) text = 'lets-build'
-  else if (cols > 60) text = 'lets-|build'
-  else text = false
+  // if (cols > 85) text = 'lets-build'
+  // else if (cols > 60) text = 'lets-|build'
+  // else text = false
 
   if (text && !isCI) {
     say(text, {
