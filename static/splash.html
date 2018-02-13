@@ -7,6 +7,10 @@
         body {
             background-color: #282C34;
             text-align: center;
+            -webkit-user-drag: text;
+            -webkit-user-select: none;
+            -webkit-box-sizing: border-box;
+            cursor: progress;
         }
         img {
             display: block;
@@ -22,6 +26,9 @@
             color: #919191;
         }
     </style>
+    <script>
+    window.ondragstart = () => { return false }
+    </script>
 </head>
 <body>
 <div>

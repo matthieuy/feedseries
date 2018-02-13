@@ -44,6 +44,12 @@ export default {
       icon: getIconPath(),
       alwaysOnTop: true,
       show: false,
+      minimizable: false,
+      resizable: false,
+      maximizable: false,
+      // webPreferences: {
+      //   devTools: true,
+      // },
     })
     this.win.loadURL(this.url)
     this.win.on('ready-to-show', () => {
