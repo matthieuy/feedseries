@@ -152,7 +152,8 @@ Object.keys(rendererConfig.entry).forEach(key => {
 if (process.env.NODE_ENV !== 'production') {
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
+      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
+      'winURL': '"http://localhost:9080"',
     })
   )
 }
@@ -173,7 +174,8 @@ if (process.env.NODE_ENV === 'production') {
       }
     ]),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
+      'winURL': `"file://${global.__static}"`
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
