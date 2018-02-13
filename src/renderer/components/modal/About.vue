@@ -9,13 +9,16 @@
 </template>
 
 <script>
-  import { remote } from 'electron'
+  import { ipcRenderer, remote } from 'electron'
 
   export default {
     data () {
       return {
         version: remote.app.getVersion(),
       }
+    },
+    mounted () {
+      ipcRenderer.send('check-update', true)
     },
   }
 </script>

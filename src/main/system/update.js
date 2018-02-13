@@ -1,5 +1,5 @@
 import { autoUpdater } from 'electron-updater'
-import { dialog } from 'electron'
+import { app, dialog, ipcMain } from 'electron'
 
 export default {
   mainWindow: null,
@@ -8,6 +8,9 @@ export default {
   init (mainWindow) {
     console.info('[UPDATE] Init system')
     this.mainWindow = mainWindow
+    if (this.inited) {
+      return this
+    }
     autoUpdater.autoDownload = false
     autoUpdater.on('checking-for-update', this.startCheck)
     autoUpdater.on('update-downloaded', this.downloaded)
@@ -16,6 +19,10 @@ export default {
     autoUpdater.on('download-progress', this.progress)
     autoUpdater.on('error', this.error)
     this.inited = true
+
+    ipcMain.on('check-update', (byUser) => {
+      this.check(byUser)
+    })
 
     return this
   },
@@ -52,16 +59,18 @@ export default {
       }
     })
   },
-  downloaded (info) {
-    console.info('downloaded', info)
+  downloaded (event, releaseNotes, releaseName) {
+    console.info('downloaded', event, releaseNotes, releaseName)
     dialog.showMessageBox(this.mainWindow, {
       type: 'info',
-      buttons: ['OK'],
+      buttons: ['OK', 'Plus tard'],
       defaultId: 0,
       cancelId: 0,
       title: 'Mise à jour',
-      message: 'Téléchargement terminé : installation en cours...',
+      message: process.platform === 'win32' ? releaseNotes : releaseName,
+      detail: 'Téléchargement terminé : installation en cours...',
     })
+    app.isQuiting = true
     autoUpdater.quitAndInstall()
   },
   progress (progress) {
