@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain } from 'electron'
+import log from 'electron-log'
 
 import updater from './system/update'
 
@@ -13,10 +14,14 @@ let userAgent = 'FeedSeries'
 if (process.env.NODE_ENV === 'development') {
   userAgent += ' (dev)'
   global.winURL = 'http://localhost:9080'
+  log.debug('Environment : dev')
 } else {
+  log.transports.console.level = 'info'
+  log.transports.file.level = 'info'
   userAgent += ' v' + app.getVersion()
   global.winURL = `file://${__dirname}`
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+  log.debug('Environment : prod')
 }
 
 /*************
@@ -65,6 +70,7 @@ const isNotSingleInstance = app.makeSingleInstance(() => {
 
 // Quit double instance
 if (isNotSingleInstance) {
+  log.error('Multi instance : close app')
   app.isQuiting = true
   if (systray) {
     systray.destroy()
@@ -121,6 +127,7 @@ function createWindow () {
 
   // App full loaded
   ipcMain.on('app-ready', () => {
+    log.debug('App is ready')
     // Create systray
     systray = require('./system/systray').default
     systray.init(mainWindow)
@@ -140,5 +147,5 @@ function createWindow () {
 
 // Catch exception
 process.on('uncaughtException', function (e) {
-  console.error('[EXCEPTION]', e)
+  log.error('[EXCEPTION]', e)
 })

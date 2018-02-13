@@ -1,12 +1,13 @@
 import { autoUpdater } from 'electron-updater'
 import { app, dialog, ipcMain } from 'electron'
+import log from 'electron-log'
 
 export default {
   mainWindow: null,
   byUser: false,
   inited: false,
   init (mainWindow) {
-    console.info('[UPDATE] Init system')
+    log.info('[UPDATE] Init system')
     this.mainWindow = mainWindow
     if (this.inited) {
       return this
@@ -31,10 +32,10 @@ export default {
     autoUpdater.checkForUpdates()
   },
   startCheck () {
-    console.info('[UPDATE] Start check')
+    log.info('[UPDATE] Start check')
   },
   noUpdate (info) {
-    console.info('App is up-to-date', info)
+    log.info('App is up-to-date', info)
     if (this.byUser) {
       dialog.showMessageBox(this.mainWindow, {
         type: 'info',
@@ -45,7 +46,7 @@ export default {
     }
   },
   availableUpdate (info) {
-    console.info('Update', info)
+    log.info('Update', info)
     dialog.showMessageBox(this.mainWindow, {
       type: 'question',
       buttons: ['Oui', 'Plus tard'],
@@ -60,7 +61,7 @@ export default {
     })
   },
   downloaded (event, releaseNotes, releaseName) {
-    console.info('downloaded', event, releaseNotes, releaseName)
+    log.info('downloaded', event, releaseNotes, releaseName)
     dialog.showMessageBox(this.mainWindow, {
       type: 'info',
       buttons: ['OK', 'Plus tard'],
@@ -75,14 +76,14 @@ export default {
   },
   progress (progress) {
     let message = `Download speed: ${progress.bytesPerSecond} - Downloaded ${progress.percent}% (${progress.transferred} / ${progress.total})`
-    console.info(message, progress)
+    log.info(message, progress)
     if (this.mainWindow) {
       this.mainWindow.setProgressBar(progress.percent / 100)
     }
   },
   error (error) {
     if (this.byUser) {
-      console.info('[UPDATE] Error', error)
+      log.info('[UPDATE] Error', error)
       dialog.showErrorBox('Mise à jour', 'Impossible de vérifier les mises à jour !')
     }
   },

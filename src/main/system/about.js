@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron'
+import log from 'electron-log'
 
 export default {
   win: null,
@@ -28,6 +29,7 @@ export default {
       modal: true,
     })
 
+    log.debug('Load about modal')
     win.loadURL(global.winURL + '/modal.html#/about')
     win.setMenu(null)
     win.once('ready-to-show', () => { win.show() })
