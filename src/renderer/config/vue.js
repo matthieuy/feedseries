@@ -94,3 +94,41 @@ Vue.filter('statusColor', (value) => {
       return 'color: #000000'
   }
 })
+
+Vue.filter('duration_tv', (value) => {
+  let duration = moment.duration(parseInt(value), 'minutes')
+  let time = []
+
+  let years = duration.years()
+  if (years !== 0) {
+    time.push(plurialize(years, 'an', 'ans'))
+  }
+
+  let month = duration.months()
+  if (month !== 0) {
+    time.push(`${month} mois`)
+  }
+
+  let weeks = duration.weeks()
+  if (weeks !== 0) {
+    time.push(plurialize(weeks, 'semaine', 'semaines'))
+    duration.subtract(weeks, 'weeks')
+  }
+
+  let days = duration.days()
+  if (days !== 0) {
+    time.push(plurialize(days, 'jour', 'jours'))
+  }
+
+  let hours = duration.hours()
+  if (hours !== 0) {
+    time.push(plurialize(hours, 'heure', 'heures'))
+  }
+
+  let minutes = duration.minutes()
+  if (minutes !== 0) {
+    time.push(plurialize(minutes, 'minute', 'minutes'))
+  }
+
+  return time.join(', ')
+})

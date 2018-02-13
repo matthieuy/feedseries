@@ -53,18 +53,3 @@
     },
   }
 </script>
-
-<style lang="scss">
-  @import "../../assets/scss/vars";
-  .binfo {
-    float: left;
-    margin: 10px 5px;
-    padding: 5px 15px;
-    border-radius: 5px;
-    background-color: $sidebarBorder;
-    box-shadow: inset 0 0 3px #000;
-  }
-  .description {
-    width: calc(100% - 15px);
-  }
-</style>
