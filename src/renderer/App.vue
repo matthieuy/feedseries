@@ -24,6 +24,11 @@
                 <div class="dropdown-item" v-for="link in history">
                   <router-link :to="link.path">{{ link.label }}</router-link>
                 </div>
+                <div class="dropdown-divider" v-if="history.length"></div>
+                <div class="dropdown-item" v-if="history.length" @click="clearHistory()">
+                  <i class="fa fa-trash"></i>
+                  Vider l'historique
+                </div>
               </div>
               <i class="fa fa-history"></i>
             </button>
@@ -88,6 +93,11 @@
         this.devToolsOpen = !currentWindow.isDevToolsOpened()
         remote.getCurrentWindow().toggleDevTools()
       },
+      // Clear the history
+      clearHistory () {
+        this.$store.commit(types.MUTATIONS.SET_HISTORY, [])
+        localStore.set(localStore.key.HISTORY, [])
+      },
     },
     mounted () {
       console.info('[VUE] Mount App.vue')
@@ -98,7 +108,6 @@
       remote.getCurrentWebContents().on('devtools-closed', () => { this.devToolsOpen = false })
 
       // History
-      // localStore.set(localStore.key.HISTORY, [])
       this.$store.commit(types.MUTATIONS.SET_HISTORY, localStore.get(localStore.key.HISTORY, []))
 
       // Disable drag

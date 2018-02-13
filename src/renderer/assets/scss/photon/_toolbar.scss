@@ -78,6 +78,13 @@
     background-color: darken($toolbarBg, 10%);
     cursor: pointer;
   }
+  .fa {
+    margin-right: 3px;
+  }
+}
+.dropdown-divider {
+  background-color: darken($toolbarBg, 10%);
+  height: 1px;
 }
 
 /*
