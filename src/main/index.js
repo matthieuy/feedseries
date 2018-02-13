@@ -2,27 +2,20 @@
 
 import { app, BrowserWindow, ipcMain } from 'electron'
 
-import localStore from '../renderer/store/local'
-import SplashScreen from './system/splashscreen'
-import systray from './system/systray'
-import mainMenu from './system/menu'
 import updater from './system/update'
 
-let mainWindow
-let winURL, splashURL
+let mainWindow, systray
+let userAgent = 'FeedSeries'
 
 /*************************
  * Environment variables *
  *************************/
-let userAgent = 'FeedSeries'
 if (process.env.NODE_ENV === 'development') {
   userAgent += ' (dev)'
-  winURL = 'http://localhost:9080'
-  splashURL = 'http://localhost:9080/static/splash.html'
+  global.winURL = 'http://localhost:9080'
 } else {
   userAgent += ' v' + app.getVersion()
-  winURL = `file://${__dirname}/index.html`
-  splashURL = `file://${global.__static}/splash.html`
+  global.winURL = `file://${__dirname}`
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
@@ -31,7 +24,8 @@ if (process.env.NODE_ENV === 'development') {
  *************/
 app.on('ready', () => {
   // Splashscreen
-  SplashScreen.init(splashURL, __static)
+  let SplashScreen = require('./system/splashscreen').default
+  SplashScreen.init()
 })
 
 ipcMain.on('splashscreen-display', () => {
@@ -41,7 +35,9 @@ ipcMain.on('splashscreen-display', () => {
 // All windows closed => exit (except macOS)
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin' && app.isQuiting) {
-    systray.destroy()
+    if (systray) {
+      systray.destroy()
+    }
     app.quit()
   }
 })
@@ -50,22 +46,6 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
-  }
-})
-
-// App full loaded
-ipcMain.on('app-ready', () => {
-  if (mainWindow) {
-    mainWindow.show()
-  }
-
-  // Create systray
-  systray.init()
-
-  // Check update
-  updater.init(mainWindow)
-  if (process.env.NODE_ENV !== 'development') {
-    updater.check(false)
   }
 })
 
@@ -86,7 +66,9 @@ const isNotSingleInstance = app.makeSingleInstance(() => {
 // Quit double instance
 if (isNotSingleInstance) {
   app.isQuiting = true
-  systray.destroy()
+  if (systray) {
+    systray.destroy()
+  }
   app.quit()
 }
 
@@ -99,7 +81,7 @@ function createWindow () {
     minWidth: 850,
     minHeight: 500,
     useContentSize: true,
-    icon: __static + '/icons/128x128.png',
+    icon: (process.platform === 'win32') ? __static + '/icons/icon.ico' : __static + '/icons/icon.png',
     center: true,
     title: app.getName(),
     backgroundColor: '#36393E',
@@ -112,15 +94,21 @@ function createWindow () {
   })
 
   // Load main window
-  let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? winURL + '#' + localStore.get(localStore.key.ROUTE.LAST) : winURL
+  let localStore = require('../renderer/store/local').default
+  let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? global.winURL + '/index.html#' + localStore.get(localStore.key.ROUTE.LAST) : global.winURL + '/index.html'
   mainWindow.loadURL(mainWindowURL, {
     userAgent: userAgent,
   })
+
+  // Main menu
+  let mainMenu = require('./system/menu').default
   mainMenu.init(mainWindow)
 
   // Close window
   mainWindow.on('closed', () => {
-    systray.destroy()
+    if (systray) {
+      systray.destroy()
+    }
     mainWindow = null
   })
   mainWindow.on('close', (event) => {
@@ -129,6 +117,24 @@ function createWindow () {
       mainWindow.hide()
     }
     return false
+  })
+
+  // App full loaded
+  ipcMain.on('app-ready', () => {
+    // Create systray
+    systray = require('./system/systray').default
+    systray.init(mainWindow)
+
+    // Show app
+    if (mainWindow) {
+      mainWindow.show()
+    }
+
+    // Check update
+    updater.init(mainWindow)
+    if (process.env.NODE_ENV !== 'development') {
+      updater.check(false)
+    }
   })
 }
 

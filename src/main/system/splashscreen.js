@@ -1,26 +1,27 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 
 export default {
-  splashWindow: null,
-  splashURL: '',
-  staticPath: '',
+  win: null,
+  url: '',
 
   /**
    * Init the splashscreen
    */
-  init (splashURL, staticPath) {
-    // Init var
-    this.staticPath = staticPath
-    this.splashURL = splashURL
+  init () {
+    if (process.env.NODE_ENV === 'development') {
+      this.url = 'http://localhost:9080/static/splash.html'
+    } else {
+      this.url = `file://${global.__static}/splash.html`
+    }
 
     // Create
     this.create()
 
     // Hide splashScreen when app is ready
     ipcMain.on('app-ready', () => {
-      if (this.splashWindow) {
-        this.splashWindow.destroy()
-        this.splashWindow = null
+      if (this.win) {
+        this.win.destroy()
+        this.win = null
       }
     })
 
@@ -31,7 +32,7 @@ export default {
    * Create the window and load content
    */
   create () {
-    this.splashWindow = new BrowserWindow({
+    this.win = new BrowserWindow({
       height: 210,
       width: 330,
       center: true,
@@ -40,16 +41,28 @@ export default {
       backgroundColor: '#36393E',
       movable: false,
       skipTaskbar: true,
-      icon: this.staticPath + '/icons/128x128.png',
+      icon: getIconPath(),
       alwaysOnTop: true,
       show: false,
+      minimizable: false,
+      resizable: false,
+      maximizable: false,
+      // webPreferences: {
+      //   devTools: true,
+      // },
     })
-    this.splashWindow.loadURL(this.splashURL)
-    this.splashWindow.on('ready-to-show', () => {
-      this.splashWindow.show()
+    this.win.loadURL(this.url)
+    this.win.on('ready-to-show', () => {
+      this.win.show()
       ipcMain.emit('splashscreen-display')
     })
 
     return this
   },
+}
+
+function getIconPath () {
+  return process.platform === 'win32'
+    ? __static + '/icons/icon.ico'
+    : __static + '/icons/icon.png'
 }

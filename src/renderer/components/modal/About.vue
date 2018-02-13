@@ -1,0 +1,35 @@
+<template>
+  <div id="about">
+    <div class="header">
+      <img src="static/icons/icon.png">
+      <div>FeedSeries v{{ version }}</div>
+    </div>
+    {{ info }}
+  </div>
+</template>
+
+<script>
+  import { ipcRenderer, remote } from 'electron'
+
+  export default {
+    data () {
+      return {
+        version: remote.app.getVersion(),
+      }
+    },
+    mounted () {
+      ipcRenderer.send('check-update', true)
+    },
+  }
+</script>
+
+<style lang="scss">
+  #about {
+    color: #fff;
+    padding: 10px;
+    .header {
+      text-align: center;
+      font-size: 1.5em;
+    }
+  }
+</style>

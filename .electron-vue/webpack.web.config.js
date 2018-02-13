@@ -13,7 +13,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
-    web: path.join(__dirname, '../src/renderer/main.js')
+    web: path.join(__dirname, '../src/renderer/main.js'),
+    modal: path.join(__dirname, '../src/renderer/modal.js'),
   },
   module: {
     rules: [
@@ -82,16 +83,6 @@ let webConfig = {
   },
   plugins: [
     new ExtractTextPlugin('styles.css'),
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: path.resolve(__dirname, '../src/index.ejs'),
-      minify: {
-        collapseWhitespace: true,
-        removeAttributeQuotes: true,
-        removeComments: true
-      },
-      nodeModules: false
-    }),
     new webpack.DefinePlugin({
       'process.env.IS_WEB': 'true'
     }),
@@ -111,6 +102,20 @@ let webConfig = {
   },
   target: 'web'
 }
+
+Object.keys(webConfig.entry).forEach(key => {
+  const plugin = new HtmlWebpackPlugin({
+    filename: `${key}.html`,
+    template: path.resolve(__dirname, `../src/${key}.ejs`),
+    minify: {
+      collapseWhitespace: true,
+      removeAttributeQuotes: true,
+      removeComments: true
+    },
+    nodeModules: false
+  })
+  webConfig.plugins.push(plugin)
+})
 
 /**
  * Adjust webConfig for production settings
