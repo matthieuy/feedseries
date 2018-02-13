@@ -65,6 +65,8 @@
     li.event a {
       color: inherit;
       font-weight: bold;
+      text-decoration: none;
+      cursor: default;
     }
     .toolbar-footer {
         .title { cursor: pointer; }

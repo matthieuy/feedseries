@@ -13,8 +13,9 @@ export default {
   getList () {
     // Get from cache
     if (Cache.isValid(this.cacheId)) {
-      console.info('[API Cache] Timeline::getList')
-      return Promise.resolve(Cache.get(this.cacheId))
+      let events = Cache.get(this.cacheId)
+      console.info('[API Cache] Timeline::getList', events)
+      return Promise.resolve(events)
     }
 
     // API Request and cache
@@ -62,6 +63,7 @@ export default {
     }).then((response) => {
       let events = []
       response.data.events.forEach((event) => {
+        console.log(event)
         events.push({
           date: event.date,
           user: event.user,
