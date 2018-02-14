@@ -62,7 +62,7 @@
             filename: file.name,
             show_id: episode.show.id,
             show_title: episode.show.title,
-            show_img: api.shows.getShowImgUrl(episode.show.id),
+            show_img: api.shows.getShowImgUrl(episode.show.id, 120),
             in_account: episode.show.in_account,
             isDownloaded: episode.user.downloaded,
             isSeen: episode.user.seen,

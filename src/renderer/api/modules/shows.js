@@ -327,11 +327,14 @@ export default {
    * @param {Integer} showId The show ID
    * @return {String} The URL
    */
-  getShowImgUrl (showId) {
+  getShowImgUrl (showId, size) {
     let url = Vue.http.defaults.baseURL + '/pictures/shows?'
     url += 'v=' + Vue.http.defaults.headers.common['X-BetaSeries-Version']
     url += '&key=' + Vue.http.defaults.headers.common['X-BetaSeries-Key']
     url += '&id=' + showId
+    if (typeof size !== 'undefined') {
+      url += '&width=' + size + '&height=' + size
+    }
     return url
   },
   /**
