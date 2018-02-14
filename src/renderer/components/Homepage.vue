@@ -41,9 +41,7 @@
           <div class="binfo">
             Épisodes :
             <ul>
-              <li>Total : {{ stats.episodes }}</li>
               <li>{{ stats.episodes_per_month|plurialize('épisode', 'épisodes') }} / mois</li>
-              <li>À voir : {{ stats.episodes_to_watch }}</li>
               <li>{{ stats.streak_days|plurialize('jour consécutif', 'jours consécutifs') }}</li>
             </ul>
           </div>
@@ -51,15 +49,8 @@
 
         <div class="fleft">
           <div class="binfo">
-            Séries :
-            <ul>
-              <li>Nombre : {{ stats.shows }}</li>
-              <li>Saisons : {{ stats.seasons }}</li>
-              <li>À voir : {{ stats.shows_to_watch }}</li>
-              <li>Terminées : {{ stats.shows_finished }}</li>
-              <li>En cours : {{ stats.shows_current }}</li>
-              <li>Abandonnées : {{ stats.shows_abandoned }}</li>
-            </ul>
+            <div id="showChart"></div>
+            <div class="clearfix"></div>
           </div>
         </div>
         <div class="clearfix"></div>
@@ -68,6 +59,7 @@
 </template>
 
 <script>
+  import * as CanvasJS from 'canvasjs'
   import api from '../api'
 
   export default {
@@ -83,6 +75,29 @@
           avatar: infos.avatar,
           xp: infos.xp,
         })
+        // let CanvasJS = require('canvasjs-dilberd')
+        let chart = new CanvasJS.Chart('showChart', {
+          animationEnabled: true,
+          backgroundColor: '#181A1F',
+          title: {
+            text: `${this.stats.shows} séries (${this.stats.seasons} saisons)`,
+          },
+          data: [
+            {
+              type: 'doughnut',
+              startAngle: 180,
+              indexLabel: '{y} {label}',
+              toolTipContent: '{y} {label} : #percent%',
+              dataPoints: [
+                { label: 'abandonnées', y: this.stats.shows_abandoned },
+                { label: 'en cours', y: this.stats.shows_current },
+                { label: 'à voir', y: this.stats.shows_to_watch },
+                { label: 'terminées', y: this.stats.shows_finished },
+              ],
+            },
+          ],
+        })
+        chart.render()
       })
     },
   }
@@ -102,9 +117,11 @@
       }
       .binfo {
         float: none;
-        max-width: 340px;
       }
     }
-
+  }
+  #showChart {
+    width: 400px;
+    height: 200px;
   }
 </style>
