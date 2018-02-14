@@ -64,7 +64,7 @@
         <div class="favorites">
           <span  v-for="show in favorites">
             <router-link :to="{ name: 'show', params: { id: show._id }}" class="img">
-              <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="200">
+              <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="200" :alt="show.title">
             </router-link>
           </span>
         </div>
