@@ -11,7 +11,7 @@ export default {
       return this.win.show()
     }
     const win = this.win = new BrowserWindow({
-      title: 'A propos',
+      title: 'À propos',
       backgroundColor: '#181A1F',
       width: 300,
       height: 350,
