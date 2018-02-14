@@ -12,10 +12,11 @@
       <div class="name">{{ episode.code}} - {{ episode.title}}</div>
       <div>{{ episode.filename }}</div>
       <div>
-        <button class="btn btn-default" @click="gotoShow()"><i class="fa fa-id-card"></i> Fiche de la série</button>
-        <button class="btn btn-default" @click="markDL()" v-show="episode.in_account && !episode.isDownloaded"><i class="fa fa-download"></i> Marquer "récupéré"</button>
-        <button class="btn btn-default" @click="markView()" v-show="episode.in_account && !episode.isSeen"><i class="fa fa-eye"></i> Marquer "vu"</button>
-        <button class="btn btn-default" @click="close()"><i class="fa fa-times-circle"></i> Annuler</button>
+        <button class="btn btn-nav" @click="gotoShow()"><i class="fa fa-id-card"></i> Fiche de la série</button>
+        <button class="btn btn-nav" @click="addShow()" v-show="!episode.in_account"><i class="fa fa-plus-circle"></i> Ajouter la série</button>
+        <button class="btn btn-nav" @click="markDL()" v-show="episode.in_account && !episode.isDownloaded"><i class="fa fa-download"></i> Marquer "récupéré"</button>
+        <button class="btn btn-nav" @click="markView()" v-show="episode.in_account && !episode.isSeen"><i class="fa fa-eye"></i> Marquer "vu"</button>
+        <button class="btn btn-nav" @click="close()"><i class="fa fa-times-circle"></i> Annuler</button>
       </div>
     </div>
   </div>
@@ -78,18 +79,25 @@
         this.$router.push({name: 'show', params: {id: this.episode.show_id}})
         this.close()
       },
+      addShow () {
+        this.$store.dispatch(types.shows.ACTIONS.ADD, {_id: this.episode.show_id}).then(() => {
+          this.close()
+        })
+      },
       markDL () {
         this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
           episode: {
             _id: this.episode.id,
           },
           isDL: true,
+        }).then(() => {
+          this.close()
         })
-        this.close()
       },
       markView () {
-        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {_id: this.episode.id})
-        this.close()
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {_id: this.episode.id}).then(() => {
+          this.close()
+        })
       },
       close () {
         this.showDrop = false
@@ -167,8 +175,8 @@
     .name {
       font-style: italic;
     }
-    .fa {
-      margin-right: 3px;
+    .btn-nav {
+      cursor: pointer;
     }
   }
 }
