@@ -12,6 +12,9 @@
       <div class="name">{{ episode.code}} - {{ episode.title}}</div>
       <div>{{ episode.filename }}</div>
       <div>
+        <button class="btn btn-default" @click="gotoShow()"><i class="fa fa-id-card"></i> Fiche de la série</button>
+        <button class="btn btn-default" @click="markDL()" v-show="episode.in_account && !episode.isDownloaded"><i class="fa fa-download"></i> Marquer "récupéré"</button>
+        <button class="btn btn-default" @click="markView()" v-show="episode.in_account && !episode.isSeen"><i class="fa fa-eye"></i> Marquer "vu"</button>
         <button class="btn btn-default" @click="close()"><i class="fa fa-times-circle"></i> Annuler</button>
       </div>
     </div>
@@ -20,6 +23,8 @@
 
 <script>
   import { remote } from 'electron'
+
+  import { types } from '../store'
   import api from '../api'
 
   export default {
@@ -68,6 +73,23 @@
             this.close()
           }
         })
+      },
+      gotoShow () {
+        this.$router.push({name: 'show', params: {id: this.episode.show_id}})
+        this.close()
+      },
+      markDL () {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
+          episode: {
+            _id: this.episode.id,
+          },
+          isDL: true,
+        })
+        this.close()
+      },
+      markView () {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {_id: this.episode.id})
+        this.close()
       },
       close () {
         this.showDrop = false
@@ -144,6 +166,9 @@
     }
     .name {
       font-style: italic;
+    }
+    .fa {
+      margin-right: 3px;
     }
   }
 }
