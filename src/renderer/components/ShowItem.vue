@@ -2,7 +2,7 @@
   <span>
     <div class="pull-left img-container">
       <router-link :to="{name: 'show', params: { id: show._id }}">
-        <img :src="show.poster" width="100" class="pull-left" v-show="show.poster">
+        <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="100" class="pull-left" v-if="show.poster">
         <div class="pull-left replace-img" v-show="!show.poster"></div>
       </router-link>
     </div>

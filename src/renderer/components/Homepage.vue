@@ -58,16 +58,27 @@
         </div>
         <div class="clearfix"></div>
       </div>
+
+      <div v-show="favorites.length">
+        <h1 class="text-center">Favoris</h1>
+        <div class="favorites">
+            <router-link :to="{ name: 'show', params: { id: show._id }}" class="img" v-for="show in favorites">
+              <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="200">
+            </router-link>
+        </div>
+      </div>
     </div>
 </template>
 
 <script>
   import api from '../api'
+  import { Show } from '../db'
 
   export default {
     data () {
       return {
         stats: {},
+        favorites: [],
       }
     },
     methods: {
@@ -115,7 +126,14 @@
     },
     mounted () {
       console.info('[VUE] Mount Homepage.vue')
+
+      // Get stats
       this.loadStats()
+
+      // Get favorites from DB
+      Show.getFavorites().then((shows) => {
+        this.favorites = shows
+      })
     },
   }
 </script>
@@ -135,6 +153,22 @@
       .binfo {
         float: none;
       }
+    }
+    .favorites {
+        max-height: 320px;
+        display: block;
+        overflow-y: hidden;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        img {
+            display: inline-block;
+            margin: 5px;
+            box-shadow: 7px 6px 12px #181A1F;
+        }
+        &::-webkit-scrollbar {
+            height: 12px;
+        }
     }
   }
   #showChart {
