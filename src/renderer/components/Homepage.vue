@@ -26,6 +26,7 @@
             <div class="pull-right" v-if="stats.episodes">soit {{ stats.episodes|plurialize('épisode', 'épisodes') }} vus</div>
             <div class="clearfix"></div>
           </div>
+
           <div class="binfo" v-if="stats.time_to_spend">
             <i class="fa fa-hourglass"></i>
             Encore {{ stats.time_to_spend|duration_tv }} - {{ stats.episodes_to_watch|plurialize('épisode', 'épisodes') }}
@@ -39,11 +40,13 @@
 
         <div class="fleft">
           <div class="binfo">
-            Épisodes :
-            <ul>
-              <li>{{ stats.episodes_per_month|plurialize('épisode', 'épisodes') }} / mois</li>
-              <li>{{ stats.streak_days|plurialize('jour consécutif', 'jours consécutifs') }}</li>
-            </ul>
+            <i class="fa fa-chart-line"></i>
+            {{ stats.episodes_per_month|plurialize('épisode', 'épisodes') }} / mois
+          </div>
+
+          <div class="binfo">
+              <i class="fa fa-calendar-check"></i>
+              {{ stats.streak_days|plurialize('jour consécutif', 'jours consécutifs') }}
           </div>
         </div>
 
@@ -59,7 +62,6 @@
 </template>
 
 <script>
-  import * as CanvasJS from 'canvasjs'
   import api from '../api'
 
   export default {
@@ -68,37 +70,49 @@
         stats: {},
       }
     },
-    mounted () {
-      console.info('[VUE] Mount Homepage.vue')
-      api.members.getInfos(true).then((infos) => {
-        this.stats = Object.assign(infos.stats, {
-          avatar: infos.avatar,
-          xp: infos.xp,
+    methods: {
+      // Load member stats
+      loadStats () {
+        api.members.getInfos(true).then((infos) => {
+          this.stats = Object.assign(infos.stats, {
+            avatar: infos.avatar,
+            xp: infos.xp,
+          })
         })
-        // let CanvasJS = require('canvasjs-dilberd')
+      },
+    },
+    watch: {
+      // On stats update => redraw the graph
+      stats (stats) {
+        let CanvasJS = require('canvasjs')
         let chart = new CanvasJS.Chart('showChart', {
           animationEnabled: true,
           backgroundColor: '#181A1F',
           title: {
-            text: `${this.stats.shows} séries (${this.stats.seasons} saisons)`,
+            text: `${stats.shows} séries (${stats.seasons} saisons)`,
           },
           data: [
             {
               type: 'doughnut',
               startAngle: 180,
               indexLabel: '{y} {label}',
-              toolTipContent: '{y} {label} : #percent%',
+              toolTipContent: '{y} séries {label} : #percent%',
               dataPoints: [
-                { label: 'abandonnées', y: this.stats.shows_abandoned },
-                { label: 'en cours', y: this.stats.shows_current },
-                { label: 'à voir', y: this.stats.shows_to_watch },
-                { label: 'terminées', y: this.stats.shows_finished },
+                { label: 'abandonnées', y: stats.shows_abandoned },
+                { label: 'en cours', y: stats.shows_current },
+                { label: 'à voir', y: stats.shows_to_watch },
+                { label: 'terminées', y: stats.shows_finished },
               ],
             },
           ],
         })
+        console.log('[Home] Redraw the shows graph')
         chart.render()
-      })
+      },
+    },
+    mounted () {
+      console.info('[VUE] Mount Homepage.vue')
+      this.loadStats()
     },
   }
 </script>
