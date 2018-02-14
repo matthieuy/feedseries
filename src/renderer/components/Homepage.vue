@@ -62,9 +62,11 @@
       <div v-show="favorites.length">
         <h1 class="text-center">Favoris</h1>
         <div class="favorites">
-            <router-link :to="{ name: 'show', params: { id: show._id }}" class="img" v-for="show in favorites">
+          <span  v-for="show in favorites">
+            <router-link :to="{ name: 'show', params: { id: show._id }}" class="img">
               <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="200">
             </router-link>
+          </span>
         </div>
       </div>
     </div>
