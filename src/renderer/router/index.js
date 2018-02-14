@@ -73,7 +73,7 @@ const router = new Router({
 // Interceptor : save the last route
 let routesExcludesSave = []
 router.afterEach((to, from) => {
-  let save = (localStore.get(localStore.key.ROUTE.SAVE, false) || (routesExcludesSave.indexOf(to.name) < 0))
+  let save = (localStore.get(localStore.key.ROUTE.SAVE, false) && (routesExcludesSave.indexOf(to.name) < 0))
   if (save && from.path !== to.path) {
     localStore.set(localStore.key.ROUTE.LAST, to.path)
   }
