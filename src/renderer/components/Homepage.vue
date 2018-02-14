@@ -1,6 +1,6 @@
 <template>
     <div class="profil">
-      <div class="infos">
+      <div class="infos" v-show="stats.id">
         <img :src="stats.avatar" alt="" class="avatar">
 
         <div class="fleft">
@@ -75,6 +75,7 @@
       loadStats () {
         api.members.getInfos(true).then((infos) => {
           this.stats = Object.assign(infos.stats, {
+            id: infos.id,
             avatar: infos.avatar,
             xp: infos.xp,
           })
@@ -88,6 +89,8 @@
         let chart = new CanvasJS.Chart('showChart', {
           animationEnabled: true,
           backgroundColor: '#181A1F',
+          width: 400,
+          height: 200,
           title: {
             text: `${stats.shows} séries (${stats.seasons} saisons)`,
           },
