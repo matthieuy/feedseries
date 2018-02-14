@@ -39,6 +39,7 @@
           <div class="clearfix"></div>
         </div>
       </div>
+
       <div v-show="favorites.length">
         <h1 class="text-center">Favoris</h1>
         <div class="favorites">
@@ -49,11 +50,23 @@
           </span>
         </div>
       </div>
+
+      <div v-show="news.length">
+        <h1 class="text-center">News</h1>
+        <div class="news">
+          <div class="new" v-for="article in news">
+            <div class="img" @click="openNews(article.url)" :style="'background-image: url(' + article.picture_url + ');'"></div>
+              <div class="new-title" @click="openNews(article.url)">{{ article.title }}</div>
+              <div class="date" :title="article.date | formatDate('ddd DD à HH[h]mm')">{{ article.date|fromNow }}</div>
+          </div>
+        </div>
+      </div>
     </div>
 </template>
 
 <script>
   import api from '../api'
+  import { types } from '../store'
   import { Show } from '../db'
 
   export default {
@@ -61,6 +74,7 @@
       return {
         stats: {},
         favorites: [],
+        news: [],
       }
     },
     methods: {
@@ -73,6 +87,10 @@
             xp: infos.xp,
           })
         })
+      },
+      // Open the news
+      openNews (url) {
+        this.$store.dispatch(types.ACTIONS.OPEN_LINK, url)
       },
     },
     watch: {
@@ -117,12 +135,21 @@
       Show.getFavorites().then((shows) => {
         this.favorites = shows
       })
+
+      // Get news
+      api.news.getNews(10).then((news) => {
+        this.news = news
+      })
     },
   }
 </script>
 
 <style lang="scss">
+  @import "../assets/scss/vars";
   .profil {
+    h1.text-center {
+      color: $txtColor;
+    }
     .avatar {
       width: 130px;
       height: 130px;
@@ -170,6 +197,39 @@
       }
       &::-webkit-scrollbar {
         height: 12px;
+      }
+    }
+    .news {
+      width: 100%;
+      position: absolute;
+      .new {
+        position: relative;
+        float: left;
+        width: 45%;
+        margin: 5px;
+        .date {
+          font-style: italic;
+          float: right;
+          color: $navTitle;
+          margin-right: 15px;
+        }
+      }
+      .img {
+        width: 100px;
+        float: left;
+        height: 100px;
+        background-size: cover;
+        background-position: top center;
+        cursor: pointer;
+      }
+      .new-title {
+        font-weight: bold;
+        margin-left: 110px;
+        color: $navColor;
+        cursor: pointer;
+        &:hover {
+          color: $navActiveColor;
+        }
       }
     }
   }
