@@ -323,6 +323,18 @@ export default {
       })
   },
   /**
+   * Get the url of the show image
+   * @param {Integer} showId The show ID
+   * @return {String} The URL
+   */
+  getShowImgUrl (showId) {
+    let url = Vue.http.defaults.baseURL + '/pictures/shows?'
+    url += 'v=' + Vue.http.defaults.headers.common['X-BetaSeries-Version']
+    url += '&key=' + Vue.http.defaults.headers.common['X-BetaSeries-Key']
+    url += '&id=' + showId
+    return url
+  },
+  /**
    * Set show in cache
    * @param {Show} show
    * @private

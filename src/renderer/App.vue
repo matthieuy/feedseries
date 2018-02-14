@@ -57,6 +57,7 @@
     </div>
 
     <login-modal>&nbsp;</login-modal>
+    <drop-zone>&nbsp;</drop-zone>
   </div>
 </template>
 
@@ -65,11 +66,15 @@
   import { mapState } from 'vuex'
 
   import LoginModal from './components/LoginModal'
+  import DropZone from './components/DropZone'
   import api from './api'
   import { types, localStore } from './store'
 
   export default {
-    components: { LoginModal },
+    components: {
+      LoginModal,
+      DropZone,
+    },
     data () {
       return {
         isDisconnecting: false,
