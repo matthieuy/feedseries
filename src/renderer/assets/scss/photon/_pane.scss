@@ -65,28 +65,6 @@
   color: $navTitle;
 }
 
-.btn-nav {
-  color: $navActiveColor;
-  border-top-color: $sidebarBorder;
-  border-right-color: $sidebarBorder;
-  border-bottom-color: $sidebarBorder;
-  border-left-color: $sidebarBorder;
-  background-color: $navBtn;
-  //background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fcfcfc), color-stop(100%, #f1f1f1));
-  //background-image: -webkit-linear-gradient(top, #fcfcfc 0%, #f1f1f1 100%);
-  //background-image: linear-gradient(to bottom, #fcfcfc 0%, #f1f1f1 100%);
-}
-.btn-nav .fa {
-  margin-top: 0;
-  margin-right: 5px;
-}
-.btn-group .btn-nav + .btn-nav {
-  border-left: 1px solid $sidebarBorder;
-}
-.btn-group .btn.active:first-child {
-  border-left: 0;
-}
-
 .nav-group-item .btn-action {
   padding: 4px 8px;
   text-align: left;
