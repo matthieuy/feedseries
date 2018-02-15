@@ -1,0 +1,54 @@
+This is a temporary TODO file
+
+- [ ] Auto-update :
+  - [ ] Windows
+  - [ ] Linux
+- [ ] About :
+  - [ ] Github link
+  - [ ] Credits BS, electron, GameIcons...
+  - [ ] Check update
+- [ ] Portable version :
+  - [ ] Store files in app directory
+  - [ ] Disable systray
+  - [ ] Disable systray in option modal
+- [ ] Timeline :
+  - [ ] Try user color
+- [ ] Suggests :
+  - [ ] Check new with interval
+  - [ ] Suggest a show to friend
+  - [ ] List of suggests
+- [ ] Subscribe
+- [ ] Planning
+- [ ] Show page :
+  - [ ] List of seasons / episodes
+  - [ ] Comments
+  - [ ] Suggest
+- [ ] Personnal links :
+  - [ ] Create entity
+  - [ ] Link to shows
+  - [ ] Add link
+  - [ ] Remove link
+  - [ ] Display list
+- [ ] Episode page :
+  - [ ] Display
+  - [ ] Spoiler
+  - [ ] Comments
+  - [ ] Mark DL / view
+  - [ ] Subtitles
+  - [ ] Seen by...
+- [ ] Options :
+  - [ ] Reset configuration
+  - [ ] Start with O.S.
+  - [ ] Special episodes
+  - [ ] Homepage :
+    - [ ] Enable/Disable display favorites
+    - [ ] Enable/Disable display news
+    - [ ] How many news ?
+  - [ ] Subtitles :
+    - [ ] DL directory
+    - [ ] Don't ask path
+- [ ] DropWindow :
+  - [ ] Create and detect where is systray
+  - [ ] Catch drop file
+  - [ ] display result in main window
+- [ ] Check : https://blog.dcpos.ch/how-to-make-your-electron-app-sexy
