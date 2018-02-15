@@ -75,6 +75,7 @@
   @import "../../assets/scss/photon/global";
   @import "../../assets/scss/photon/buttons";
   @import "../../assets/scss/photon/form";
+  $rootFont: "../../";
   @import "../../assets/scss/fa";
 
 </style>

@@ -7,13 +7,13 @@
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 900;
-  src: url("/fonts/fa-solid-900.woff2");
+  src: url($rootFont + "assets/fonts/fa-solid-900.woff2");
 }
 @font-face {
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 400;
-  src: url("/fonts/fa-regular-400.woff2");
+  src: url($rootFont + "assets/fonts/fa-regular-400.woff2");
 }
 
 .far {
