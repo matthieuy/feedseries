@@ -30,6 +30,7 @@ const key = {
   LAST_DL: 'last.dl', // {String} Last download dir
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history
+  HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history
   DEVTOOLS: 'devtools', // {Boolean} Devtools is open
 }
 
@@ -55,6 +56,7 @@ let store = new ElectronStore({
     },
     devtools: false,
     history: [],
+    sizehistory: 5,
   },
 })
 store.key = key

@@ -69,10 +69,13 @@
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
           Cache.invalidate('timeline')
         }
-        localStore.set(localStore.key.TIMELINE.NB, Math.min(50, Math.max(5, this.timeline)))
+        localStore.set(localStore.key.TIMELINE.NB, this.between(this.timeline, 5, 50))
         localStore.set(localStore.key.TIMELINE.HIMSELF, this.timeline_himself)
 
         this.load()
+      },
+      between (value, min, max) {
+        return Math.min(max, Math.max(min, value))
       },
     },
     mounted () {
