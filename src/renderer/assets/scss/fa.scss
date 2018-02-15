@@ -7,13 +7,13 @@
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 900;
-  src: url("assets/fonts/fa-solid-900.woff2");
+  src: url("/fonts/fa-solid-900.woff2");
 }
 @font-face {
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 400;
-  src: url("assets/fonts/fa-regular-400.woff2");
+  src: url("/fonts/fa-regular-400.woff2");
 }
 
 .far {
@@ -82,6 +82,7 @@
 .fa-bookmark:before { content: "\f02e"; }
 .fa-pencil-alt:before { content: "\f303"; }
 .fa-cog:before { content: "\f013"; }
+.fa-save:before { content: "\f0c7"; }
 
 /*
 
@@ -1912,9 +1913,6 @@
 
 .fa-sass:before {
   content: "\f41e"; }
-
-.fa-save:before {
-  content: "\f0c7"; }
 
 .fa-schlix:before {
   content: "\f3ea"; }
