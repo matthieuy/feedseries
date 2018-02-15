@@ -25,6 +25,13 @@
       </div>
     </fieldset>
 
+    <fieldset>
+      <legend>Sous-titres</legend>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="srtVF" /> Afficher uniquement les sous-titres français</label>
+      </div>
+    </fieldset>
+
     <div class="text-center">
       <button class="btn btn-nav" @click="save()"><i class="fa fa-save"></i> Sauvegarder</button>
     </div>
@@ -42,6 +49,7 @@
         route_save: false,
         timeline: 30,
         timeline_himself: false,
+        srtVF: true,
       }
     },
     methods: {
@@ -50,10 +58,12 @@
         this.route_save = localStore.get(localStore.key.ROUTE.SAVE, false)
         this.timeline = localStore.get(localStore.key.TIMELINE.NB, 30)
         this.timeline_himself = localStore.get(localStore.key.TIMELINE.HIMSELF, false)
+        this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
       },
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
         localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
+        localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
@@ -61,6 +71,8 @@
         }
         localStore.set(localStore.key.TIMELINE.NB, Math.min(50, Math.max(5, this.timeline)))
         localStore.set(localStore.key.TIMELINE.HIMSELF, this.timeline_himself)
+
+        this.load()
       },
     },
     mounted () {
