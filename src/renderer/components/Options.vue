@@ -13,6 +13,13 @@
     </fieldset>
 
     <fieldset>
+      <legend>Accueil</legend>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="homepage_favorite" /> Afficher les favoris</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Timeline</legend>
       <div class="form-group">
         <label>
@@ -50,6 +57,7 @@
         timeline: 30,
         timeline_himself: false,
         srtVF: true,
+        homepage_favorite: true,
       }
     },
     methods: {
@@ -59,11 +67,13 @@
         this.timeline = localStore.get(localStore.key.TIMELINE.NB, 30)
         this.timeline_himself = localStore.get(localStore.key.TIMELINE.HIMSELF, false)
         this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
+        this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
       },
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
         localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
         localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
+        localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
@@ -84,14 +94,3 @@
     },
   }
 </script>
-
-<style lang="scss">
-  /*
-  @import "../assets/scss/vars";
-  @import "../assets/scss/photon/global";
-  @import "../assets/scss/photon/buttons";
-  @import "../assets/scss/photon/form";
-  $rootFont: "../../";
-  @import "../assets/scss/fa";
-  // */
-</style>

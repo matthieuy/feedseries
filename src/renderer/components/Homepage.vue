@@ -66,7 +66,7 @@
 
 <script>
   import api from '../api'
-  import { types } from '../store'
+  import { localStore, types } from '../store'
   import { Show } from '../db'
 
   export default {
@@ -132,9 +132,11 @@
       this.loadStats()
 
       // Get favorites from DB
-      Show.getFavorites().then((shows) => {
-        this.favorites = shows
-      })
+      if (localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)) {
+        Show.getFavorites().then((shows) => {
+          this.favorites = shows
+        })
+      }
 
       // Get news
       api.news.getNews(10).then((news) => {

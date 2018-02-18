@@ -7,6 +7,9 @@ import ElectronStore from 'electron-store'
 const key = {
   LOGIN: 'login', // {String} current login
   TOKEN: 'token', // {String} user token
+  HOMEPAGE: {
+    FAVORITE: 'homepage.favorite', // {Boolean} Display favorites on homepage
+  },
   EPISODES: {
     FILTER: 'episodes.filter', // {String} Filter (view|get|all)
     LIMIT: 'episodes.limit', // {Integer} Nb of episodes
@@ -42,6 +45,9 @@ let store = new ElectronStore({
       order: 'date',
       special: true,
       vf: true,
+    },
+    homepage: {
+      favorite: true,
     },
     timeline: {
       nb: 30,
