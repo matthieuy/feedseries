@@ -17,6 +17,9 @@
       <div class="checkbox">
         <label><input type="checkbox" v-model="homepage_favorite" /> Afficher les favoris</label>
       </div>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="homepage_news" /> Afficher les news </label>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -58,6 +61,7 @@
         timeline_himself: false,
         srtVF: true,
         homepage_favorite: true,
+        homepage_news: true,
       }
     },
     methods: {
@@ -68,6 +72,7 @@
         this.timeline_himself = localStore.get(localStore.key.TIMELINE.HIMSELF, false)
         this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
         this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
+        this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
       },
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
@@ -81,6 +86,12 @@
         }
         localStore.set(localStore.key.TIMELINE.NB, this.between(this.timeline, 5, 50))
         localStore.set(localStore.key.TIMELINE.HIMSELF, this.timeline_himself)
+
+        // News
+        if (this.homepage_news !== localStore.get(localStore.key.HOMEPAGE.NEWS, true)) {
+          Cache.invalidate('news')
+        }
+        localStore.set(localStore.key.HOMEPAGE.NEWS, this.homepage_news)
 
         this.load()
       },

@@ -41,7 +41,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Start with O.S.
   - [ ] Special episodes
   - [ ] Homepage :
-    - [ ] Enable/Disable display news
     - [ ] How many news ?
   - [ ] Subtitles :
     - [ ] DL directory

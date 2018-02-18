@@ -139,9 +139,11 @@
       }
 
       // Get news
-      api.news.getNews(10).then((news) => {
-        this.news = news
-      })
+      if (localStore.get(localStore.key.HOMEPAGE.NEWS, true)) {
+        api.news.getNews(10).then((news) => {
+          this.news = news
+        })
+      }
     },
   }
 </script>

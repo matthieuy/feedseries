@@ -9,6 +9,7 @@ const key = {
   TOKEN: 'token', // {String} user token
   HOMEPAGE: {
     FAVORITE: 'homepage.favorite', // {Boolean} Display favorites on homepage
+    NEWS: 'homepage.news', // {Boolean} Display news on homepage
   },
   EPISODES: {
     FILTER: 'episodes.filter', // {String} Filter (view|get|all)
@@ -48,6 +49,7 @@ let store = new ElectronStore({
     },
     homepage: {
       favorite: true,
+      news: true,
     },
     timeline: {
       nb: 30,
