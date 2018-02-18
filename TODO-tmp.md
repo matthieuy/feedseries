@@ -3,6 +3,10 @@ This is a temporary TODO file need to be reorganize
 - [ ] Auto-update :
   - [ ] Windows
   - [ ] Linux
+- [ ] Notifications :
+  - [ ] Use "node-notifier"
+  - [ ] Subtitle DL : on clic open explorer
+  - [ ] Notification icon 
 - [ ] About :
   - [ ] Github link
   - [ ] Credits BS, electron, GameIcons...

@@ -55,6 +55,7 @@
 </template>
 
 <script>
+  import { remote } from 'electron'
   import { localStore } from '../store/index'
   import { Cache } from '../db/index'
 
@@ -101,6 +102,12 @@
         }
         localStore.set(localStore.key.HOMEPAGE.NEWS, this.homepage_news)
         localStore.set(localStore.key.HOMEPAGE.NB_NEWS, this.nb_news)
+
+        // Notification
+        /* eslint-disable no-new */
+        new Notification(remote.app.getName(), {
+          body: 'Options sauvegardées avec succès !',
+        })
 
         this.load()
       },
