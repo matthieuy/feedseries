@@ -300,7 +300,7 @@ const getters = {
         case 'active':
           return !show.isArchived && show.progress === 100
         case 'archived':
-          return show.isArchived && show.status !== 'Ended'
+          return show.isArchived && (show.status !== 'Ended' || show.progress !== 100)
         case 'ended':
           return show.isArchived && show.progress === 100 && show.status === 'Ended'
         default:
