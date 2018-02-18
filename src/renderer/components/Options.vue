@@ -8,6 +8,9 @@
         <label><input type="checkbox" v-model="systray" /> Réduire dans le systray à la fermeture de la fenêtre</label>
       </div>
       <div class="checkbox">
+        <label><input type="checkbox" v-model="autoload" /> Démarrer avec le système</label>
+      </div>
+      <div class="checkbox">
         <label><input type="checkbox" v-model="route_save" /> Afficher la dernière page visitée au chargement</label>
       </div>
       <div class="form-group">
@@ -63,13 +66,20 @@
 <script>
   import { remote } from 'electron'
   import { mapState } from 'vuex'
+  import Autolauch from 'auto-launch'
+
   import { localStore, types } from '../store/index'
   import { Cache } from '../db/index'
+
+  let launcher = new Autolauch({
+    name: remote.app.getName(),
+  })
 
   export default {
     data () {
       return {
         systray: true,
+        autoload: false,
         route_save: false,
         timeline: 30,
         timeline_himself: false,
@@ -94,6 +104,9 @@
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
+        launcher.isEnabled().then((enabled) => {
+          this.autoload = enabled
+        })
       },
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
@@ -118,6 +131,13 @@
         // History
         if (this.sizehistory !== localStore.get(localStore.key.HISTORY_SIZE, 5)) {
           this.$store.commit(types.MUTATIONS.CHANGE_HISTORY_SIZE, this.sizehistory)
+        }
+
+        // Autoload
+        if (this.autoload) {
+          launcher.enable()
+        } else {
+          launcher.disable()
         }
 
         // Notification

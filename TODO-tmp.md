@@ -3,6 +3,10 @@ This is a temporary TODO file need to be reorganize
 - [ ] Auto-update :
   - [ ] Windows
   - [ ] Linux
+- [ ] On disconnect :
+  - [ ] Clear cache
+  - [ ] Clear DB
+  - [ ] Clear Prefs
 - [ ] Notifications :
   - [ ] Use "node-notifier"
   - [ ] Subtitle DL : on clic open explorer
@@ -42,7 +46,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Seen by...
 - [ ] Options :
   - [ ] Reset configuration
-  - [ ] Start with O.S.
   - [ ] Special episodes
   - [ ] Subtitles :
     - [ ] DL directory
