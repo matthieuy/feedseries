@@ -31,14 +31,16 @@ export default {
    * Init : Create systray
    */
   init (mainWindow) {
-    this.mainWindow = mainWindow
-    this.tray = new Tray(`${__static}/icons/128x128.png`)
-    this.contextMenu = Menu.buildFromTemplate(template)
+    if (this.tray === null) {
+      this.mainWindow = mainWindow
+      this.tray = new Tray(`${__static}/icons/128x128.png`)
+      this.contextMenu = Menu.buildFromTemplate(template)
 
-    // Left click : show mainWindow
-    this.tray.on('click', () => {
-      this.mainWindow.show()
-    })
+      // Left click : show mainWindow
+      this.tray.on('click', () => {
+        this.mainWindow.show()
+      })
+    }
 
     this.update()
   },
