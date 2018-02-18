@@ -20,6 +20,12 @@
       <div class="checkbox">
         <label><input type="checkbox" v-model="homepage_news" /> Afficher les news </label>
       </div>
+      <div class="form-group">
+        <label>
+          Nombre de news à afficher :
+          <input type="number" v-model="nb_news" max="20" min="2" :class="{disabled: !homepage_news }" :disabled="!homepage_news"/>
+        </label>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -62,6 +68,7 @@
         srtVF: true,
         homepage_favorite: true,
         homepage_news: true,
+        nb_news: 10,
       }
     },
     methods: {
@@ -73,6 +80,7 @@
         this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
         this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
+        this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
       },
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
@@ -88,10 +96,11 @@
         localStore.set(localStore.key.TIMELINE.HIMSELF, this.timeline_himself)
 
         // News
-        if (this.homepage_news !== localStore.get(localStore.key.HOMEPAGE.NEWS, true)) {
+        if (this.homepage_news !== localStore.get(localStore.key.HOMEPAGE.NEWS, true) || this.nb_news !== localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)) {
           Cache.invalidate('news')
         }
         localStore.set(localStore.key.HOMEPAGE.NEWS, this.homepage_news)
+        localStore.set(localStore.key.HOMEPAGE.NB_NEWS, this.nb_news)
 
         this.load()
       },

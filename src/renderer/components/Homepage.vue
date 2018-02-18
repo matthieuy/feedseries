@@ -140,7 +140,8 @@
 
       // Get news
       if (localStore.get(localStore.key.HOMEPAGE.NEWS, true)) {
-        api.news.getNews(10).then((news) => {
+        let nbNews = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
+        api.news.getNews(nbNews).then((news) => {
           this.news = news
         })
       }

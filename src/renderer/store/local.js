@@ -10,6 +10,7 @@ const key = {
   HOMEPAGE: {
     FAVORITE: 'homepage.favorite', // {Boolean} Display favorites on homepage
     NEWS: 'homepage.news', // {Boolean} Display news on homepage
+    NB_NEWS: 'homepage.news_nb', // {Integer} Number of news
   },
   EPISODES: {
     FILTER: 'episodes.filter', // {String} Filter (view|get|all)

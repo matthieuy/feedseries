@@ -40,8 +40,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Reset configuration
   - [ ] Start with O.S.
   - [ ] Special episodes
-  - [ ] Homepage :
-    - [ ] How many news ?
   - [ ] Subtitles :
     - [ ] DL directory
     - [ ] Don't ask path
