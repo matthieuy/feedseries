@@ -10,6 +10,12 @@
       <div class="checkbox">
         <label><input type="checkbox" v-model="route_save" /> Afficher la dernière page visitée au chargement</label>
       </div>
+      <div class="form-group">
+        <label>
+          Taille de l'historique :
+          <input type="number" v-model="sizehistory" max="12" min="1" />
+        </label>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -56,7 +62,8 @@
 
 <script>
   import { remote } from 'electron'
-  import { localStore } from '../store/index'
+  import { mapState } from 'vuex'
+  import { localStore, types } from '../store/index'
   import { Cache } from '../db/index'
 
   export default {
@@ -70,7 +77,11 @@
         homepage_favorite: true,
         homepage_news: true,
         nb_news: 10,
+        sizehistory: 5,
       }
+    },
+    computed: {
+      ...mapState(['history']),
     },
     methods: {
       load () {
@@ -82,6 +93,7 @@
         this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
+        this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
       },
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
@@ -102,6 +114,11 @@
         }
         localStore.set(localStore.key.HOMEPAGE.NEWS, this.homepage_news)
         localStore.set(localStore.key.HOMEPAGE.NB_NEWS, this.nb_news)
+
+        // History
+        if (this.sizehistory !== localStore.get(localStore.key.HISTORY_SIZE, 5)) {
+          this.$store.commit(types.MUTATIONS.CHANGE_HISTORY_SIZE, this.sizehistory)
+        }
 
         // Notification
         /* eslint-disable no-new */
