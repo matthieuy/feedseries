@@ -133,4 +133,24 @@ export default {
         return Promise.reject(new Error('Impossible de marquer l\'épisode comme non-vu'))
       })
   },
+
+  /**
+   * Scraper
+   * @param {String} filename
+   * @returns {Promise}
+   */
+  scraper (filename) {
+    console.log('[API] Episodes::scraper', filename)
+    return Vue.http.get('/episodes/scraper', {
+      params: {
+        file: filename,
+      },
+    })
+      .then((response) => {
+        return Promise.resolve(response.data.episode)
+      })
+      .catch((error) => {
+        return Promise.reject(error)
+      })
+  },
 }

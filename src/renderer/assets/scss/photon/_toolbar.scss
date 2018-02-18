@@ -71,13 +71,20 @@
   display: block;
 }
 .dropdown-item {
-  padding: 5px 10px;
+  padding: 5px 15px 5px 10px;
   text-align: left;
   opacity: 1;
   &:hover {
     background-color: darken($toolbarBg, 10%);
     cursor: pointer;
   }
+  .fa {
+    margin-right: 3px;
+  }
+}
+.dropdown-divider {
+  background-color: darken($toolbarBg, 10%);
+  height: 1px;
 }
 
 /*

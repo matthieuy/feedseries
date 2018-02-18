@@ -20,6 +20,11 @@ const mutations = {
   },
   // Add item to history
   [types.ADD_HISTORY] (state, obj) {
+    let historySize = localStore.get(localStore.key.HISTORY_SIZE, 5)
+    if (historySize === 0) {
+      return false
+    }
+
     let { show, route } = obj
     let item = {
       label: show.title,
@@ -37,7 +42,7 @@ const mutations = {
 
     // Add into history and save
     state.history.unshift(item)
-    state.history = state.history.splice(0, 5)
+    state.history = state.history.splice(0, historySize)
     localStore.set(localStore.key.HISTORY, state.history)
   },
   // Set the history

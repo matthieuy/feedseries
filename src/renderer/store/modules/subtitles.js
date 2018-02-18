@@ -100,6 +100,13 @@ const getters = {
       return a.name.localeCompare(b.name)
     })
 
+    // French subtitle only
+    if (localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)) {
+      listSubtitles = listSubtitles.filter((srt) => {
+        return srt.language === 'VF'
+      })
+    }
+
     return listSubtitles
   },
 }

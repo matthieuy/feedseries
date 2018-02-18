@@ -14,8 +14,9 @@ export default {
     // Get from cache
     let cacheId = 'summary'
     if (summary === true && Cache.isValid(cacheId)) {
-      console.info('[API Cache] Members::getInfos')
-      return Promise.resolve(Cache.get(cacheId))
+      let infos = Cache.get(cacheId)
+      console.info('[API Cache] Members::getInfos', infos)
+      return Promise.resolve(infos)
     }
 
     // API Request

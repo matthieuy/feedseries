@@ -11,7 +11,12 @@ const types = {
 }
 
 const actions = {
-  // Login
+  /**
+   * Login
+   * @param context
+   * @param authInfo
+   * @return {Promise}
+   */
   [types.LOGIN] (context, authInfo) {
     return new Promise((resolve, reject) => {
       api.auth.connect(authInfo.login, authInfo.password).then((response) => {
@@ -24,7 +29,11 @@ const actions = {
       })
     })
   },
-  // Logout
+  /**
+   * Logout
+   * @param context
+   * @return {Promise}
+   */
   [types.LOGOUT] (context) {
     return new Promise((resolve, reject) => {
       api.auth.disconnect().then(() => {
@@ -37,7 +46,12 @@ const actions = {
       })
     })
   },
-  // Open external link
+  /**
+   * Open external link
+   * @param context
+   * @param obj
+   * @return {boolean}
+   */
   [types.OPEN_LINK] (context, obj) {
     let url = ''
     if (obj.constructor.name === 'Episode' || obj.typeObj === 'Episode') {

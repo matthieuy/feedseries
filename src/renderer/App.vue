@@ -24,6 +24,11 @@
                 <div class="dropdown-item" v-for="link in history">
                   <router-link :to="link.path">{{ link.label }}</router-link>
                 </div>
+                <div class="dropdown-divider" v-if="history.length"></div>
+                <div class="dropdown-item" v-if="history.length" @click="clearHistory()">
+                  <i class="fa fa-trash"></i>
+                  Vider l'historique
+                </div>
               </div>
               <i class="fa fa-history"></i>
             </button>
@@ -36,6 +41,9 @@
           </div>
 
           <div class="btn-group pull-right">
+            <button class="btn btn-default" @click="openOptions()">
+              <i class="fa fa-cog"></i>
+            </button>
             <button class="btn btn-default" @click="devTools()" :class="{active: devToolsOpen}">
               <i class="fa fa-bug"></i>
             </button>
@@ -52,6 +60,7 @@
     </div>
 
     <login-modal>&nbsp;</login-modal>
+    <drop-zone>&nbsp;</drop-zone>
   </div>
 </template>
 
@@ -60,11 +69,15 @@
   import { mapState } from 'vuex'
 
   import LoginModal from './components/LoginModal'
+  import DropZone from './components/DropZone'
   import api from './api'
   import { types, localStore } from './store'
 
   export default {
-    components: { LoginModal },
+    components: {
+      LoginModal,
+      DropZone,
+    },
     data () {
       return {
         isDisconnecting: false,
@@ -75,6 +88,9 @@
       ...mapState(['history']),
     },
     methods: {
+      openOptions () {
+        ipcRenderer.send('open-options')
+      },
       // Disconnect the user
       disconnect () {
         this.isDisconnecting = true
@@ -88,6 +104,11 @@
         this.devToolsOpen = !currentWindow.isDevToolsOpened()
         remote.getCurrentWindow().toggleDevTools()
       },
+      // Clear the history
+      clearHistory () {
+        this.$store.commit(types.MUTATIONS.SET_HISTORY, [])
+        localStore.set(localStore.key.HISTORY, [])
+      },
     },
     mounted () {
       console.info('[VUE] Mount App.vue')
@@ -98,7 +119,6 @@
       remote.getCurrentWebContents().on('devtools-closed', () => { this.devToolsOpen = false })
 
       // History
-      // localStore.set(localStore.key.HISTORY, [])
       this.$store.commit(types.MUTATIONS.SET_HISTORY, localStore.get(localStore.key.HISTORY, []))
 
       // Disable drag

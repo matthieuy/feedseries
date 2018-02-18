@@ -1,20 +1,17 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, ipcMain } from 'electron'
 import log from 'electron-log'
 
 export default {
   win: null,
   parent: null,
 
-  init (parentWindow) {
-    this.parent = parentWindow
+  init () {
     if (this.win) {
       return this.win.show()
     }
     const win = this.win = new BrowserWindow({
-      title: 'À propos',
+      title: 'Options',
       backgroundColor: '#181A1F',
-      width: 300,
-      height: 350,
       useContentSize: true,
       center: true,
       resizable: false,
@@ -29,11 +26,18 @@ export default {
       modal: true,
     })
 
-    log.debug('Load about modal')
-    win.loadURL(global.winURL + '/modal.html#/about')
+    log.debug('Load options modal')
+    win.loadURL(global.winURL + '/modal.html#/options')
     win.setMenu(null)
     win.once('ready-to-show', () => { win.show() })
     win.once('closed', () => { this.win = null })
+  },
+
+  prepareListeners (parentWindow) {
+    this.parent = parentWindow
+    ipcMain.on('open-options', () => {
+      this.init()
+    })
   },
 }
 

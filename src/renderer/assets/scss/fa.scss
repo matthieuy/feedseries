@@ -7,13 +7,13 @@
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 900;
-  src: url("assets/fonts/fa-solid-900.woff2");
+  src: url($rootFont + "assets/fonts/fa-solid-900.woff2");
 }
 @font-face {
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
   font-weight: 400;
-  src: url("assets/fonts/fa-regular-400.woff2");
+  src: url($rootFont + "assets/fonts/fa-regular-400.woff2");
 }
 
 .far {
@@ -73,6 +73,16 @@
 .fa-paste:before { content: "\f0ea"; }
 .fa-tag:before { content: "\f02b"; }
 .fa-history:before { content: "\f1da"; }
+.fa-trash:before { content: "\f1f8"; }
+.fa-certificate:before { content: "\f0a3"; }
+.fa-chart-line:before { content: "\f201"; }
+.fa-calendar-check:before { content: "\f274"; }
+.fa-times-circle:before { content: "\f057"; }
+.fa-birthday-cake:before { content: "\f1fd"; }
+.fa-bookmark:before { content: "\f02e"; }
+.fa-pencil-alt:before { content: "\f303"; }
+.fa-cog:before { content: "\f013"; }
+.fa-save:before { content: "\f0c7"; }
 
 /*
 
@@ -467,9 +477,6 @@
 .fa-binoculars:before {
   content: "\f1e5"; }
 
-.fa-birthday-cake:before {
-  content: "\f1fd"; }
-
 .fa-bitbucket:before {
   content: "\f171"; }
 
@@ -512,9 +519,6 @@
 .fa-book:before {
   content: "\f02d"; }
 
-.fa-bookmark:before {
-  content: "\f02e"; }
-
 .fa-bowling-ball:before {
   content: "\f436"; }
 
@@ -553,9 +557,6 @@
 
 .fa-calendar-alt:before {
   content: "\f073"; }
-
-.fa-calendar-check:before {
-  content: "\f274"; }
 
 .fa-calendar-minus:before {
   content: "\f272"; }
@@ -638,17 +639,11 @@
 .fa-centercode:before {
   content: "\f380"; }
 
-.fa-certificate:before {
-  content: "\f0a3"; }
-
 .fa-chart-area:before {
   content: "\f1fe"; }
 
 .fa-chart-bar:before {
   content: "\f080"; }
-
-.fa-chart-line:before {
-  content: "\f201"; }
 
 .fa-chart-pie:before {
   content: "\f200"; }
@@ -757,9 +752,6 @@
 
 .fa-coffee:before {
   content: "\f0f4"; }
-
-.fa-cog:before {
-  content: "\f013"; }
 
 .fa-cogs:before {
   content: "\f085"; }
@@ -1724,9 +1716,6 @@
 .fa-pen-square:before {
   content: "\f14b"; }
 
-.fa-pencil-alt:before {
-  content: "\f303"; }
-
 .fa-percent:before {
   content: "\f295"; }
 
@@ -1924,9 +1913,6 @@
 
 .fa-sass:before {
   content: "\f41e"; }
-
-.fa-save:before {
-  content: "\f0c7"; }
 
 .fa-schlix:before {
   content: "\f3ea"; }
@@ -2249,9 +2235,6 @@
 .fa-times:before {
   content: "\f00d"; }
 
-.fa-times-circle:before {
-  content: "\f057"; }
-
 .fa-tint:before {
   content: "\f043"; }
 
@@ -2272,9 +2255,6 @@
 
 .fa-transgender-alt:before {
   content: "\f225"; }
-
-.fa-trash:before {
-  content: "\f1f8"; }
 
 .fa-trash-alt:before {
   content: "\f2ed"; }

@@ -54,6 +54,14 @@ class Show extends Document {
   }
 
   /**
+   * Get favorites shows
+   * @return {Promise}
+   */
+  static getFavorites () {
+    return this.find({ isFavorited: true })
+  }
+
+  /**
    * Clean properties to upsert a Episode
    * @param {Object} show
    * @returns {Object}
@@ -82,7 +90,7 @@ class Show extends Document {
       progress: show.user.status,
       description: show.description,
       image: (show.images.show) ? show.images.show.replace('https://www.betaseries.com/images/fonds/show/', '') : null,
-      poster: (show.images.poster) ? show.images.poster : null,
+      poster: (show.images.poster) ? show.images.poster.replace('https://www.betaseries.com/images/fonds/poster/', '') : null,
       note: Math.round(show.notes.mean * 10) / 10,
     }
   }

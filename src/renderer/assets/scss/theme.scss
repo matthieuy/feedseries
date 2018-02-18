@@ -20,6 +20,9 @@
 @import "login";
 @import "search";
 
+.fleft { float: left; }
+.clearfix { clear: both; }
+
 .fa-heart { color: #fb1710; }
 .fa-archive { color: #fdbc40; }
 .fa-eye { color: #0a67ac; }
@@ -49,4 +52,16 @@ a {
 }
 .season .open {
   color: $navActiveColor;
+}
+
+.binfo {
+  float: left;
+  margin: 10px 5px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  background-color: $sidebarBorder;
+  box-shadow: inset 0 0 3px #000;
+  .description {
+    width: calc(100% - 15px);
+  }
 }

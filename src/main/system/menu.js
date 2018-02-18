@@ -76,7 +76,7 @@ let template = [
         },
       },
       {
-        label: 'A propos',
+        label: 'À propos',
         click (menuItem, browserWindow) {
           about.init(browserWindow)
         },

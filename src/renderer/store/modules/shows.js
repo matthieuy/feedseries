@@ -132,6 +132,8 @@ const actions = {
   [types.ACTIONS.ADD] (context, show) {
     return api.shows.add(show).then((showAdded) => {
       context.commit(types.MUTATIONS.ADD, showAdded)
+      Cache.invalidateByTags({show: showAdded.id})
+      Cache.invalidate('summary')
       return Promise.resolve(showAdded)
     })
   },
@@ -145,6 +147,8 @@ const actions = {
   [types.ACTIONS.DELETE] (context, show) {
     return api.shows.delete(show).then((showDeleted) => {
       context.commit(types.MUTATIONS.DELETE, showDeleted)
+      Cache.invalidateByTags({show: showDeleted.id})
+      Cache.invalidate('summary')
       return Promise.resolve(showDeleted)
     }).catch((response) => {
       // Already delete
@@ -231,9 +235,12 @@ const actions = {
     // DB
     promises.addPromise(Show.archive(show, archive))
 
-    promises.then((show) => {
-      Cache.invalidateByTags({show: show.id})
-      context.commit(types.MUTATIONS.UPDATE_SHOW, show)
+    promises.then((showArchived) => {
+      Cache.invalidate('summary')
+      if (showArchived) {
+        Cache.invalidateByTags({show: showArchived.id})
+        context.commit(types.MUTATIONS.UPDATE_SHOW, showArchived)
+      }
     })
 
     return promises.race()
@@ -265,8 +272,10 @@ const actions = {
     promises.addPromise(Show.favorite(show, favorite))
 
     promises.then((show) => {
-      Cache.invalidateByTags({show: show._id})
-      context.commit(types.MUTATIONS.UPDATE_SHOW, show)
+      if (show) {
+        Cache.invalidateByTags({show: show._id})
+        context.commit(types.MUTATIONS.UPDATE_SHOW, show)
+      }
     })
 
     return promises.race()
@@ -291,7 +300,7 @@ const getters = {
         case 'active':
           return !show.isArchived && show.progress === 100
         case 'archived':
-          return show.isArchived && show.status !== 'Ended'
+          return show.isArchived && (show.status !== 'Ended' || show.progress !== 100)
         case 'ended':
           return show.isArchived && show.progress === 100 && show.status === 'Ended'
         default:
