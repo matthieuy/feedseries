@@ -5,12 +5,6 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    // Options
-    {
-      name: 'options',
-      path: '/options',
-      component: require('@/components/modal/Options').default,
-    },
     // About modal
     {
       name: 'about',

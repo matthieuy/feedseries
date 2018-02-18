@@ -62,6 +62,12 @@ const router = new Router({
       name: 'search',
       component: require('@/components/Search').default,
     },
+    // Options
+    {
+      name: 'options',
+      path: '/options',
+      component: require('@/components/Options').default,
+    },
     // Default route
     {
       path: '*',
@@ -71,7 +77,7 @@ const router = new Router({
 })
 
 // Interceptor : save the last route
-let routesExcludesSave = []
+let routesExcludesSave = ['options']
 router.afterEach((to, from) => {
   let save = (localStore.get(localStore.key.ROUTE.SAVE, false) && (routesExcludesSave.indexOf(to.name) < 0))
   if (save && from.path !== to.path) {

@@ -39,8 +39,8 @@
 </template>
 
 <script>
-  import { localStore } from '../../store'
-  import { Cache } from '../../db'
+  import { localStore } from '../store/index'
+  import { Cache } from '../db/index'
 
   export default {
     data () {
@@ -86,11 +86,12 @@
 </script>
 
 <style lang="scss">
-  @import "../../assets/scss/vars";
-  @import "../../assets/scss/photon/global";
-  @import "../../assets/scss/photon/buttons";
-  @import "../../assets/scss/photon/form";
+  /*
+  @import "../assets/scss/vars";
+  @import "../assets/scss/photon/global";
+  @import "../assets/scss/photon/buttons";
+  @import "../assets/scss/photon/form";
   $rootFont: "../../";
-  @import "../../assets/scss/fa";
-
+  @import "../assets/scss/fa";
+  // */
 </style>

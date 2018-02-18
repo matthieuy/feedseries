@@ -110,9 +110,6 @@ function createWindow () {
   let mainMenu = require('./system/menu').default
   mainMenu.init(mainWindow)
 
-  let options = require('./system/options').default
-  options.prepareListeners(mainWindow)
-
   // Close window
   mainWindow.on('closed', () => {
     if (systray) {
