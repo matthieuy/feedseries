@@ -1,7 +1,7 @@
 import { app, Menu, shell } from 'electron'
 
 import about from './about'
-import updater from './update'
+import Updater from './update'
 import { localStore } from '../../renderer/store'
 
 let template = [
@@ -69,10 +69,8 @@ let template = [
       {
         label: 'Vérifier les mises à jour',
         click (menuItem, browserWindow) {
-          if (!updater.inited) {
-            updater.init(browserWindow)
-          }
-          updater.check(true)
+          Updater.init(browserWindow)
+          Updater.check(true)
         },
       },
       {

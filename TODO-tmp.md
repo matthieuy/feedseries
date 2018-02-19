@@ -2,7 +2,6 @@ This is a temporary TODO file need to be reorganize
 
 - [ ] Auto-update :
   - [ ] Windows
-  - [ ] Linux
 - [ ] On disconnect :
   - [ ] Clear cache
   - [ ] Clear DB

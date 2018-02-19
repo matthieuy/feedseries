@@ -3,10 +3,11 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import log from 'electron-log'
 
-import updater from './system/update'
+import Updater from './system/update'
 
 let mainWindow, systray
 let userAgent = 'FeedSeries'
+app.setAppUserModelId('org.matthieuy.feedseries')
 
 /*************************
  * Environment variables *
@@ -138,9 +139,9 @@ function createWindow () {
     }
 
     // Check update
-    updater.init(mainWindow)
+    Updater.init(mainWindow)
     if (process.env.NODE_ENV !== 'development') {
-      updater.check(false)
+      Updater.check(false)
     }
   })
 }
