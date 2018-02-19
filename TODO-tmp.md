@@ -1,13 +1,10 @@
 This is a temporary TODO file need to be reorganize
 
-- [ ] Auto-update :
-  - [ ] Windows
 - [ ] On disconnect :
   - [ ] Clear cache
   - [ ] Clear DB
   - [ ] Clear Prefs
 - [ ] Notifications :
-  - [ ] Use "node-notifier"
   - [ ] Subtitle DL : on clic open explorer
   - [ ] Notification icon 
 - [ ] About :
