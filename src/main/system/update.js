@@ -111,12 +111,13 @@ class Updater {
    * @param progress
    */
   progress = (progress) => {
-    let message = `Download speed: ${progress.bytesPerSecond} - Downloaded ${progress.percent}% (${progress.transferred} / ${progress.total})`
+    let percent = Math.round(progress.percent)
+    let message = `Download speed: ${progress.bytesPerSecond} - Downloaded ${percent}% (${progress.transferred} / ${progress.total})`
     log.info(message, progress)
-    this._mainWindow.setProgressBar(progress.percent / 100)
-    if (this._percent !== progress.percent) {
-      this._mainWindow.setTitle(`FeedSeries - Téléchargement : ${progress.percent}%`)
-      this._percent = progress.percent
+    this._mainWindow.setProgressBar(percent / 100)
+    if (this._percent !== percent) {
+      this._mainWindow.setTitle(`FeedSeries - Téléchargement : ${percent}%`)
+      this._percent = percent
     }
   }
 
