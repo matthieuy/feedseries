@@ -65,7 +65,7 @@
                 <div class="friends-content">
                   Vu par :
                   <div v-for="friend in episode.friends">
-                    <img :src="avatarURL(friend.id)" width="20">
+                    <img :src="avatarURL(friend.id)" width="20" height="20">
                     {{ friend.login }}
                   </div>
                 </div>
