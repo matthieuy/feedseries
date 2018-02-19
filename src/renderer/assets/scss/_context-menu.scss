@@ -3,8 +3,6 @@
     color: $ctxColor;
     background-color: $ctxBg;
     border: 1px solid rgba(0, 0, 0, .15);
-    -moz-box-shadow: 0 0 5px $ctxShadow;
-    -webkit-box-shadow: 0 0 5px $ctxShadow;
     box-shadow: 0 0 5px $ctxShadow;
   }
 

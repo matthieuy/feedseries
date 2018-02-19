@@ -47,4 +47,20 @@ export default {
       }
     })
   },
+  /**
+   * Get the url of avatar user
+   * @param {Integer} userId The user ID
+   * @param {Integer|null} size The size in px or undefined
+   * @return {string} The url
+   */
+  getAvatarURL (userId, size) {
+    let url = Vue.http.defaults.baseURL + '/pictures/members?'
+    url += 'v=' + Vue.http.defaults.headers.common['X-BetaSeries-Version']
+    url += '&key=' + Vue.http.defaults.headers.common['X-BetaSeries-Key']
+    url += '&id=' + userId
+    if (typeof size !== 'undefined') {
+      url += '&width=' + size + '&height=' + size
+    }
+    return url
+  },
 }

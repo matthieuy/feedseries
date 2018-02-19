@@ -63,12 +63,14 @@ export default {
       let episodes = response.data.episodes
       let srtVFOnly = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
       let nbSubtitles = 0
+      let nbEpisodes = 0
 
       let promises = []
       episodes.forEach(async (episode) => {
         // Update episode
         let p = new Promise((resolve, reject) => {
           Episode.findOneAndUpdate({_id: episode.id + ''}, Episode.cleanProperties(episode), {upsert: true}).then((episodeSaved) => {
+            nbEpisodes++
             resolve(episodeSaved)
           })
         })
@@ -83,7 +85,12 @@ export default {
         })
       })
       store.dispatch(types.subtitles.ACTIONS.LOAD_SUBTITLES)
-      console.info(`[DB] Update ${nbSubtitles} subtitles`)
+      if (nbEpisodes) {
+        console.info(`[DB] Update ${nbEpisodes} episodes`)
+      }
+      if (nbSubtitles) {
+        console.info(`[DB] Update ${nbSubtitles} subtitles`)
+      }
 
       return Promise.all(promises)
     })
@@ -325,6 +332,7 @@ export default {
   /**
    * Get the url of the show image
    * @param {Integer} showId The show ID
+   * @param {Integer|null} size Size of img
    * @return {String} The URL
    */
   getShowImgUrl (showId, size) {
