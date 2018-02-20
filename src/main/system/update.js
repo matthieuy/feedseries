@@ -1,90 +1,136 @@
-import { autoUpdater } from 'electron-updater'
 import { app, dialog, ipcMain } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 
-export default {
-  mainWindow: null,
-  byUser: false,
-  inited: false,
-  init (mainWindow) {
-    log.info('[UPDATE] Init system')
-    this.mainWindow = mainWindow
-    if (this.inited) {
+class Updater {
+  /**
+   * Construtor : init variables
+   */
+  constructor () {
+    autoUpdater.autoDownload = false
+    this._init = false
+    this._mainWindow = null
+    this._byUser = false
+    this._percent = 0
+  }
+
+  /**
+   * Init the update system
+   * @param mainWindow
+   * @return {Updater}
+   */
+  init = (mainWindow) => {
+    this._mainWindow = mainWindow
+    if (this._init) {
       return this
     }
-    autoUpdater.autoDownload = false
-    autoUpdater.on('checking-for-update', this.startCheck)
-    autoUpdater.on('update-downloaded', this.downloaded)
-    autoUpdater.on('update-not-available', this.noUpdate)
-    autoUpdater.on('update-available', this.availableUpdate)
-    autoUpdater.on('download-progress', this.progress)
-    autoUpdater.on('error', this.error)
-    this.inited = true
 
+    // Listener
+    autoUpdater.on('update-available', this.available)
+    autoUpdater.on('update-not-available', this.noUpdate)
+    autoUpdater.on('download-progress', this.progress)
+    autoUpdater.on('update-downloaded', this.downloaded)
+    autoUpdater.on('error', this.error)
+
+    // IPC
     ipcMain.on('check-update', (byUser) => {
       this.check(byUser)
     })
 
+    this._init = true
     return this
-  },
-  check (byUser) {
-    this.byUser = byUser
+  }
+
+  /**
+   * Check update
+   * @param {Boolean} byUser Initial by user (to show dialog)
+   */
+  check = (byUser) => {
+    this._byUser = byUser
     autoUpdater.checkForUpdates()
-  },
-  startCheck () {
-    log.info('[UPDATE] Start check')
-  },
-  noUpdate (info) {
-    log.info('App is up-to-date', info)
-    if (this.byUser) {
-      dialog.showMessageBox(this.mainWindow, {
+  }
+
+  /**
+   * Update is available
+   * @param {Object} infos
+   */
+  available = (infos) => {
+    log.info('[UPDATE] Available :', infos)
+    dialog.showMessageBox(this._mainWindow, {
+      type: 'question',
+      buttons: ['Oui', 'Plus tard'],
+      defaultId: 0,
+      cancelId: 1,
+      title: 'Mise à jour',
+      message: `Une mise à jour est disponible (${infos.releaseName}) !\nFaut-il la télécharger maintenant ?`,
+    }, (response) => {
+      if (response === 0) {
+        autoUpdater.downloadUpdate()
+      }
+    })
+  }
+
+  /**
+   * No update : App is up-to-date (call by autoUpdater)
+   * @param {Object} infos
+   */
+  noUpdate = (infos) => {
+    log.info('[UPDATE] App is up-to-date')
+    if (this._byUser) {
+      dialog.showMessageBox(this._mainWindow, {
         type: 'info',
         buttons: ['OK'],
         title: 'Mise à jour',
         message: 'Aucune mise à jour disponible',
       })
     }
-  },
-  availableUpdate (info) {
-    log.info('Update', info)
-    dialog.showMessageBox(this.mainWindow, {
-      type: 'question',
-      buttons: ['Oui', 'Plus tard'],
-      defaultId: 0,
-      cancelId: 1,
-      title: 'Mise à jour',
-      message: 'Une mise à jour est disponible ! Faut-il la télécharger maintenant ?',
-    }, (response) => {
-      if (response === 0) {
-        autoUpdater.downloadUpdate()
-      }
-    })
-  },
-  downloaded (event, releaseNotes, releaseName) {
+  }
+
+  /**
+   * A release was downloaded (call by autoUpdater)
+   * @param event
+   * @param releaseNotes
+   * @param releaseName
+   */
+  downloaded = (event, releaseNotes, releaseName) => {
     log.info('downloaded', event, releaseNotes, releaseName)
-    dialog.showMessageBox(this.mainWindow, {
+    dialog.showMessageBox(this._mainWindow, {
       type: 'info',
-      buttons: ['OK', 'Plus tard'],
+      buttons: ['OK'],
       defaultId: 0,
-      cancelId: 0,
       title: 'Mise à jour',
       message: process.platform === 'win32' ? releaseNotes : releaseName,
       detail: 'Téléchargement terminé : installation en cours...',
     })
     app.isQuiting = true
     autoUpdater.quitAndInstall()
-  },
-  progress (progress) {
-    let message = `Download speed: ${progress.bytesPerSecond} - Downloaded ${progress.percent}% (${progress.transferred} / ${progress.total})`
+  }
+
+  /**
+   * During downloaded (call by autoUpdater)
+   * @param progress
+   */
+  progress = (progress) => {
+    let percent = Math.round(progress.percent)
+    let message = `Download speed: ${progress.bytesPerSecond} - Downloaded ${percent}% (${progress.transferred} / ${progress.total})`
     log.info(message, progress)
-    if (this.mainWindow) {
-      this.mainWindow.setProgressBar(progress.percent / 100)
+    this._mainWindow.setProgressBar(percent / 100)
+    if (this._percent !== percent) {
+      this._mainWindow.setTitle(`FeedSeries - Téléchargement : ${percent}%`)
+      this._percent = percent
     }
-  },
-  error (error) {
-    if (this.byUser) {
-      log.info('[UPDATE] Error', error)
+  }
+
+  /**
+   * Catch error when update (call by autoUpdater)
+   * @param error
+   */
+  error = (error) => {
+    log.error('[UPDATE] Error', error)
+    if (this._byUser) {
       dialog.showErrorBox('Mise à jour', 'Impossible de vérifier les mises à jour !')
     }
-  },
+  }
 }
+
+export default new Updater()

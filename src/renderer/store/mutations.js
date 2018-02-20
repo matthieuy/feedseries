@@ -5,6 +5,7 @@ const types = {
   LOGOUT: 'logout',
   ADD_HISTORY: 'history.add',
   SET_HISTORY: 'history.set',
+  CHANGE_HISTORY_SIZE: 'history.size',
 }
 
 const mutations = {
@@ -48,6 +49,13 @@ const mutations = {
   // Set the history
   [types.SET_HISTORY] (state, history) {
     state.history = history
+  },
+  // Change the history size
+  [types.CHANGE_HISTORY_SIZE] (state, size) {
+    if (size < state.history.length) {
+      state.history = state.history.splice(0, size)
+    }
+    localStore.set(localStore.key.HISTORY_SIZE, size)
   },
 }
 

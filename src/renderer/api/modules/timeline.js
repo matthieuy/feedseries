@@ -63,10 +63,11 @@ export default {
     }).then((response) => {
       let events = []
       response.data.events.forEach((event) => {
-        console.log(event)
         events.push({
           date: event.date,
+          type: event.type,
           user: event.user,
+          userId: event.user_id,
           html: event.html,
           note: (event.data.note) ? event.data.note : 0,
         })

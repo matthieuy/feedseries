@@ -1,6 +1,7 @@
 import { shell } from 'electron'
 
 import api from '../api'
+import { Cache } from '../db'
 import localStore from '../store/local'
 
 const types = {
@@ -39,6 +40,7 @@ const actions = {
       api.auth.disconnect().then(() => {
         context.commit(types.LOGOUT)
         localStore.delete(localStore.key.LOGIN)
+        Cache.reset()
         console.info('[LOGOUT]')
         resolve()
       }).catch(() => {

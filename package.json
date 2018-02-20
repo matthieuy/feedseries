@@ -1,6 +1,7 @@
 {
   "name": "feedseries",
-  "version": "0.0.3",
+  "desktopName": "FeedSeries",
+  "version": "0.1.0",
   "author": "Matthieu YK <matthieuy+git@riseup.net>",
   "description": "Suivez votre actualité sériephile",
   "license": "MIT",
@@ -102,6 +103,7 @@
     ]
   },
   "dependencies": {
+    "auto-launch": "^5.0.5",
     "axios": "^0.16.1",
     "camo": "^0.12.3",
     "canvasjs": "github:vasilrimar/canvasjs",

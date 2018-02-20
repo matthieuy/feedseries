@@ -41,9 +41,9 @@
           </div>
 
           <div class="btn-group pull-right">
-            <button class="btn btn-default" @click="openOptions()">
+            <router-link :to="{name: 'options'}" class="btn btn-default" :class="{active: $route.name === 'options'}">
               <i class="fa fa-cog"></i>
-            </button>
+            </router-link>
             <button class="btn btn-default" @click="devTools()" :class="{active: devToolsOpen}">
               <i class="fa fa-bug"></i>
             </button>
@@ -88,9 +88,6 @@
       ...mapState(['history']),
     },
     methods: {
-      openOptions () {
-        ipcRenderer.send('open-options')
-      },
       // Disconnect the user
       disconnect () {
         this.isDisconnecting = true

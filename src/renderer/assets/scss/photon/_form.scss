@@ -43,6 +43,10 @@ legend {
 input[type="number"] {
   background-color: $formBg;
   color: $sidebarbgc;
+  &.disabled {
+    background-color: $navTitle;
+    cursor: not-allowed;
+  }
 }
 input[type="search"] {
   background-color: $formBg;

@@ -1,8 +1,11 @@
 This is a temporary TODO file need to be reorganize
 
-- [ ] Auto-update :
-  - [ ] Windows
-  - [ ] Linux
+- [ ] On disconnect :
+  - [ ] Clear DB
+  - [ ] Clear Prefs
+- [ ] Notifications :
+  - [ ] Subtitle DL : on clic open explorer
+  - [ ] Notification icon
 - [ ] About :
   - [ ] Github link
   - [ ] Credits BS, electron, GameIcons...
@@ -38,12 +41,7 @@ This is a temporary TODO file need to be reorganize
   - [ ] Seen by...
 - [ ] Options :
   - [ ] Reset configuration
-  - [ ] Start with O.S.
   - [ ] Special episodes
-  - [ ] Homepage :
-    - [ ] Enable/Disable display favorites
-    - [ ] Enable/Disable display news
-    - [ ] How many news ?
   - [ ] Subtitles :
     - [ ] DL directory
     - [ ] Don't ask path

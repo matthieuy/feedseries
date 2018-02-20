@@ -16,6 +16,7 @@ class Episode extends Document {
       special: Boolean,
       isDownloaded: Boolean,
       isSeen: Boolean,
+      friends: Array,
     })
   }
 
@@ -82,7 +83,7 @@ class Episode extends Document {
    * @returns {Object}
    */
   static cleanProperties (episode) {
-    return {
+    let properties = {
       _id: String(episode.id),
       show: String(episode.show.id),
       code: episode.code,
@@ -96,6 +97,12 @@ class Episode extends Document {
       isDownloaded: episode.user.downloaded || false,
       isSeen: episode.user.seen || false,
     }
+
+    if (episode.hasOwnProperty('watched_by') && episode.watched_by.length) {
+      properties.friends = episode.watched_by
+    }
+
+    return properties
   }
 }
 

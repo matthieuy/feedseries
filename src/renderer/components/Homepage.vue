@@ -65,8 +65,10 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   import api from '../api'
-  import { types } from '../store'
+  import { localStore, types } from '../store'
   import { Show } from '../db'
 
   export default {
@@ -76,6 +78,9 @@
         favorites: [],
         news: [],
       }
+    },
+    computed: {
+      ...mapState(['isLogged']),
     },
     methods: {
       // Load member stats
@@ -87,6 +92,14 @@
             xp: infos.xp,
           })
         })
+      },
+      // Load favorites shows from DB
+      loadFavorites () {
+        if (localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)) {
+          Show.getFavorites().then((shows) => {
+            this.favorites = shows
+          })
+        }
       },
       // Open the news
       openNews (url) {
@@ -124,22 +137,28 @@
         console.log('[Home] Redraw the shows graph')
         chart.render()
       },
+      // On logon => refresh stats and favorites
+      isLogged (logged) {
+        if (logged) {
+          this.loadStats()
+          this.loadFavorites()
+        }
+      },
     },
     mounted () {
       console.info('[VUE] Mount Homepage.vue')
-
-      // Get stats
-      this.loadStats()
-
-      // Get favorites from DB
-      Show.getFavorites().then((shows) => {
-        this.favorites = shows
-      })
+      if (this.isLogged) {
+        this.loadStats()
+        this.loadFavorites()
+      }
 
       // Get news
-      api.news.getNews(10).then((news) => {
-        this.news = news
-      })
+      if (localStore.get(localStore.key.HOMEPAGE.NEWS, true)) {
+        let nbNews = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
+        api.news.getNews(nbNews).then((news) => {
+          this.news = news
+        })
+      }
     },
   }
 </script>
