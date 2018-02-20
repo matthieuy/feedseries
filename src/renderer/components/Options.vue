@@ -73,6 +73,7 @@
 
   let launcher = new Autolauch({
     name: remote.app.getName(),
+    isHidden: true,
   })
 
   export default {
@@ -104,9 +105,6 @@
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
-        launcher.isEnabled().then((enabled) => {
-          this.autoload = enabled
-        })
       },
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
@@ -159,6 +157,9 @@
     mounted () {
       console.log('[VUE] Mount Options.vue')
       this.load()
+      launcher.isEnabled().then((enabled) => {
+        this.autoload = enabled
+      })
     },
   }
 </script>

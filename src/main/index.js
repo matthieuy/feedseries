@@ -25,17 +25,26 @@ if (process.env.NODE_ENV === 'development') {
   log.debug('Environment : prod')
 }
 
+// Params
+if (process.argv.length) {
+  log.debug('Start with params : ', process.argv)
+}
+let hiddenStart = (process.argv.indexOf('--hidden') > -1)
+
 /*************
  * Listeners *
  *************/
 app.on('ready', () => {
-  // Splashscreen
-  let SplashScreen = require('./system/splashscreen').default
-  SplashScreen.init()
-})
-
-ipcMain.on('splashscreen-display', () => {
-  createWindow()
+  // Splashscreen (if isn't silent start)
+  if (!hiddenStart) {
+    let SplashScreen = require('./system/splashscreen').default
+    SplashScreen.init(hiddenStart)
+    ipcMain.on('splashscreen-display', () => {
+      createWindow()
+    })
+  } else {
+    createWindow()
+  }
 })
 
 // All windows closed => exit (except macOS)
@@ -134,7 +143,7 @@ function createWindow () {
     systray.init(mainWindow)
 
     // Show app
-    if (mainWindow) {
+    if (mainWindow && !hiddenStart) {
       mainWindow.show()
     }
 
