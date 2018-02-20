@@ -4,8 +4,7 @@ This is a temporary TODO file need to be reorganize
   - [ ] Clear DB
   - [ ] Clear Prefs
 - [ ] Notifications :
-  - [ ] Subtitle DL : on clic open explorer
-  - [ ] Notification icon
+  - [ ] Fix problem with W10 1709
 - [ ] About :
   - [ ] Github link
   - [ ] Credits BS, electron, GameIcons...

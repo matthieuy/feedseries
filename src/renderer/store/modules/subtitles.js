@@ -76,10 +76,14 @@ const actions = {
         req.pipe(out)
 
         req.on('end', () => {
-          /* eslint-disable no-new */
-          new Notification('Sous-titre téléchargé', {
+          let notif = new Notification('Sous-titre téléchargé', {
             body: filepath,
+            icon: 'static/icons/icon.png',
           })
+          notif.onclick = (event) => {
+            event.preventDefault()
+            remote.shell.showItemInFolder(filepath)
+          }
         })
       }
     })

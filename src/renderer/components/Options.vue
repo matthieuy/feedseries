@@ -146,6 +146,7 @@
         /* eslint-disable no-new */
         new window.Notification(remote.app.getName(), {
           body: 'Options sauvegardées avec succès !',
+          icon: 'static/icons/icon.png',
         })
 
         this.load()
