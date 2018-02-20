@@ -4,9 +4,11 @@
     <div class="window-content">
       <ul>
         <li v-for="event in timeline.events" class="event">
-            <span :title="event.date | formatDate('ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
-            {{ event.user }} <span v-html="event.html" v-on:click.prevent=""></span>
-            <span class="fa fa-star" v-show="event.note" v-for="star in event.note"></span>
+          <img :src="userAvatar(event.userId)" alt="" width="24" height="24" />
+          <i class="type-icon fa" :class="iconType(event.type)"></i>
+          <span :title="event.date | formatDate('ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
+          {{ event.user }} <span v-html="event.html" v-on:click.prevent=""></span>
+          <span class="fa fa-star" v-show="event.note" v-for="star in event.note"></span>
         </li>
       </ul>
     </div>
@@ -21,6 +23,7 @@
 <script>
     import { mapState } from 'vuex'
 
+    import api from '../api'
     import { types } from '../store'
 
     export default {
@@ -52,6 +55,20 @@
             this.disableMore = false
           })
         },
+        userAvatar (userId) {
+          return api.members.getAvatarURL(userId, 24)
+        },
+        iconType (type) {
+          switch (type) {
+            case 'markas':
+              return 'fa-eye'
+            case 'archive':
+            case 'unarchive':
+              return 'fa-archive'
+            case 'add_serie':
+              return 'fa-plus-circle'
+          }
+        },
       },
       mounted () {
         console.info('[VUE] Mount Timeline.vue')
@@ -61,12 +78,35 @@
 </script>
 
 <style lang="scss">
+  @import "../assets/scss/vars";
   .timeline {
-    li.event a {
-      color: inherit;
-      font-weight: bold;
-      text-decoration: none;
-      cursor: default;
+    ul {
+      width: 100%;
+      padding: 0;
+    }
+    li.event {
+      list-style: none;
+      line-height: 24px;
+      margin-bottom: 5px;
+      padding: 0 15px;
+      width: 100%;
+      &:hover {
+        background-color: $navActiveBg;
+      }
+      img {
+        border-radius: 12px;
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      .type-icon {
+        margin-right: 3px;
+      }
+      a {
+        color: inherit;
+        font-weight: bold;
+        text-decoration: none;
+        cursor: default;
+      }
     }
     .toolbar-footer {
         .title { cursor: pointer; }

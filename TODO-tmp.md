@@ -14,8 +14,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Store files in app directory
   - [ ] Disable systray
   - [ ] Disable systray in option modal
-- [ ] Timeline :
-  - [ ] Try user color
 - [ ] Suggests :
   - [ ] Check new with interval
   - [ ] Suggest a show to friend

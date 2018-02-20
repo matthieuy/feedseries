@@ -31,7 +31,7 @@ export default {
    * @returns {Promise}
    */
   getMore (event) {
-    console.info('[API] Timeline::getMore')
+    console.info('[API] Timeline::getMore', event)
     return this.request({
       since_id: event.id,
     }).then((events) => {
@@ -64,6 +64,7 @@ export default {
       let events = []
       response.data.events.forEach((event) => {
         events.push({
+          id: event.id,
           date: event.date,
           type: event.type,
           user: event.user,
