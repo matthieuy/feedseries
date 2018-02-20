@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import { ipcRenderer, remote } from 'electron'
+  import { remote } from 'electron'
 
   export default {
     data () {
@@ -18,7 +18,7 @@
       }
     },
     mounted () {
-      ipcRenderer.send('check-update', true)
+      console.log('[VUE] Mount About.vue')
     },
   }
 </script>
