@@ -14,6 +14,9 @@ app.isQuiting = true
 log.transports.console.level = 'debug'
 log.transports.file.level = 'debug'
 
+// Use the same path as prod
+app.setPath('userData', require('path').join(app.getPath('appData'), 'feedseries'))
+
 // Install `vue-devtools`
 app.on('ready', () => {
   let installExtension = require('electron-devtools-installer')
