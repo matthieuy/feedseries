@@ -134,15 +134,19 @@
         }
 
         // Autoload
-        if (this.autoload) {
-          launcher.enable()
-        } else {
-          launcher.disable()
-        }
+        launcher.isEnabled().then((enabled) => {
+          if (this.autoload !== enabled) {
+            if (this.autoload) {
+              launcher.enable()
+            } else {
+              launcher.disable()
+            }
+          }
+        })
 
         // Notification
         /* eslint-disable no-new */
-        new Notification(remote.app.getName(), {
+        new window.Notification(remote.app.getName(), {
           body: 'Options sauvegardées avec succès !',
         })
 
