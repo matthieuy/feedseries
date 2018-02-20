@@ -8,6 +8,7 @@ class Updater {
    */
   constructor () {
     autoUpdater.autoDownload = false
+    autoUpdater.fullChangelog = true
     this._init = false
     this._mainWindow = null
     this._byUser = false
