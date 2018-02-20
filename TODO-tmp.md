@@ -1,12 +1,11 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] On disconnect :
-  - [ ] Clear cache
   - [ ] Clear DB
   - [ ] Clear Prefs
 - [ ] Notifications :
   - [ ] Subtitle DL : on clic open explorer
-  - [ ] Notification icon 
+  - [ ] Notification icon
 - [ ] About :
   - [ ] Github link
   - [ ] Credits BS, electron, GameIcons...
