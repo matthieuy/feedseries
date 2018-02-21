@@ -55,7 +55,7 @@
             <i @click="openLinkManager()" v-show="show.in_account" class="cursor fa fa-plus-circle"></i>
           </h5>
           <a v-for="link in links" @click="openURL(link)" class="nav-group-item">
-            <img :src="link.icon" width="16" height="16" onerror="this.src='static/links/none.png'"> {{ link.name }}
+            <img :src="link.icon" width="16" height="16" onerror="this.src='static/empty.png'"> {{ link.name }}
           </a>
 
           <a v-show="show.slug" @click="openURL('bs')" class="nav-group-item"><img src="static/links/bs.png"> BetaSeries</a>

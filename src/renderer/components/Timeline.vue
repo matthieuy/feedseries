@@ -97,6 +97,8 @@
         border-radius: 12px;
         vertical-align: middle;
         margin-right: 5px;
+        width: 24px;
+        height: 24px;
       }
       .type-icon {
         margin-right: 3px;

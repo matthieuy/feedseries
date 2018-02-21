@@ -246,6 +246,7 @@
         height: 100px;
         background-size: cover;
         background-position: top center;
+        background-color: #000000;
         cursor: pointer;
       }
       .new-title {

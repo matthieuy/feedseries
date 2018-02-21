@@ -3,7 +3,9 @@
     <h1 class="text-center">{{ show.title }}</h1>
 
     <div class="link-item" v-for="link in links">
-      <div class="img pull-left" :style="bgIcon(link)"></div>
+      <div class="img pull-left">
+        <img :src="link.icon" alt="" width="24" height="24" onerror="this.src='static/empty.png'">
+      </div>
       <div>
         <div class="link-title">
           {{ link.name }}
@@ -158,9 +160,6 @@
       margin-right: 15px;
       height: 24px;
       width: 24px;
-      background-size: cover;
-      background-position: top center;
-
     }
     .link-title {
       font-size: 1.1em;
