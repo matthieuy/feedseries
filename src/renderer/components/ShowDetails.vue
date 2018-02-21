@@ -137,7 +137,7 @@
        * Delete a show
        */
       deleteShow () {
-        remote.diaconsole.showMessageBox(remote.getCurrentWindow(), {
+        remote.dialog.showMessageBox(remote.getCurrentWindow(), {
           buttons: ['Supprimer', 'Annuler'],
           defaultId: 0,
           title: this.show.title,

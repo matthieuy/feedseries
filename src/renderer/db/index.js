@@ -5,6 +5,7 @@ import { remote } from 'electron'
 import Episode from './models/Episode'
 import Show from './models/Show'
 import Subtitle from './models/Subtitle'
+import Link from './models/Link'
 
 import Cache from './cache'
 
@@ -28,5 +29,5 @@ let Database = function () {
   }
 }
 
-export { Cache, Episode, Show, Subtitle }
+export { Cache, Episode, Show, Subtitle, Link }
 export default new Database()
