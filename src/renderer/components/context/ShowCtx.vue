@@ -7,18 +7,23 @@
     <li class="ctx-item" v-show="show.in_account && show.isArchived" @click="unarchive()"><i class="fa fa-archive"></i> Sortir des archives</li>
     <li class="ctx-divider"></li>
     <li class="ctx-item" @click="gotoShow(show)"><i class="fa fa-id-card"></i> Fiche de la série</li>
+
+    <li v-for="link in links" @click="openLink(link)" class="ctx-item">
+      <img :src="link.icon" width="16" height="16" onerror="this.src='static/links/none.png'"> {{ link.name }}
+    </li>
     <li class="ctx-item" @click="openBS(show)"><img src="static/links/bs.png"> Voir la série sur BS</li>
   </context-menu>
 </template>
 
 <script>
   import { types } from '../../store'
-  import { Show } from '../../db'
+  import { Show, Link } from '../../db'
 
   export default {
     data () {
       return {
         show: new Show(),
+        links: [],
       }
     },
     methods: {
@@ -50,6 +55,13 @@
         this.$store.dispatch(types.ACTIONS.OPEN_LINK, show)
       },
       /**
+       * Open link
+       * @param {Link} link
+       */
+      openLink (link) {
+        this.$store.dispatch(types.ACTIONS.OPEN_LINK, link.url)
+      },
+      /**
        * Go to the show page
        * @param show
        */
@@ -63,6 +75,11 @@
       onOpen (show) {
         console.info('[CONTEXT]', show)
         this.show = show
+
+        // Load links
+        Link.getLinks(show).then((links) => {
+          this.links = links
+        })
 
         // Close other context-menu
         let parentRef = this.$parent.$refs
