@@ -2,6 +2,8 @@ import { app, dialog, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 
+import { localStore } from '../../renderer/store'
+
 class Updater {
   /**
    * Construtor : init variables
@@ -9,6 +11,7 @@ class Updater {
   constructor () {
     autoUpdater.autoDownload = false
     autoUpdater.fullChangelog = true
+    autoUpdater.allowPrerelease = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
     this._init = false
     this._mainWindow = null
     this._byUser = false

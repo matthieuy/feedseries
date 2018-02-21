@@ -8,7 +8,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Remove link
   - [ ] Display list
 - [ ] Update :
-  - [ ] Allow use prerelease
   - [ ] Display releaseNote
   - [ ] Change app-update.yml path in dev env
 - [ ] On disconnect :

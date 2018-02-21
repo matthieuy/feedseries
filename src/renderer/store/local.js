@@ -32,6 +32,9 @@ const key = {
     SAVE: 'route.save', // {Boolean} Save the last route
     LAST: 'route.last', // {String} The last route path
   },
+  UPDATE: {
+    PRERELEASE: 'update.alpha', // {Boolean} Can use pre-release update
+  },
   LAST_DL: 'last.dl', // {String} Last download dir
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history
@@ -51,6 +54,7 @@ let store = new ElectronStore({
     homepage: {
       favorite: true,
       news: true,
+      news_nb: 10,
     },
     timeline: {
       nb: 30,
@@ -62,6 +66,9 @@ let store = new ElectronStore({
     route: {
       save: false,
       last: '/',
+    },
+    update: {
+      alpha: false,
     },
     devtools: false,
     history: [],
