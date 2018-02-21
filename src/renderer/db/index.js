@@ -20,12 +20,26 @@ let Database = function () {
         camo.connect(url).then((db) => {
           this._database = db
           console.info('[DB] Database loaded')
+          setTimeout(this.compact, 5000)
           resolve()
         })
       })
     } else {
       return Promise.resolve()
     }
+  }
+  this.compact = () => {
+    return new Promise((resolve, reject) => {
+      global.dbCollection = camo.getClient().driver()
+      for (let collection in global.dbCollection) {
+        if (global.dbCollection.hasOwnProperty(collection)) {
+          global.dbCollection[collection].persistence.setAutocompactionInterval(1000 * 60 * 60)
+          global.dbCollection[collection].on('compaction.done', () => {
+            console.log(`[DB] "${collection}" : Compaction done`)
+          })
+        }
+      }
+    })
   }
 }
 
