@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
+import { localStore } from '../../renderer/store'
 
 export default {
   windows: {},
@@ -44,8 +45,11 @@ export default {
     })
     win.setMenu(null)
     win.once('ready-to-show', () => { win.show() })
+    win.once('close', () => {
+      this.parent.webContents.send('modal-close', name)
+    })
     win.once('closed', () => { delete this.windows[name] })
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'development' && localStore.get(localStore.key.DEVTOOLS, false)) {
       win.openDevTools()
     }
   },

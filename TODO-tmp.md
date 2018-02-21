@@ -9,7 +9,7 @@ This is a temporary TODO file need to be reorganize
   - [X] Remove link
   - [ ] Display list :
     - [X] in modal
-    - [ ] Show page
+    - [X] Show page
     - [ ] Context menu
 - [ ] Update :
   - [ ] Display releaseNote
