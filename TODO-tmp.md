@@ -5,7 +5,7 @@ This is a temporary TODO file need to be reorganize
   - [X] Create entity
   - [X] Modal
   - [X] Add link
-  - [ ] Edit link
+  - [X] Edit link
   - [ ] Remove link
   - [ ] Display list :
     - [ ] in modal
