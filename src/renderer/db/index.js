@@ -28,18 +28,17 @@ let Database = function () {
       return Promise.resolve()
     }
   }
+
   this.compact = () => {
-    return new Promise((resolve, reject) => {
-      global.dbCollection = camo.getClient().driver()
-      for (let collection in global.dbCollection) {
-        if (global.dbCollection.hasOwnProperty(collection)) {
-          global.dbCollection[collection].persistence.setAutocompactionInterval(1000 * 60 * 60)
-          global.dbCollection[collection].on('compaction.done', () => {
-            console.log(`[DB] "${collection}" : Compaction done`)
-          })
-        }
+    global.dbCollection = camo.getClient().driver()
+    for (let collection in global.dbCollection) {
+      if (global.dbCollection.hasOwnProperty(collection)) {
+        global.dbCollection[collection].persistence.setAutocompactionInterval(1000 * 60 * 60)
+        global.dbCollection[collection].on('compaction.done', () => {
+          console.log(`[DB] "${collection}" : Compaction done`)
+        })
       }
-    })
+    }
   }
 }
 
