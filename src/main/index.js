@@ -48,7 +48,7 @@ let silentStart = (process.argv.indexOf('--hidden') > -1) // Start without displ
 app.on('ready', () => {
   // Splashscreen (if isn't silent start)
   if (!silentStart) {
-    let SplashScreen = require('./system/splashscreen').default
+    let SplashScreen = require('./windows/splashscreen').default
     SplashScreen.init()
     ipcMain.on('splashscreen-display', () => {
       createWindow()

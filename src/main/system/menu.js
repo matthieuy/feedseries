@@ -1,6 +1,6 @@
 import { app, Menu, shell } from 'electron'
 
-import about from './about'
+import about from '../windows/about'
 import Updater from './update'
 import { localStore } from '../../renderer/store'
 
