@@ -7,20 +7,19 @@
         <img :src="link.icon" alt="">
         {{ link.name }}
         {{ link.url }}
-        <button class="btn btn-default" @click="selectLink(link)">
-          Modifier
-        </button>
+        <button class="btn btn-default" @click="selectLink(link)">Modifier</button>
+        <button class="btn btn-default" @click="deleteLink(link)">Supprimer</button>
       </li>
     </ul>
 
     <fieldset>
       <div class="form-group">
         <label for="name">Nom :</label>
-        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" />
+        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" required/>
       </div>
       <div class="form-group">
         <label>Adresse :</label>
-        <input id="url" type="url" class="form-control" placeholder="https://..." v-model="url" />
+        <input id="url" type="url" class="form-control" placeholder="https://..." v-model="url" required/>
       </div>
 
       <div class="form-actions">
@@ -72,19 +71,29 @@
           return false
         }
 
-        for (let i = 0; i < this.links.length; i++) {
-          if (this.links[i]._id === this.idLink) {
-            let link = this.links[i]
-            link.show = this.show
-            link.name = this.name
-            link.url = this.url
-            link.save().then(() => {
-              this.reset()
-            })
-            return true
-          }
+        let index = this.links.findIndex((a) => a._id === this.idLink)
+        if (index > -1) {
+          let link = this.links[index]
+          link.show = this.show
+          link.name = this.name
+          link.url = this.url
+          link.save().then(() => {
+            this.reset()
+          })
+          return true
         }
         return false
+      },
+      /**
+       * Delete a link
+       * @param {Link} link
+       */
+      deleteLink (link) {
+        let index = this.links.findIndex((a) => a._id === link._id)
+        link.delete().then((ar) => {
+          this.$delete(this.links, index)
+          this.reset()
+        })
       },
       /**
        * Select a link (to edit)
@@ -112,7 +121,7 @@
           document.getElementById('name').focus()
           return false
         }
-        if (!this.url.length) {
+        if (!this.url.length || !/https?:\/\/.+/g.test(this.url)) {
           document.getElementById('url').focus()
           return false
         }

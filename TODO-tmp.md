@@ -6,7 +6,7 @@ This is a temporary TODO file need to be reorganize
   - [X] Modal
   - [X] Add link
   - [X] Edit link
-  - [ ] Remove link
+  - [X] Remove link
   - [ ] Display list :
     - [ ] in modal
     - [ ] Show page

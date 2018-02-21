@@ -34,7 +34,7 @@ class Link extends Document {
    */
   static getLinks (show) {
     let idShow = show._id || show.id
-    return this.find({ show: idShow }, { sort: 'name' })
+    return this.find({ show: idShow }, { sort: '_id' })
   }
 }
 
