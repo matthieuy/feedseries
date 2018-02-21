@@ -55,7 +55,7 @@
         <h1 class="text-center">News</h1>
         <div class="news">
           <div class="new" v-for="article in news">
-            <div class="img" @click="openNews(article.url)" :style="'background-image: url(' + article.picture_url + ');'"></div>
+            <div class="img" @click="openNews(article.url)" :style="bgNews(article)"></div>
               <div class="new-title" @click="openNews(article.url)">{{ article.title }}</div>
               <div class="date" :title="article.date | formatDate('ddd DD à HH[h]mm')">{{ article.date|fromNow }}</div>
           </div>
@@ -104,6 +104,13 @@
       // Open the news
       openNews (url) {
         this.$store.dispatch(types.ACTIONS.OPEN_LINK, url)
+      },
+      // Get background style for the news
+      bgNews (news) {
+        if (news.picture_url) {
+          return `background-image: url('${news.picture_url}');`
+        }
+        return ''
       },
     },
     watch: {
