@@ -82,7 +82,7 @@ class Updater {
         type: 'info',
         buttons: ['OK'],
         title: 'Mise à jour',
-        message: 'Aucune mise à jour disponible',
+        message: 'FeedSeries est à jour',
       })
     }
   }

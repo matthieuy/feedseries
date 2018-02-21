@@ -1,10 +1,6 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
-- [ ] Portable version :
-  - [ ] Store files in app directory PORTABLE_EXECUTABLE_DIR
-  - [ ] Disable systray
-  - [ ] Disable systray in option modal
 - [ ] Personnal links :
   - [ ] Create entity
   - [ ] Link to shows

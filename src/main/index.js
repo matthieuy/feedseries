@@ -8,6 +8,20 @@ import Updater from './system/update'
 let mainWindow, systray
 app.setAppUserModelId('org.matthieuy.feedseries')
 
+/********************
+ * Portable version *
+ ********************/
+if (process.env.PORTABLE_EXECUTABLE_DIR) {
+  let path = require('path')
+  let portablePath = path.join(process.env.PORTABLE_EXECUTABLE_DIR, 'feedseries_data')
+  app.setPath('userData', path.join(portablePath, 'userdata'))
+  app.setPath('temp', path.join(portablePath, 'tmp'))
+  app.setPath('logs', path.join(portablePath, 'logs'))
+  log.transports.file.file = path.join(portablePath, 'log.log')
+  log.debug('Portable version')
+  app.isQuiting = true
+}
+
 /*************************
  * Environment variables *
  *************************/
@@ -23,7 +37,7 @@ if (process.env.NODE_ENV !== 'development') {
 /******************
  * CLI Parameters *
  ******************/
-if (process.argv.length) {
+if (process.argv.length && process.env.NODE_ENV !== 'development') {
   log.debug('Start with params : ', process.argv)
 }
 let silentStart = (process.argv.indexOf('--hidden') > -1) // Start without display windows
