@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 
 export default {
   windows: {},
@@ -6,6 +6,10 @@ export default {
 
   init (parentWindow) {
     this.parent = parentWindow
+
+    ipcMain.on('open-modal', (event, name, url, options) => {
+      this.open(name, url, options)
+    })
   },
 
   open (name, url, options) {
@@ -13,7 +17,8 @@ export default {
       return this.windows[name].show()
     }
 
-    options = Object.assign({}, {
+    // Default options
+    options = Object.assign({
       title: app.getName(),
       backgroundColor: '#181A1F',
       useContentSize: true,

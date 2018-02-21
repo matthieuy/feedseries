@@ -11,6 +11,12 @@ const router = new Router({
       path: '/about',
       component: require('@/components/modal/About').default,
     },
+    // Links manager
+    {
+      name: 'links',
+      path: '/show/:id/links',
+      component: require('@/components/modal/Links').default,
+    },
     {
       path: '*',
       redirect: '/about',

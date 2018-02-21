@@ -49,8 +49,11 @@
             </button>
           </div>
         </nav>
-        <nav class="nav-group">
-          <h5 class="nav-group-title">Liens</h5>
+        <nav class="nav-group" v-show="show">
+          <h5 class="nav-group-title">
+            Liens
+            <i @click="openLinkManager()" v-show="show.in_account" class="pull-right cursor fa fa-plus-circle"></i>
+          </h5>
           <a v-show="show.slug" @click="openURL('bs')" class="nav-group-item"><img src="static/links/bs.png"> BetaSeries</a>
           <a v-show="show.imdb" @click="openURL('imdb')" class="nav-group-item"><img src="static/links/imdb.png"> IMDb</a>
           <a v-show="show.tvdb" @click="openURL('tvdb')" class="nav-group-item"><img src="static/links/tvdb.png"> TheTVDB</a>
@@ -89,7 +92,7 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { remote } from 'electron'
+  import { remote, ipcRenderer } from 'electron'
 
   import { types } from '../store'
 
@@ -113,6 +116,11 @@
       },
     },
     methods: {
+      openLinkManager () {
+        ipcRenderer.send('open-modal', 'links', `/show/${this.show._id}/links`, {
+          title: this.show.title + ' - Liens',
+        })
+      },
       /**
        * (un)archive a show
        * @param {Boolean} add archive or not
