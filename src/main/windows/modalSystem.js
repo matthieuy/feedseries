@@ -1,20 +1,21 @@
-import { BrowserWindow } from 'electron'
-import log from 'electron-log'
+import { app, BrowserWindow } from 'electron'
 
 export default {
-  win: null,
+  windows: {},
   parent: null,
 
   init (parentWindow) {
     this.parent = parentWindow
-    if (this.win) {
-      return this.win.show()
+  },
+
+  open (name, url, options) {
+    if (this.windows[name]) {
+      return this.windows[name].show()
     }
-    const win = this.win = new BrowserWindow({
-      title: 'À propos',
+
+    options = Object.assign({}, {
+      title: app.getName(),
       backgroundColor: '#181A1F',
-      width: 300,
-      height: 350,
       useContentSize: true,
       center: true,
       resizable: false,
@@ -27,15 +28,15 @@ export default {
       frame: true,
       parent: this.parent,
       modal: true,
-    })
+    }, options)
 
-    log.debug('Load about modal')
-    win.loadURL(global.winURL + '/modal.html#/about', {
+    const win = this.windows[name] = new BrowserWindow(options)
+    win.loadURL(`${global.winURL}/modal.html#${url}`, {
       userAgent: global.userAgent,
     })
     win.setMenu(null)
     win.once('ready-to-show', () => { win.show() })
-    win.once('closed', () => { this.win = null })
+    win.once('closed', () => { delete this.windows[name] })
   },
 }
 

@@ -131,6 +131,10 @@ function createWindow () {
   let mainMenu = require('./system/menu').default
   mainMenu.init(mainWindow)
 
+  // Modal
+  let modalSystem = require('./windows/modalSystem').default
+  modalSystem.init(mainWindow)
+
   // Close window
   mainWindow.on('closed', () => {
     if (systray) {

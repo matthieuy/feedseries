@@ -1,6 +1,6 @@
 import { app, Menu, shell } from 'electron'
 
-import about from '../windows/about'
+import modalSystem from '../windows/modalSystem'
 import Updater from './update'
 import { localStore } from '../../renderer/store'
 
@@ -76,7 +76,11 @@ let template = [
       {
         label: 'À propos',
         click (menuItem, browserWindow) {
-          about.init(browserWindow)
+          modalSystem.open('about', '/about', {
+            title: 'À propos',
+            width: 300,
+            height: 350,
+          })
         },
       },
     ],
