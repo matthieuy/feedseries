@@ -13,6 +13,20 @@ class Link extends Document {
     })
   }
 
+  set url (value) {
+    let urlArray = value.split('/')
+    this.base = urlArray[0] + '//' + urlArray[2]
+    this.path = value.replace(this.base + '/', '')
+  }
+
+  get url () {
+    return this.base + '/' + this.path
+  }
+
+  get icon () {
+    return this.base + '/favicon.ico'
+  }
+
   /**
    * Get links for a show
    * @param {Show|Object} show The show

@@ -3,10 +3,12 @@ This is a temporary TODO file need to be reorganize
 - [ ] isLogged => isVerified
 - [ ] Personnal links :
   - [X] Create entity
-  - [ ] Modal
-  - [ ] Add link
+  - [X] Modal
+  - [X] Add link
+  - [ ] Edit link
   - [ ] Remove link
   - [ ] Display list :
+    - [ ] in modal
     - [ ] Show page
     - [ ] Context menu
 - [ ] Update :

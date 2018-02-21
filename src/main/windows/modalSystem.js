@@ -33,6 +33,9 @@ export default {
       frame: true,
       parent: this.parent,
       modal: true,
+      webPreferences: {
+        devTools: true,
+      },
     }, options)
 
     const win = this.windows[name] = new BrowserWindow(options)
@@ -42,6 +45,9 @@ export default {
     win.setMenu(null)
     win.once('ready-to-show', () => { win.show() })
     win.once('closed', () => { delete this.windows[name] })
+    if (process.env.NODE_ENV === 'development') {
+      win.openDevTools()
+    }
   },
 }
 
