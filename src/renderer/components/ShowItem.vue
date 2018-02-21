@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <div>
     <div class="pull-left img-container">
       <router-link :to="{name: 'show', params: { id: show._id }}">
         <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="100" class="pull-left" v-if="show.poster">
@@ -30,7 +30,7 @@
     <div class="text-center account-info" v-show="show.in_account">
       Série <span v-show="show.isArchived">(archivée)</span> déjà présente sur votre compte : {{ show.progress }}%<span v-show="show.remaining">, {{ show.remaining|plurialize('épisode', 'épisodes') }} à voir</span>
     </div>
-  </span>
+  </div>
 </template>
 
 <script>
