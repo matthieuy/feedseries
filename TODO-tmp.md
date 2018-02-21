@@ -1,5 +1,20 @@
 This is a temporary TODO file need to be reorganize
 
+- [ ] isLogged => isVerified
+- [ ] Portable version :
+  - [ ] Store files in app directory PORTABLE_EXECUTABLE_DIR
+  - [ ] Disable systray
+  - [ ] Disable systray in option modal
+- [ ] Personnal links :
+  - [ ] Create entity
+  - [ ] Link to shows
+  - [ ] Add link
+  - [ ] Remove link
+  - [ ] Display list
+- [ ] Update :
+  - [ ] Allow use prerelease
+  - [ ] Display releaseNote
+  - [ ] Change app-update.yml path in dev env
 - [ ] On disconnect :
   - [ ] Clear DB
   - [ ] Clear Prefs
@@ -9,10 +24,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Github link
   - [ ] Credits BS, electron, GameIcons...
   - [ ] Check update
-- [ ] Portable version :
-  - [ ] Store files in app directory
-  - [ ] Disable systray
-  - [ ] Disable systray in option modal
 - [ ] Suggests :
   - [ ] Check new with interval
   - [ ] Suggest a show to friend
@@ -23,12 +34,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] List of seasons / episodes
   - [ ] Comments
   - [ ] Suggest
-- [ ] Personnal links :
-  - [ ] Create entity
-  - [ ] Link to shows
-  - [ ] Add link
-  - [ ] Remove link
-  - [ ] Display list
 - [ ] Episode page :
   - [ ] Display
   - [ ] Spoiler
@@ -46,4 +51,5 @@ This is a temporary TODO file need to be reorganize
   - [ ] Create and detect where is systray
   - [ ] Catch drop file
   - [ ] display result in main window
+- [ ] CrashReporter
 - [ ] Check : https://blog.dcpos.ch/how-to-make-your-electron-app-sexy
