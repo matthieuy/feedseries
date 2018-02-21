@@ -22,23 +22,25 @@ if (process.env.NODE_ENV === 'development') {
   userAgent += ' v' + app.getVersion()
   global.winURL = `file://${__dirname}`
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
-  log.debug('Environment : prod')
+  log.debug('Environment : prod', userAgent)
 }
 
-// Params
+/******************
+ * CLI Parameters *
+ ******************/
 if (process.argv.length) {
   log.debug('Start with params : ', process.argv)
 }
-let hiddenStart = (process.argv.indexOf('--hidden') > -1)
+let silentStart = (process.argv.indexOf('--hidden') > -1) // Start without display windows
 
 /*************
  * Listeners *
  *************/
 app.on('ready', () => {
   // Splashscreen (if isn't silent start)
-  if (!hiddenStart) {
+  if (!silentStart) {
     let SplashScreen = require('./system/splashscreen').default
-    SplashScreen.init(hiddenStart)
+    SplashScreen.init()
     ipcMain.on('splashscreen-display', () => {
       createWindow()
     })
@@ -143,7 +145,7 @@ function createWindow () {
     systray.init(mainWindow)
 
     // Show app
-    if (mainWindow && !hiddenStart) {
+    if (mainWindow && !silentStart) {
       mainWindow.show()
     }
 
