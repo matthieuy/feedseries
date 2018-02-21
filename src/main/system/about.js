@@ -30,7 +30,9 @@ export default {
     })
 
     log.debug('Load about modal')
-    win.loadURL(global.winURL + '/modal.html#/about')
+    win.loadURL(global.winURL + '/modal.html#/about', {
+      userAgent: global.userAgent,
+    })
     win.setMenu(null)
     win.once('ready-to-show', () => { win.show() })
     win.once('closed', () => { this.win = null })

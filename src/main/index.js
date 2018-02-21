@@ -6,23 +6,18 @@ import log from 'electron-log'
 import Updater from './system/update'
 
 let mainWindow, systray
-let userAgent = 'FeedSeries'
 app.setAppUserModelId('org.matthieuy.feedseries')
 
 /*************************
  * Environment variables *
  *************************/
-if (process.env.NODE_ENV === 'development') {
-  userAgent += ' (dev)'
-  global.winURL = 'http://localhost:9080'
-  log.debug('Environment : dev')
-} else {
+if (process.env.NODE_ENV !== 'development') {
   log.transports.console.level = 'info'
   log.transports.file.level = 'info'
-  userAgent += ' v' + app.getVersion()
+  global.userAgent = `FeedSeries v${app.getVersion()}`
   global.winURL = `file://${__dirname}`
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
-  log.debug('Environment : prod', userAgent)
+  log.debug('Environment : prod', global.userAgent)
 }
 
 /******************
@@ -115,7 +110,7 @@ function createWindow () {
   let localStore = require('../renderer/store/local').default
   let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? global.winURL + '/index.html#' + localStore.get(localStore.key.ROUTE.LAST) : global.winURL + '/index.html'
   mainWindow.loadURL(mainWindowURL, {
-    userAgent: userAgent,
+    userAgent: global.userAgent,
   })
 
   // Main menu
