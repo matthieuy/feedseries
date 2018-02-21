@@ -119,6 +119,8 @@
       openLinkManager () {
         ipcRenderer.send('open-modal', 'links', `/show/${this.show._id}/links`, {
           title: this.show.title + ' - Liens',
+          width: 450,
+          height: 550,
         })
       },
       /**

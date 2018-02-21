@@ -16,7 +16,13 @@ class Link extends Document {
   set url (value) {
     let urlArray = value.split('/')
     this.base = urlArray[0] + '//' + urlArray[2]
-    this.path = value.replace(this.base + '/', '')
+
+    let path = value.replace(this.base, '')
+    let startIndex = 0
+    while (path[startIndex] === '/') {
+      startIndex++
+    }
+    this.path = path.substr(startIndex)
   }
 
   get url () {

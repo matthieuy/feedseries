@@ -2,27 +2,30 @@
   <div v-show="show">
     <h1 class="text-center">{{ show.title }}</h1>
 
-    <ul>
-      <li v-for="link in links">
-        <img :src="link.icon" alt="">
-        {{ link.name }}
-        {{ link.url }}
-        <button class="btn btn-default" @click="selectLink(link)">Modifier</button>
-        <button class="btn btn-default" @click="deleteLink(link)">Supprimer</button>
-      </li>
-    </ul>
+    <div class="link-item" v-for="link in links">
+      <div class="img pull-left" :style="bgIcon(link)"></div>
+      <div>
+        <div class="link-title">
+          {{ link.name }}
+          <i class="fa fa-pencil-alt cursor" @click="selectLink(link)" title="Modifier"></i>
+          <i class="fa fa-minus-circle cursor" @click="deleteLink(link)" title="Supprimer"></i>
+        </div>
+        <div class="link-url">{{ link.url }}</div>
+      </div>
+      <div class="clearfix"></div>
+    </div>
 
     <fieldset>
       <div class="form-group">
         <label for="name">Nom :</label>
-        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" required/>
+        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" required maxlength="20" />
       </div>
       <div class="form-group">
         <label>Adresse :</label>
         <input id="url" type="url" class="form-control" placeholder="https://..." v-model="url" required/>
       </div>
 
-      <div class="form-actions">
+      <div class="form-actions text-center">
         <button class="btn btn-default" v-show="!idLink" @click="add()"><i class="fa fa-plus-circle"></i> Ajouter</button>
         <button class="btn btn-default" v-show="idLink" @click="edit()"><i class="fa fa-plus-circle"></i> Modifier</button>
         <button class="btn btn-danger" @click="reset()"><i class="fa fa-times-circle"></i> Annuler</button>
@@ -112,6 +115,9 @@
         this.name = ''
         this.url = ''
       },
+      bgIcon (link) {
+        return `background-image: url('${link.icon}');`
+      },
       /**
        * Check form
        * @return {boolean}
@@ -144,5 +150,41 @@
 <style lang="scss">
   $rootFont: '../../';
   @import "../../assets/scss/theme";
-  h1 {}
+  .link-item {
+    margin: 5px 15px;
+    clear: both;
+    height: 50px;
+    .img {
+      margin-right: 15px;
+      height: 24px;
+      width: 24px;
+      background-size: cover;
+      background-position: top center;
+
+    }
+    .link-title {
+      font-size: 1.1em;
+      color: $txtColor;
+      font-weight: bold;
+      .fa {
+        font-size: 0.9em;
+        margin-left: 3px;
+      }
+      .fa-minus-circle {
+        color: Tomato;
+      }
+    }
+    .link-url {
+      color: $navColor;
+      font-style: italic;
+      max-height: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .form-actions {
+    .fa {
+      margin-right: 3px;
+    }
+  }
 </style>

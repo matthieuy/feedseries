@@ -8,7 +8,7 @@ This is a temporary TODO file need to be reorganize
   - [X] Edit link
   - [X] Remove link
   - [ ] Display list :
-    - [ ] in modal
+    - [X] in modal
     - [ ] Show page
     - [ ] Context menu
 - [ ] Update :
