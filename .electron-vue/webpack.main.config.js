@@ -7,6 +7,7 @@ const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
 const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 let mainConfig = {
   entry: {
@@ -80,7 +81,13 @@ if (process.env.NODE_ENV === 'production') {
       'process.env.NODE_ENV': '"production"',
       'winURL': `"file://${global.__static}"`,
       'userAgent': `"${global.userAgent}"`,
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, '../.electron-vue/app-update.yml'),
+        to: path.join(__dirname, '../dist/electron'),
+      },
+    ]),
   )
 }
 
