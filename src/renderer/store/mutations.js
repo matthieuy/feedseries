@@ -18,6 +18,7 @@ const mutations = {
   [types.LOGOUT] (state) {
     state.isLogged = false
     localStore.delete(localStore.key.TOKEN)
+    localStore.purge()
   },
   // Add item to history
   [types.ADD_HISTORY] (state, obj) {

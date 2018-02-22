@@ -5,7 +5,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Display releaseNote
 - [ ] On disconnect :
   - [ ] Clear DB
-  - [ ] Clear Prefs
 - [ ] Notifications :
   - [ ] Fix problem with W10 1709
 - [ ] About :
@@ -30,7 +29,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Subtitles
   - [ ] Seen by...
 - [ ] Options :
-  - [ ] Reset configuration
   - [ ] Special episodes
   - [ ] Subtitles :
     - [ ] DL directory

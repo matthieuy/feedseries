@@ -58,6 +58,7 @@
     </fieldset>
 
     <div class="text-center">
+      <button class="btn btn-nav" @click="purge()"><i class="fa fa-trash"></i> Réinitialiser</button>
       <button class="btn btn-nav" @click="save()"><i class="fa fa-save"></i> Sauvegarder</button>
     </div>
   </div>
@@ -149,6 +150,10 @@
           icon: 'static/icons/icon.png',
         })
 
+        this.load()
+      },
+      purge () {
+        localStore.purge()
         this.load()
       },
       between (value, min, max) {

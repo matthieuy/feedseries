@@ -77,4 +77,23 @@ let store = new ElectronStore({
 })
 store.key = key
 
+/**
+ * Purge the store (keep connexion)
+ */
+store.purge = () => {
+  let keepData = [key.LOGIN, key.TOKEN]
+  let data = {}
+  keepData.forEach((k) => {
+    data[k] = store.get(k, null)
+  })
+
+  store.clear()
+
+  keepData.forEach((k) => {
+    if (data[k] !== null) {
+      store.set(k, data[k])
+    }
+  })
+}
+
 export default store
