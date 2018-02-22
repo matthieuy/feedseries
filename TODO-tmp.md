@@ -1,16 +1,6 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
-- [ ] Personnal links :
-  - [X] Create entity
-  - [X] Modal
-  - [X] Add link
-  - [X] Edit link
-  - [X] Remove link
-  - [ ] Display list :
-    - [X] in modal
-    - [X] Show page
-    - [ ] Context menu
 - [ ] Update :
   - [ ] Display releaseNote
   - [ ] Change app-update.yml path in dev env

@@ -14,15 +14,17 @@
     <li class="ctx-divider"></li>
     <li class="ctx-item" v-show="!hideShow && !episode.show.isArchived" @click="archive(episode.show)"><i class="fa fa-archive"></i> Archiver la série</li>
     <li class="ctx-divider" v-show="!hideShow"></li>
+    <li v-for="link in links" @click="openWeb(link.url)" class="ctx-item" v-show="!hideShow">
+      <img :src="link.icon" width="16" height="16" onerror="this.src='static/links/none.png'"> {{ link.name }}
+    </li>
     <li class="ctx-item" v-show="!hideShow" @click="gotoShow(episode.show)"><i class="fa fa-id-card"></i> Fiche de la série</li>
-    <li class="ctx-item" @click="openBS(episode)"><img src="static/links/bs.png" /> Voir l'épisode sur BS</li>
-    <li class="ctx-item" v-show="!hideShow" @click="openBS(episode.show)"><img src="static/links/bs.png" /> Voir la série sur BS</li>
+    <li class="ctx-item" @click="openWeb(episode)"><img src="static/links/bs.png" /> Voir l'épisode sur BS</li>
   </context-menu>
 </template>
 
 <script>
   import { types } from '../../store'
-  import { Episode } from '../../db'
+  import { Episode, Link } from '../../db'
 
   export default {
     props: {
@@ -31,6 +33,7 @@
     data () {
       return {
         episode: new Episode(),
+        links: [],
       }
     },
     methods: {
@@ -79,6 +82,13 @@
         console.info('[CONTEXT]', episode)
         this.episode = episode
 
+        // Load links
+        if (!this.hideShow) {
+          Link.getLinks(episode.show._id).then((links) => {
+            this.links = links
+          })
+        }
+
         // Close other context-menu
         let parentRef = this.$parent.$refs
         let thisTag = this.$options._componentTag
@@ -90,9 +100,9 @@
       },
       /**
        * Open show|episode on BS (external link)
-       * @param {Episode|Show} element The element
+       * @param {Episode|Show|String} element The element
        */
-      openBS (element) {
+      openWeb (element) {
         this.$store.dispatch(types.ACTIONS.OPEN_LINK, element)
       },
       /**

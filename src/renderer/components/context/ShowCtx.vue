@@ -77,7 +77,7 @@
         this.show = show
 
         // Load links
-        Link.getLinks(show).then((links) => {
+        Link.getLinks(show._id).then((links) => {
           this.links = links
         })
 
