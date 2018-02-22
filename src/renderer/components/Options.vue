@@ -63,7 +63,15 @@
       </div>
     </fieldset>
 
+    <fieldset>
+      <legend>Mise à jour</legend>
+      <div class="checkbox">
+        <label :class="{strike: !update_alpha}"><input type="checkbox" v-model="update_alpha" readonly disabled />Récupérer les versions non stable</label>
+      </div>
+    </fieldset>
+
     <div class="text-center">
+      <button class="btn btn-nav" @click="openConf()" v-if="env === 'development'"><i class="fa fa-pencil-alt"></i>Éditer le fichier de configuration</button>
       <button class="btn btn-nav" @click="purge()"><i class="fa fa-trash"></i> Réinitialiser</button>
       <button class="btn btn-nav" @click="save()"><i class="fa fa-save"></i> Sauvegarder</button>
     </div>
@@ -86,6 +94,7 @@
   export default {
     data () {
       return {
+        env: process.env.NODE_ENV,
         systray: true,
         autoload: false,
         route_save: false,
@@ -98,6 +107,7 @@
         sizehistory: 5,
         dl_dir: '',
         dl_ask: true,
+        update_alpha: false,
       }
     },
     computed: {
@@ -119,6 +129,7 @@
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
         this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
         this.dl_ask = localStore.get(localStore.key.DOWNLOAD.ASK, true)
+        this.update_alpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
       },
       /**
        * Save the configuration
@@ -129,6 +140,7 @@
         localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
         localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
         localStore.set(localStore.key.DOWNLOAD.ASK, this.dl_ask)
+        localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
@@ -191,6 +203,12 @@
         localStore.purge()
         this.load()
       },
+      /**
+       * Open config in editor
+       */
+      openConf () {
+        localStore.openInEditor()
+      },
       between (value, min, max) {
         return Math.min(max, Math.max(min, value))
       },
@@ -211,5 +229,8 @@
     padding: 3px 5px;
     color: #000;
     cursor: pointer;
+  }
+  .strike {
+    text-decoration: line-through;
   }
 </style>
