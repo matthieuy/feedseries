@@ -69,7 +69,7 @@
 
   import api from '../api'
   import { localStore, types } from '../store'
-  import { Show } from '../db'
+  import { Cache, Show } from '../db'
 
   export default {
     data () {
@@ -85,13 +85,26 @@
     methods: {
       // Load member stats
       loadStats () {
-        api.members.getInfos(true).then((infos) => {
+        // Response
+        let response = (infos) => {
           this.stats = Object.assign(infos.stats, {
             id: infos.id,
             avatar: infos.avatar,
             xp: infos.xp,
           })
-        })
+        }
+
+        // Load from cache
+        let cacheId = 'summary'
+        if (Cache.has(cacheId)) {
+          let infos = Cache.get(cacheId, false)
+          if (infos) {
+            response(infos)
+          }
+        }
+
+        // Load from API
+        api.members.getInfos(true).then(response)
       },
       // Load favorites shows from DB
       loadFavorites () {
