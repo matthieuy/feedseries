@@ -117,9 +117,6 @@
         this.name = ''
         this.url = ''
       },
-      bgIcon (link) {
-        return `background-image: url('${link.icon}');`
-      },
       /**
        * Check form
        * @return {boolean}
