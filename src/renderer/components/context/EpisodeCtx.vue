@@ -15,7 +15,7 @@
     <li class="ctx-item" v-show="!hideShow && !episode.show.isArchived" @click="archive(episode.show)"><i class="fa fa-archive"></i> Archiver la série</li>
     <li class="ctx-divider" v-show="!hideShow"></li>
     <li v-for="link in links" @click="openWeb(link.url)" class="ctx-item" v-show="!hideShow">
-      <img :src="link.icon" width="16" height="16" onerror="this.src='static/links/none.png'"> {{ link.name }}
+      <img :src="link.icon" width="16" height="16" onerror="this.src='static/empty.png'"> {{ link.name }}
     </li>
     <li class="ctx-item" v-show="!hideShow" @click="gotoShow(episode.show)"><i class="fa fa-id-card"></i> Fiche de la série</li>
     <li class="ctx-item" @click="openWeb(episode)"><img src="static/links/bs.png" /> Voir l'épisode sur BS</li>
