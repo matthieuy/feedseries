@@ -3,7 +3,6 @@ This is a temporary TODO file need to be reorganize
 - [ ] isLogged => isVerified
 - [ ] Update :
   - [ ] Display releaseNote
-  - [ ] Change app-update.yml path in dev env
 - [ ] On disconnect :
   - [ ] Clear DB
   - [ ] Clear Prefs

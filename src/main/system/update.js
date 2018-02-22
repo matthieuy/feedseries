@@ -12,6 +12,11 @@ class Updater {
     autoUpdater.autoDownload = false
     autoUpdater.fullChangelog = true
     autoUpdater.allowPrerelease = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
+    if (process.env.NODE_ENV === 'development') {
+      autoUpdater.updateConfigPath = require('path').join(__dirname, '../../../.electron-vue/dev-app-update.yml')
+      autoUpdater.currentVersion = '0.0.1'
+    }
+
     this._init = false
     this._mainWindow = null
     this._byUser = false
@@ -106,8 +111,11 @@ class Updater {
       message: process.platform === 'win32' ? releaseNotes : releaseName,
       detail: 'Téléchargement terminé : installation en cours...',
     })
-    app.isQuiting = true
-    autoUpdater.quitAndInstall()
+
+    if (process.env.NODE_ENV !== 'development') {
+      app.isQuiting = true
+      autoUpdater.quitAndInstall()
+    }
   }
 
   /**
