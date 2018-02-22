@@ -55,6 +55,9 @@
       <div class="checkbox">
         <label><input type="checkbox" v-model="srtVF" /> Afficher uniquement les sous-titres français</label>
       </div>
+      <div class="form-group">
+          Dossier de téléchargement : <span class="dl_dir" @click="changeDlDir()">{{ dl_dir }}</span>
+      </div>
     </fieldset>
 
     <div class="text-center">
@@ -90,12 +93,16 @@
         homepage_news: true,
         nb_news: 10,
         sizehistory: 5,
+        dl_dir: '',
       }
     },
     computed: {
       ...mapState(['history']),
     },
     methods: {
+      /**
+       * Load the configuration from localStore
+       */
       load () {
         this.systray = localStore.get(localStore.key.SYSTRAY, true)
         this.route_save = localStore.get(localStore.key.ROUTE.SAVE, false)
@@ -106,7 +113,11 @@
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
+        this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
       },
+      /**
+       * Save the configuration
+       */
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
         localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
@@ -152,6 +163,19 @@
 
         this.load()
       },
+      changeDlDir () {
+        remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+          title: 'Dossier de téléchargement des sous-titres',
+          defaultPath: this.dl_dir,
+          properties: ['openDirectory', 'createDirectory'],
+        }, (dirpath) => {
+          this.dl_dir = dirpath[0]
+          localStore.set(localStore.key.DOWNLOAD.DIR, this.dl_dir)
+        })
+      },
+      /**
+       * Purge localStore (without logout)
+       */
       purge () {
         localStore.purge()
         this.load()
@@ -169,3 +193,12 @@
     },
   }
 </script>
+
+<style lang="scss">
+  .dl_dir {
+    background-color: #FFFFFF;
+    padding: 3px 5px;
+    color: #000;
+    cursor: pointer;
+  }
+</style>

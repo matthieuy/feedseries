@@ -57,7 +57,7 @@ const actions = {
     })
   },
   [types.ACTIONS.DL_SUBTITLE] (context, subtitle) {
-    let dirPath = localStore.get(localStore.key.LAST_DL, remote.app.getPath('downloads'))
+    let dirPath = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
     remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
       title: 'Sauvegarder un fichier de sous-titre',
       defaultPath: path.join(dirPath, subtitle.name),
@@ -65,7 +65,7 @@ const actions = {
       if (typeof filepath !== 'undefined') {
         // Save download path
         dirPath = path.dirname(filepath)
-        localStore.set(localStore.key.LAST_DL, dirPath)
+        localStore.set(localStore.key.DOWNLOAD.DIR, dirPath)
 
         // Download
         let req = request({

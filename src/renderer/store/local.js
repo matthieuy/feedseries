@@ -35,7 +35,9 @@ const key = {
   UPDATE: {
     PRERELEASE: 'update.alpha', // {Boolean} Can use pre-release update
   },
-  LAST_DL: 'last.dl', // {String} Last download dir
+  DOWNLOAD: {
+    DIR: 'dl.dir', // {String} Last download dir
+  },
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history
   HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history

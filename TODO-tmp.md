@@ -31,7 +31,6 @@ This is a temporary TODO file need to be reorganize
 - [ ] Options :
   - [ ] Special episodes
   - [ ] Subtitles :
-    - [ ] DL directory
     - [ ] Don't ask path
 - [ ] DropWindow :
   - [ ] Create and detect where is systray
