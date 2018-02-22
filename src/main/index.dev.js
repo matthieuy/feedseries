@@ -18,7 +18,7 @@ global.userAgent = 'FeedSeries (dev)'
 log.debug('Environment : dev')
 
 // Use the same path as prod
-app.setPath('userData', require('path').join(app.getPath('appData'), 'feedseries'))
+app.setPath('userData', require('path').join(app.getPath('appData'), 'FeedSeries'))
 
 // Install `vue-devtools`
 app.on('ready', () => {
