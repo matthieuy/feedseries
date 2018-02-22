@@ -102,6 +102,14 @@ class Show extends Document {
       note: Math.round(show.notes.mean * 10) / 10,
     }
   }
+
+  /**
+   * Get the collection name
+   * @return {string}
+   */
+  static collectionName() {
+    return 'shows'
+  }
 }
 
 export default Show

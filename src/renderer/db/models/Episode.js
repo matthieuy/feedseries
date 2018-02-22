@@ -104,6 +104,14 @@ class Episode extends Document {
 
     return properties
   }
+
+  /**
+   * Get the collection name
+   * @return {string}
+   */
+  static collectionName() {
+    return 'episodes'
+  }
 }
 
 export default Episode

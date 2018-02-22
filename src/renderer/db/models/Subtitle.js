@@ -33,6 +33,14 @@ class Subtitle extends Document {
       season: season,
     }
   }
+
+  /**
+   * Get the collection name
+   * @return {string}
+   */
+  static collectionName() {
+    return 'subtitles'
+  }
 }
 
 export default Subtitle

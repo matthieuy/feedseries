@@ -60,6 +60,14 @@ class Link extends Document {
   static getLinks (showId) {
     return this.find({ showId: showId }, { sort: '_id' })
   }
+
+  /**
+   * Get the collection name
+   * @return {string}
+   */
+  static collectionName() {
+    return 'links'
+  }
 }
 
 export default Link
