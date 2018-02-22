@@ -30,8 +30,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Seen by...
 - [ ] Options :
   - [ ] Special episodes
-  - [ ] Subtitles :
-    - [ ] Don't ask path
 - [ ] DropWindow :
   - [ ] Create and detect where is systray
   - [ ] Catch drop file

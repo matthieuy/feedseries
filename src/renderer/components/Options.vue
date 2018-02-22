@@ -58,6 +58,9 @@
       <div class="form-group">
           Dossier de téléchargement : <span class="dl_dir" @click="changeDlDir()">{{ dl_dir }}</span>
       </div>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="dl_ask" /> Demander où télécharger les sous-titres</label>
+      </div>
     </fieldset>
 
     <div class="text-center">
@@ -94,6 +97,7 @@
         nb_news: 10,
         sizehistory: 5,
         dl_dir: '',
+        dl_ask: true,
       }
     },
     computed: {
@@ -114,6 +118,7 @@
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
         this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
+        this.dl_ask = localStore.get(localStore.key.DOWNLOAD.ASK, true)
       },
       /**
        * Save the configuration
@@ -123,6 +128,7 @@
         localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
         localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
         localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
+        localStore.set(localStore.key.DOWNLOAD.ASK, this.dl_ask)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
@@ -163,14 +169,19 @@
 
         this.load()
       },
+      /**
+       * Change download directory
+       */
       changeDlDir () {
         remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
           title: 'Dossier de téléchargement des sous-titres',
           defaultPath: this.dl_dir,
           properties: ['openDirectory', 'createDirectory'],
         }, (dirpath) => {
-          this.dl_dir = dirpath[0]
-          localStore.set(localStore.key.DOWNLOAD.DIR, this.dl_dir)
+          if (typeof dirpath !== 'undefined') {
+            this.dl_dir = dirpath[0]
+            localStore.set(localStore.key.DOWNLOAD.DIR, this.dl_dir)
+          }
         })
       },
       /**

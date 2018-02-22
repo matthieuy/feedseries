@@ -37,6 +37,7 @@ const key = {
   },
   DOWNLOAD: {
     DIR: 'dl.dir', // {String} Last download dir
+    ASK: 'dl.ask', // {Boolean} Ask where save
   },
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history
