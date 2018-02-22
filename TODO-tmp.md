@@ -1,21 +1,16 @@
 This is a temporary TODO file need to be reorganize
 
+- [ ] isLogged => isVerified
+- [ ] Update :
+  - [ ] Display releaseNote
 - [ ] On disconnect :
   - [ ] Clear DB
-  - [ ] Clear Prefs
 - [ ] Notifications :
-  - [ ] Subtitle DL : on clic open explorer
-  - [ ] Notification icon
+  - [ ] Fix problem with W10 1709
 - [ ] About :
   - [ ] Github link
   - [ ] Credits BS, electron, GameIcons...
   - [ ] Check update
-- [ ] Portable version :
-  - [ ] Store files in app directory
-  - [ ] Disable systray
-  - [ ] Disable systray in option modal
-- [ ] Timeline :
-  - [ ] Try user color
 - [ ] Suggests :
   - [ ] Check new with interval
   - [ ] Suggest a show to friend
@@ -26,12 +21,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] List of seasons / episodes
   - [ ] Comments
   - [ ] Suggest
-- [ ] Personnal links :
-  - [ ] Create entity
-  - [ ] Link to shows
-  - [ ] Add link
-  - [ ] Remove link
-  - [ ] Display list
 - [ ] Episode page :
   - [ ] Display
   - [ ] Spoiler
@@ -40,13 +29,10 @@ This is a temporary TODO file need to be reorganize
   - [ ] Subtitles
   - [ ] Seen by...
 - [ ] Options :
-  - [ ] Reset configuration
   - [ ] Special episodes
-  - [ ] Subtitles :
-    - [ ] DL directory
-    - [ ] Don't ask path
 - [ ] DropWindow :
   - [ ] Create and detect where is systray
   - [ ] Catch drop file
   - [ ] display result in main window
+- [ ] CrashReporter
 - [ ] Check : https://blog.dcpos.ch/how-to-make-your-electron-app-sexy

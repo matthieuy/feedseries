@@ -55,7 +55,7 @@
         <h1 class="text-center">News</h1>
         <div class="news">
           <div class="new" v-for="article in news">
-            <div class="img" @click="openNews(article.url)" :style="'background-image: url(' + article.picture_url + ');'"></div>
+            <div class="img" @click="openNews(article.url)" :style="bgNews(article)"></div>
               <div class="new-title" @click="openNews(article.url)">{{ article.title }}</div>
               <div class="date" :title="article.date | formatDate('ddd DD à HH[h]mm')">{{ article.date|fromNow }}</div>
           </div>
@@ -69,7 +69,7 @@
 
   import api from '../api'
   import { localStore, types } from '../store'
-  import { Show } from '../db'
+  import { Cache, Show } from '../db'
 
   export default {
     data () {
@@ -85,13 +85,26 @@
     methods: {
       // Load member stats
       loadStats () {
-        api.members.getInfos(true).then((infos) => {
+        // Response
+        let response = (infos) => {
           this.stats = Object.assign(infos.stats, {
             id: infos.id,
             avatar: infos.avatar,
             xp: infos.xp,
           })
-        })
+        }
+
+        // Load from cache
+        let cacheId = 'summary'
+        if (Cache.has(cacheId)) {
+          let infos = Cache.get(cacheId, false)
+          if (infos) {
+            response(infos)
+          }
+        }
+
+        // Load from API
+        api.members.getInfos(true).then(response)
       },
       // Load favorites shows from DB
       loadFavorites () {
@@ -104,6 +117,13 @@
       // Open the news
       openNews (url) {
         this.$store.dispatch(types.ACTIONS.OPEN_LINK, url)
+      },
+      // Get background style for the news
+      bgNews (news) {
+        if (news.picture_url) {
+          return `background-image: url('${news.picture_url}');`
+        }
+        return ''
       },
     },
     watch: {
@@ -239,6 +259,7 @@
         height: 100px;
         background-size: cover;
         background-position: top center;
+        background-color: #000000;
         cursor: pointer;
       }
       .new-title {

@@ -91,7 +91,14 @@ const actions = {
     })
 
     // API
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV === 'development') {
+      // Bugfix on first load in dev env
+      Show.count({}).then((nb) => {
+        if (!nb) {
+          promises.addPromise(api.members.getInfos())
+        }
+      })
+    } else {
       promises.addPromise(api.members.getInfos())
     }
 

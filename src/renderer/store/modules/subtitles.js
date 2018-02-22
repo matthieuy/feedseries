@@ -57,32 +57,30 @@ const actions = {
     })
   },
   [types.ACTIONS.DL_SUBTITLE] (context, subtitle) {
-    let dirPath = localStore.get(localStore.key.LAST_DL, remote.app.getPath('downloads'))
-    remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
-      title: 'Sauvegarder un fichier de sous-titre',
-      defaultPath: path.join(dirPath, subtitle.name),
-    }, (filepath) => {
-      if (typeof filepath !== 'undefined') {
-        // Save download path
-        dirPath = path.dirname(filepath)
-        localStore.set(localStore.key.LAST_DL, dirPath)
+    let defaultDownloadDir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
+    let askDownload = localStore.get(localStore.key.DOWNLOAD.ASK, true)
+    if (!askDownload && !fs.existsSync(defaultDownloadDir)) {
+      askDownload = true
+    }
 
-        // Download
-        let req = request({
-          method: 'GET',
-          uri: `https://www.betaseries.com/srt/${subtitle._id}`,
-        })
-        let out = fs.createWriteStream(filepath)
-        req.pipe(out)
+    // Ask where dowload the subtitle
+    if (askDownload) {
+      remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+        title: 'Sauvegarder un fichier de sous-titre',
+        defaultPath: path.join(defaultDownloadDir, subtitle.name),
+      }, (filepath) => {
+        if (typeof filepath !== 'undefined') {
+          // Save download path
+          localStore.set(localStore.key.DOWNLOAD.DIR, path.dirname(filepath))
 
-        req.on('end', () => {
-          /* eslint-disable no-new */
-          new Notification('Sous-titre téléchargé', {
-            body: filepath,
-          })
-        })
-      }
-    })
+          // Download
+          downloadSubtitleFile(filepath, subtitle)
+        }
+      })
+    } else {
+      // Don't ask and download
+      downloadSubtitleFile(path.join(defaultDownloadDir, subtitle.name), subtitle)
+    }
   },
 }
 
@@ -109,6 +107,31 @@ const getters = {
 
     return listSubtitles
   },
+}
+
+/**
+ * Download a subtitle file
+ * @param {String} filepath Where to download (dir + filename)
+ * @param {Subtitle} subtitle The subtitle entity
+ */
+let downloadSubtitleFile = (filepath, subtitle) => {
+  let req = request({
+    method: 'GET',
+    uri: `https://www.betaseries.com/srt/${subtitle._id}`,
+  })
+  let out = fs.createWriteStream(filepath)
+  req.pipe(out)
+
+  req.on('end', () => {
+    let notif = new Notification('Sous-titre téléchargé', {
+      body: filepath,
+      icon: 'static/icons/icon.png',
+    })
+    notif.onclick = (event) => {
+      event.preventDefault()
+      remote.shell.showItemInFolder(filepath)
+    }
+  })
 }
 
 export { types }

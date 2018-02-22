@@ -62,6 +62,14 @@ class Show extends Document {
   }
 
   /**
+   * Get show by id
+   * @param {Integer} id
+   */
+  static getById (id) {
+    return this.findOne({ _id: id }, { populate: true })
+  }
+
+  /**
    * Clean properties to upsert a Episode
    * @param {Object} show
    * @returns {Object}

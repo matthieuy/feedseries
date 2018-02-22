@@ -2,12 +2,21 @@ import { app, dialog, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 
+import { localStore } from '../../renderer/store'
+
 class Updater {
   /**
    * Construtor : init variables
    */
   constructor () {
     autoUpdater.autoDownload = false
+    autoUpdater.fullChangelog = true
+    autoUpdater.allowPrerelease = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
+    if (process.env.NODE_ENV === 'development') {
+      autoUpdater.updateConfigPath = require('path').join(__dirname, '../../../.electron-vue/dev-app-update.yml')
+      autoUpdater.currentVersion = '0.0.1'
+    }
+
     this._init = false
     this._mainWindow = null
     this._byUser = false
@@ -81,7 +90,7 @@ class Updater {
         type: 'info',
         buttons: ['OK'],
         title: 'Mise à jour',
-        message: 'Aucune mise à jour disponible',
+        message: 'FeedSeries est à jour',
       })
     }
   }
@@ -102,8 +111,11 @@ class Updater {
       message: process.platform === 'win32' ? releaseNotes : releaseName,
       detail: 'Téléchargement terminé : installation en cours...',
     })
-    app.isQuiting = true
-    autoUpdater.quitAndInstall()
+
+    if (process.env.NODE_ENV !== 'development') {
+      app.isQuiting = true
+      autoUpdater.quitAndInstall()
+    }
   }
 
   /**

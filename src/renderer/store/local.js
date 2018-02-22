@@ -32,7 +32,13 @@ const key = {
     SAVE: 'route.save', // {Boolean} Save the last route
     LAST: 'route.last', // {String} The last route path
   },
-  LAST_DL: 'last.dl', // {String} Last download dir
+  UPDATE: {
+    PRERELEASE: 'update.alpha', // {Boolean} Can use pre-release update
+  },
+  DOWNLOAD: {
+    DIR: 'dl.dir', // {String} Last download dir
+    ASK: 'dl.ask', // {Boolean} Ask where save
+  },
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history
   HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history
@@ -51,6 +57,7 @@ let store = new ElectronStore({
     homepage: {
       favorite: true,
       news: true,
+      news_nb: 10,
     },
     timeline: {
       nb: 30,
@@ -63,11 +70,33 @@ let store = new ElectronStore({
       save: false,
       last: '/',
     },
+    update: {
+      alpha: false,
+    },
     devtools: false,
     history: [],
     sizehistory: 5,
   },
 })
 store.key = key
+
+/**
+ * Purge the store (keep connexion)
+ */
+store.purge = () => {
+  let keepData = [key.LOGIN, key.TOKEN]
+  let data = {}
+  keepData.forEach((k) => {
+    data[k] = store.get(k, null)
+  })
+
+  store.clear()
+
+  keepData.forEach((k) => {
+    if (data[k] !== null) {
+      store.set(k, data[k])
+    }
+  })
+}
 
 export default store

@@ -13,6 +13,12 @@ process.env.NODE_ENV = 'development'
 app.isQuiting = true
 log.transports.console.level = 'debug'
 log.transports.file.level = 'debug'
+global.winURL = 'http://localhost:9080'
+global.userAgent = 'FeedSeries (dev)'
+log.debug('Environment : dev')
+
+// Use the same path as prod
+app.setPath('userData', require('path').join(app.getPath('appData'), 'feedseries'))
 
 // Install `vue-devtools`
 app.on('ready', () => {

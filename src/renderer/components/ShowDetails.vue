@@ -49,15 +49,22 @@
             </button>
           </div>
         </nav>
-        <nav class="nav-group">
-          <h5 class="nav-group-title">Liens</h5>
+        <nav class="nav-group" v-show="show">
+          <h5 class="nav-group-title">
+            Liens
+            <i @click="openLinkManager()" v-show="show.in_account" class="cursor fa fa-plus-circle"></i>
+          </h5>
+          <a v-for="link in links" @click="openURL(link)" class="nav-group-item">
+            <img :src="link.icon" width="16" height="16" onerror="this.src='static/empty.png'"> {{ link.name }}
+          </a>
+
           <a v-show="show.slug" @click="openURL('bs')" class="nav-group-item"><img src="static/links/bs.png"> BetaSeries</a>
           <a v-show="show.imdb" @click="openURL('imdb')" class="nav-group-item"><img src="static/links/imdb.png"> IMDb</a>
           <a v-show="show.tvdb" @click="openURL('tvdb')" class="nav-group-item"><img src="static/links/tvdb.png"> TheTVDB</a>
         </nav>
         <nav class="nav-group nav-group-bottom">
           <div class="nav-group-item" v-show="show.in_account">
-            <button class="btn btn-nav btn-delete-show cursor" @click="deleteShow()">
+            <button class="btn btn-nav btn-action btn-delete-show cursor" @click="deleteShow()">
               <i class="fa fa-minus-circle"></i> Supprimer la série
             </button>
           </div>
@@ -89,15 +96,17 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { remote } from 'electron'
+  import { remote, ipcRenderer } from 'electron'
 
   import { types } from '../store'
+  import { Link } from '../db'
 
   export default {
     data () {
       return {
         isLoading: true,
         notFound: false,
+        links: [],
       }
     },
     computed: {
@@ -113,6 +122,47 @@
       },
     },
     methods: {
+      openLinkManager () {
+        // Open modal
+        ipcRenderer.send('open-modal', 'links', `/show/${this.show._id}/links`, {
+          title: this.show.title + ' - Liens',
+          width: 450,
+          height: 550,
+        })
+
+        // When close modal => remove IPC listener
+        ipcRenderer.once('modal-close', (event, modalName) => {
+          if (modalName === 'links') {
+            ipcRenderer.removeAllListeners('links-modal')
+          }
+        })
+
+        // Receive data from modal
+        ipcRenderer.on('links-modal', (event, payload) => {
+          console.log('[IPC Parent] Receive', payload)
+
+          // Response : send links list to modal
+          let responseIPC = () => {
+            Link.getLinks(this.show._id).then((links) => {
+              console.log('[IPC Parent] Send', links)
+              let modalContent = remote.getCurrentWindow().getChildWindows()[0].webContents
+              modalContent.send('links-parent', links)
+              this.links = links
+            })
+          }
+
+          switch (payload.action) {
+            case 'add':
+              return Link.create(payload.link).save().then(responseIPC)
+            case 'edit':
+              return Link.updateOrCreate(payload.link).then(responseIPC)
+            case 'delete':
+              return Link.deleteOne({ _id: payload.link._id }).then(responseIPC)
+            case 'list':
+              return responseIPC()
+          }
+        })
+      },
       /**
        * (un)archive a show
        * @param {Boolean} add archive or not
@@ -137,7 +187,7 @@
        * Delete a show
        */
       deleteShow () {
-        remote.diaconsole.showMessageBox(remote.getCurrentWindow(), {
+        remote.dialog.showMessageBox(remote.getCurrentWindow(), {
           buttons: ['Supprimer', 'Annuler'],
           defaultId: 0,
           title: this.show.title,
@@ -176,7 +226,11 @@
             url = `http://www.imdb.com/title/${this.show.imdb}/episodes`
             break
           default:
-            return false
+            if (type instanceof Link) {
+              url = type.url
+            } else {
+              return false
+            }
         }
 
         this.$store.dispatch(types.ACTIONS.OPEN_LINK, url)
@@ -194,6 +248,11 @@
               show: show,
               route: route,
             })
+
+            // Load links from DB
+            if (show.in_account) {
+              this.loadLinks(show)
+            }
           })
           .catch((response) => {
             if (response.data && response.data.errors && response.data.errors[0].code === 4001) {
@@ -201,6 +260,15 @@
               this.notFound = true
             }
           })
+      },
+      /**
+       * Load links from DB
+       * @param {Show} show
+       */
+      loadLinks (show) {
+        Link.getLinks(show._id).then((links) => {
+          this.links = links
+        })
       },
     },
     mounted () {
@@ -270,6 +338,5 @@
     color: Tomato;
     position: absolute;
     bottom: 20px;
-    left: 16px;
   }
 </style>

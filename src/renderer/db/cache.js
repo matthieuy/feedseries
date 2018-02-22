@@ -65,6 +65,15 @@ class Cache {
   }
 
   /**
+   * Check if a key exist in DB
+   * @param key
+   * @return {Boolean}
+   */
+  has = (key) => {
+    return this._cacheStore.has(key)
+  }
+
+  /**
    * Check if key is valid
    * @param key
    * @returns {Boolean}

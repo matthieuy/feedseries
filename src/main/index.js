@@ -6,39 +6,50 @@ import log from 'electron-log'
 import Updater from './system/update'
 
 let mainWindow, systray
-let userAgent = 'FeedSeries'
 app.setAppUserModelId('org.matthieuy.feedseries')
+
+/********************
+ * Portable version *
+ ********************/
+if (process.env.PORTABLE_EXECUTABLE_DIR) {
+  let path = require('path')
+  let portablePath = path.join(process.env.PORTABLE_EXECUTABLE_DIR, 'feedseries_data')
+  app.setPath('userData', path.join(portablePath, 'userdata'))
+  app.setPath('temp', path.join(portablePath, 'tmp'))
+  app.setPath('logs', path.join(portablePath, 'logs'))
+  log.transports.file.file = path.join(portablePath, 'log.log')
+  log.debug('Portable version')
+  app.isQuiting = true
+}
 
 /*************************
  * Environment variables *
  *************************/
-if (process.env.NODE_ENV === 'development') {
-  userAgent += ' (dev)'
-  global.winURL = 'http://localhost:9080'
-  log.debug('Environment : dev')
-} else {
+if (process.env.NODE_ENV !== 'development') {
   log.transports.console.level = 'info'
   log.transports.file.level = 'info'
-  userAgent += ' v' + app.getVersion()
+  global.userAgent = `FeedSeries v${app.getVersion()}`
   global.winURL = `file://${__dirname}`
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
-  log.debug('Environment : prod')
+  log.debug('Environment : prod', global.userAgent)
 }
 
-// Params
-if (process.argv.length) {
+/******************
+ * CLI Parameters *
+ ******************/
+if (process.argv.length && process.env.NODE_ENV !== 'development') {
   log.debug('Start with params : ', process.argv)
 }
-let hiddenStart = (process.argv.indexOf('--hidden') > -1)
+let silentStart = (process.argv.indexOf('--hidden') > -1) // Start without display windows
 
 /*************
  * Listeners *
  *************/
 app.on('ready', () => {
   // Splashscreen (if isn't silent start)
-  if (!hiddenStart) {
-    let SplashScreen = require('./system/splashscreen').default
-    SplashScreen.init(hiddenStart)
+  if (!silentStart) {
+    let SplashScreen = require('./windows/splashscreen').default
+    SplashScreen.init()
     ipcMain.on('splashscreen-display', () => {
       createWindow()
     })
@@ -113,12 +124,16 @@ function createWindow () {
   let localStore = require('../renderer/store/local').default
   let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? global.winURL + '/index.html#' + localStore.get(localStore.key.ROUTE.LAST) : global.winURL + '/index.html'
   mainWindow.loadURL(mainWindowURL, {
-    userAgent: userAgent,
+    userAgent: global.userAgent,
   })
 
   // Main menu
   let mainMenu = require('./system/menu').default
   mainMenu.init(mainWindow)
+
+  // Modal
+  let modalSystem = require('./windows/modalSystem').default
+  modalSystem.init(mainWindow)
 
   // Close window
   mainWindow.on('closed', () => {
@@ -143,7 +158,7 @@ function createWindow () {
     systray.init(mainWindow)
 
     // Show app
-    if (mainWindow && !hiddenStart) {
+    if (mainWindow && !silentStart) {
       mainWindow.show()
     }
 

@@ -55,9 +55,24 @@
       <div class="checkbox">
         <label><input type="checkbox" v-model="srtVF" /> Afficher uniquement les sous-titres français</label>
       </div>
+      <div class="form-group">
+          Dossier de téléchargement : <span class="dl_dir" @click="changeDlDir()">{{ dl_dir }}</span>
+      </div>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="dl_ask" /> Demander où télécharger les sous-titres</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Mise à jour</legend>
+      <div class="checkbox">
+        <label :class="{strike: !update_alpha}"><input type="checkbox" v-model="update_alpha" readonly disabled />Récupérer les versions non stable</label>
+      </div>
     </fieldset>
 
     <div class="text-center">
+      <button class="btn btn-nav" @click="openConf()" v-if="env === 'development'"><i class="fa fa-pencil-alt"></i>Éditer le fichier de configuration</button>
+      <button class="btn btn-nav" @click="purge()"><i class="fa fa-trash"></i> Réinitialiser</button>
       <button class="btn btn-nav" @click="save()"><i class="fa fa-save"></i> Sauvegarder</button>
     </div>
   </div>
@@ -79,6 +94,7 @@
   export default {
     data () {
       return {
+        env: process.env.NODE_ENV,
         systray: true,
         autoload: false,
         route_save: false,
@@ -89,12 +105,18 @@
         homepage_news: true,
         nb_news: 10,
         sizehistory: 5,
+        dl_dir: '',
+        dl_ask: true,
+        update_alpha: false,
       }
     },
     computed: {
       ...mapState(['history']),
     },
     methods: {
+      /**
+       * Load the configuration from localStore
+       */
       load () {
         this.systray = localStore.get(localStore.key.SYSTRAY, true)
         this.route_save = localStore.get(localStore.key.ROUTE.SAVE, false)
@@ -105,12 +127,20 @@
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
+        this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
+        this.dl_ask = localStore.get(localStore.key.DOWNLOAD.ASK, true)
+        this.update_alpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
       },
+      /**
+       * Save the configuration
+       */
       save () {
         localStore.set(localStore.key.SYSTRAY, this.systray)
         localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
         localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
         localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
+        localStore.set(localStore.key.DOWNLOAD.ASK, this.dl_ask)
+        localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
@@ -146,9 +176,38 @@
         /* eslint-disable no-new */
         new window.Notification(remote.app.getName(), {
           body: 'Options sauvegardées avec succès !',
+          icon: 'static/icons/icon.png',
         })
 
         this.load()
+      },
+      /**
+       * Change download directory
+       */
+      changeDlDir () {
+        remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+          title: 'Dossier de téléchargement des sous-titres',
+          defaultPath: this.dl_dir,
+          properties: ['openDirectory', 'createDirectory'],
+        }, (dirpath) => {
+          if (typeof dirpath !== 'undefined') {
+            this.dl_dir = dirpath[0]
+            localStore.set(localStore.key.DOWNLOAD.DIR, this.dl_dir)
+          }
+        })
+      },
+      /**
+       * Purge localStore (without logout)
+       */
+      purge () {
+        localStore.purge()
+        this.load()
+      },
+      /**
+       * Open config in editor
+       */
+      openConf () {
+        localStore.openInEditor()
       },
       between (value, min, max) {
         return Math.min(max, Math.max(min, value))
@@ -163,3 +222,15 @@
     },
   }
 </script>
+
+<style lang="scss">
+  .dl_dir {
+    background-color: #FFFFFF;
+    padding: 3px 5px;
+    color: #000;
+    cursor: pointer;
+  }
+  .strike {
+    text-decoration: line-through;
+  }
+</style>

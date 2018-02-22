@@ -65,6 +65,7 @@ if (process.env.NODE_ENV !== 'production') {
     new webpack.DefinePlugin({
       '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
       'winURL': '"http://localhost:9080"',
+      'userAgent': `"${global.userAgent}"`,
     })
   )
 }
@@ -77,7 +78,8 @@ if (process.env.NODE_ENV === 'production') {
     new BabiliWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
-      'winURL': `"file://${global.__static}"`
+      'winURL': `"file://${global.__static}"`,
+      'userAgent': `"${global.userAgent}"`,
     })
   )
 }

@@ -47,11 +47,10 @@ export default {
       minimizable: false,
       resizable: false,
       maximizable: false,
-      // webPreferences: {
-      //   devTools: true,
-      // },
     })
-    this.win.loadURL(this.url)
+    this.win.loadURL(this.url, {
+      userAgent: global.userAgent,
+    })
     this.win.on('ready-to-show', () => {
       this.win.show()
       ipcMain.emit('splashscreen-display')
