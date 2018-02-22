@@ -1,18 +1,20 @@
 import { Document } from 'camo'
 
-import Show from './Show'
-
 class Link extends Document {
   constructor () {
     super()
     this.schema({
-      show: Show,
+      showId: String,
       name: String,
       base: String,
       path: String,
     })
   }
 
+  /**
+   * Set the URL (to split base + path)
+   * @param {String} value the complete URL
+   */
   set url (value) {
     let urlArray = value.split('/')
     this.base = urlArray[0] + '//' + urlArray[2]
@@ -25,22 +27,38 @@ class Link extends Document {
     this.path = path.substr(startIndex)
   }
 
+  /**
+   * Get the complete URL
+   * @return {String}
+   */
   get url () {
     return this.base + '/' + this.path
   }
 
+  /**
+   * Get the favicon URL
+   * @return {String}
+   */
   get icon () {
     return this.base + '/favicon.ico'
   }
 
   /**
+   * Update or create a link
+   * @param {Link|Object} The link
+   * @return {Promise}
+   */
+  static updateOrCreate (link) {
+    return this.findOneAndUpdate({ _id: link._id }, link, { upsert: true })
+  }
+
+  /**
    * Get links for a show
-   * @param {Show|Object} show The show
+   * @param {Integer} showId
    * @return {Promise} links
    */
-  static getLinks (show) {
-    let idShow = show._id || show.id
-    return this.find({ show: idShow }, { sort: '_id' })
+  static getLinks (showId) {
+    return this.find({ showId: showId }, { sort: '_id' })
   }
 }
 

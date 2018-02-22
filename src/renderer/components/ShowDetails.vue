@@ -130,11 +130,36 @@
           height: 550,
         })
 
-        // When close modal => refresh links list
+        // When close modal => remove IPC listener
         ipcRenderer.once('modal-close', (event, modalName) => {
-          console.log('listener modal-close', modalName)
           if (modalName === 'links') {
-            this.loadLinks(this.show)
+            ipcRenderer.removeAllListeners('links-modal')
+          }
+        })
+
+        // Receive data from modal
+        ipcRenderer.on('links-modal', (event, payload) => {
+          console.log('[IPC Parent] Receive', payload)
+
+          // Response : send links list to modal
+          let responseIPC = () => {
+            Link.getLinks(this.show._id).then((links) => {
+              console.log('[IPC Parent] Send', links)
+              let modalContent = remote.getCurrentWindow().getChildWindows()[0].webContents
+              modalContent.send('links-parent', links)
+              this.links = links
+            })
+          }
+
+          switch (payload.action) {
+            case 'add':
+              return Link.create(payload.link).save().then(responseIPC)
+            case 'edit':
+              return Link.updateOrCreate(payload.link).then(responseIPC)
+            case 'delete':
+              return Link.deleteOne({ _id: payload.link._id }).then(responseIPC)
+            case 'list':
+              return responseIPC()
           }
         })
       },
@@ -241,7 +266,7 @@
        * @param {Show} show
        */
       loadLinks (show) {
-        Link.getLinks(show).then((links) => {
+        Link.getLinks(show._id).then((links) => {
           this.links = links
         })
       },

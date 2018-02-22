@@ -37,6 +37,7 @@
 </template>
 
 <script>
+  import { remote, ipcRenderer } from 'electron'
   import { Show, Link } from '../../db'
 
   export default {
@@ -59,14 +60,11 @@
         }
 
         let link = Link.create({
-          show: this.show,
+          showId: this.show._id,
           name: this.name,
           url: this.url,
         })
-        link.save().then((linkSaved) => {
-          this.reset()
-          this.links.push(linkSaved)
-        })
+        this.sendLinkActionToParent('add', link)
       },
       /**
        * Edit a link
@@ -79,12 +77,10 @@
         let index = this.links.findIndex((a) => a._id === this.idLink)
         if (index > -1) {
           let link = this.links[index]
-          link.show = this.show
+          link.showId = this.show._id
           link.name = this.name
           link.url = this.url
-          link.save().then(() => {
-            this.reset()
-          })
+          this.sendLinkActionToParent('edit', link)
           return true
         }
         return false
@@ -94,11 +90,7 @@
        * @param {Link} link
        */
       deleteLink (link) {
-        let index = this.links.findIndex((a) => a._id === link._id)
-        link.delete().then((ar) => {
-          this.$delete(this.links, index)
-          this.reset()
-        })
+        this.sendLinkActionToParent('delete', link)
       },
       /**
        * Select a link (to edit)
@@ -133,14 +125,41 @@
 
         return true
       },
+      /**
+       * Send a action link to parent window
+       * @param {String} action (add|edit|delete)
+       * @param {Link} link
+       */
+      sendLinkActionToParent (action, link) {
+        let webContents = remote.getCurrentWindow().getParentWindow().webContents
+        let payload = {
+          action: action,
+          link: (link) ? link.toJSON() : null,
+        }
+        console.log('[IPC Modal] Send', payload)
+        webContents.send('links-modal', payload)
+      },
     },
     mounted () {
       console.log('[VUE] Mount modal/Links.vue')
-      Link.getLinks({id: this.$route.params.id}).then((links) => {
-        this.links = links
-      })
+
+      // Get the current show
       Show.getById(this.$route.params.id).then((show) => {
         this.show = show
+      })
+
+      // Get links list
+      this.sendLinkActionToParent('list')
+
+      // Receive links list from parent window
+      ipcRenderer.on('links-parent', (event, links) => {
+        console.log('[IPC Modal] Receive', links)
+        this.links = []
+        links.forEach((a) => {
+          delete a._schema
+          this.links.push(Link.create(a))
+        })
+        this.reset()
       })
     },
   }
@@ -149,6 +168,9 @@
 <style lang="scss">
   $rootFont: '../../';
   @import "../../assets/scss/theme";
+  body {
+    overflow-y: auto;
+  }
   .link-item {
     margin: 5px 15px;
     clear: both;
