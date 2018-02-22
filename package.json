@@ -71,7 +71,6 @@
         },
         {
           "target": "portable",
-          "artifactName": "${name}-portable-${version}.exe",
           "arch": [
             "x64"
           ]

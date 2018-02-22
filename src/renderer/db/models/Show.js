@@ -107,7 +107,7 @@ class Show extends Document {
    * Get the collection name
    * @return {string}
    */
-  static collectionName() {
+  static collectionName () {
     return 'shows'
   }
 }
