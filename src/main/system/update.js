@@ -52,6 +52,12 @@ class Updater {
       autoUpdater.downloadUpdate()
     })
 
+    // Check interval
+    let intervalCheck = 3600
+    setInterval(() => {
+      this.check(false)
+    }, 1000 * intervalCheck)
+
     this._init = true
     return this
   }

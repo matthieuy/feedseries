@@ -6,7 +6,7 @@
     <div class="infos">
       <div class="current">Version actuelle : v{{ version }}</div>
       <div class="text-center">
-        <button class="btn btn-nav" v-show="lastVersion && percent === 0 && !isInstalling" @click="startDownload()">Télécharger la v{{ lastVersion }}</button>
+        <button class="btn btn-nav" v-show="lastVersion && percent === 0 && !isInstalling" @click="startDownload()">Télécharger "FeedSeries v{{ lastVersion }}"</button>
         <div id="progress" v-show="percent">
           <div id="prg">
             <div id="line" :style="`width: ${percent}%;`"></div>
