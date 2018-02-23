@@ -1,8 +1,6 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
-- [ ] Update :
-  - [ ] Display releaseNote
 - [ ] On disconnect :
   - [ ] Clear DB
 - [ ] Notifications :

@@ -17,6 +17,12 @@ const router = new Router({
       path: '/show/:id/links',
       component: require('@/components/modal/Links').default,
     },
+    // Update
+    {
+      name: 'update',
+      path: '/update',
+      component: require('@/components/modal/Update').default,
+    },
     {
       path: '*',
       redirect: '/about',
