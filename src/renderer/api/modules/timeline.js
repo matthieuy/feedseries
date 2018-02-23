@@ -37,8 +37,8 @@ export default {
     }).then((events) => {
       // Update cache
       if (Cache.isValid(this.cacheId)) {
-        events = Cache.get(this.cacheId, []).concat(events)
-        Cache.update(this.cacheId, events)
+        let cacheEvents = Cache.get(this.cacheId, []).concat(events)
+        Cache.update(this.cacheId, cacheEvents)
       }
 
       return Promise.resolve(events)
