@@ -2,6 +2,7 @@ import { app, dialog, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 
+import modalSystem from '../windows/modalSystem'
 import { localStore } from '../../renderer/store'
 
 class Updater {
@@ -21,6 +22,7 @@ class Updater {
     this._mainWindow = null
     this._byUser = false
     this._percent = 0
+    this._webcontent = null
   }
 
   /**
@@ -45,6 +47,16 @@ class Updater {
     ipcMain.on('check-update', (byUser) => {
       this.check(byUser)
     })
+    ipcMain.on('start-update', (event) => {
+      this._webcontent = event.sender
+      autoUpdater.downloadUpdate()
+    })
+
+    // Check interval
+    let intervalCheck = 3600
+    setInterval(() => {
+      this.check(false)
+    }, 1000 * intervalCheck)
 
     this._init = true
     return this
@@ -65,17 +77,13 @@ class Updater {
    */
   available = (infos) => {
     log.info('[UPDATE] Available :', infos)
-    dialog.showMessageBox(this._mainWindow, {
-      type: 'question',
-      buttons: ['Oui', 'Plus tard'],
-      defaultId: 0,
-      cancelId: 1,
-      title: 'Mise à jour',
-      message: `Une mise à jour est disponible (${infos.releaseName}) !\nFaut-il la télécharger maintenant ?`,
-    }, (response) => {
-      if (response === 0) {
-        autoUpdater.downloadUpdate()
-      }
+    localStore.set(localStore.key.UPDATE.NOTE, infos.releaseNotes)
+
+    modalSystem.open('update', '/update', {
+      title: 'Mises à jour',
+      width: 400,
+      height: 500,
+      frame: false,
     })
   }
 
@@ -103,14 +111,10 @@ class Updater {
    */
   downloaded = (event, releaseNotes, releaseName) => {
     log.info('downloaded', event, releaseNotes, releaseName)
-    dialog.showMessageBox(this._mainWindow, {
-      type: 'info',
-      buttons: ['OK'],
-      defaultId: 0,
-      title: 'Mise à jour',
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail: 'Téléchargement terminé : installation en cours...',
-    })
+    this._mainWindow.setTitle('FeedSeries')
+    if (this._webcontent) {
+      this._webcontent.send('start-install', true)
+    }
 
     if (process.env.NODE_ENV !== 'development') {
       app.isQuiting = true
@@ -130,6 +134,9 @@ class Updater {
     if (this._percent !== percent) {
       this._mainWindow.setTitle(`FeedSeries - Téléchargement : ${percent}%`)
       this._percent = percent
+      if (this._webcontent) {
+        this._webcontent.send('progress-update', percent, progress.bytesPerSecond)
+      }
     }
   }
 

@@ -1,16 +1,10 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
-- [ ] Update :
-  - [ ] Display releaseNote
 - [ ] On disconnect :
   - [ ] Clear DB
 - [ ] Notifications :
   - [ ] Fix problem with W10 1709
-- [ ] About :
-  - [ ] Github link
-  - [ ] Credits BS, electron, GameIcons...
-  - [ ] Check update
 - [ ] Suggests :
   - [ ] Check new with interval
   - [ ] Suggest a show to friend

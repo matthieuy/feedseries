@@ -79,7 +79,8 @@ let template = [
           modalSystem.open('about', '/about', {
             title: 'À propos',
             width: 300,
-            height: 350,
+            height: 325,
+            frame: false,
           })
         },
       },

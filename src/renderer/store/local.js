@@ -34,6 +34,7 @@ const key = {
   },
   UPDATE: {
     PRERELEASE: 'update.alpha', // {Boolean} Can use pre-release update
+    NOTE: 'update.note', // {Array} Release notes from autoUpdater
   },
   DOWNLOAD: {
     DIR: 'dl.dir', // {String} Last download dir
