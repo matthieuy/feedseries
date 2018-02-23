@@ -21,7 +21,7 @@
       </ul>
     </div>
     <div class="github" @click="openLink('https://github.com/matthieuy/feedseries')">
-      <img src="static/github.png" width="24"> Github
+      Github <img src="static/github.png" width="24">
     </div>
   </div>
 </template>
@@ -88,11 +88,10 @@
       position: absolute;
       bottom: 3px;
       right: 5px;
-      font-size: 0.9em;
+      font-size: 15px;
       cursor: pointer;
       img {
         vertical-align: middle;
-        margin-right: -2px;
         margin-top: -1px;
       }
     }
