@@ -5,6 +5,7 @@ import api from '../../api'
 import ConcurentPromise from '../../tools/ConcurentPromise'
 import { Episode } from '../../db'
 import { types as typesShows } from './shows'
+import { localStore } from '../../store'
 
 const types = {
   ACTIONS: {
@@ -199,8 +200,17 @@ const getters = {
       return a.global - b.global
     })
 
+    // Special
+    let special = localStore.get(localStore.key.EPISODES.SPECIAL, true)
+
+    // Filter
     episodes = episodes.filter((episode) => {
       if (episode.show.isArchived || episode.isSeen || (episode.date && moment(String(episode.date)).isAfter(moment.now()))) {
+        return false
+      }
+
+      // Special
+      if (!special && episode.special) {
         return false
       }
 
@@ -246,11 +256,19 @@ const getters = {
    */
   [types.GETTERS.SEASON_LIST]: (state) => (show) => {
     let seasons = {}
+    let special = localStore.get(localStore.key.EPISODES.SPECIAL, true)
 
     state.episodes.forEach((episode) => {
+      // Not this show
       if (episode.show._id !== show._id) {
         return false
       }
+
+      // Special
+      if (!special && episode.special) {
+        return false
+      }
+
       if (!seasons.hasOwnProperty(episode.season)) {
         seasons[episode.season] = {
           number: episode.season,

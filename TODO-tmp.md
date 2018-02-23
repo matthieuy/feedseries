@@ -11,6 +11,7 @@ This is a temporary TODO file need to be reorganize
   - [ ] List of suggests
 - [ ] Subscribe
 - [ ] Planning
+- [ ] Connexion with modal
 - [ ] Show page :
   - [ ] List of seasons / episodes
   - [ ] Comments
