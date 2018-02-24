@@ -5,6 +5,7 @@ import log from 'electron-log'
 
 import Updater from './system/update'
 
+console.time('init')
 let mainWindow, systray
 app.setAppUserModelId('org.matthieuy.feedseries')
 
@@ -166,6 +167,11 @@ function createWindow () {
     Updater.init(mainWindow)
     if (process.env.NODE_ENV !== 'development') {
       Updater.check(false)
+    }
+
+    console.timeEnd('init')
+    if (process.env.NODE_ENV === 'development') {
+      console.timeEnd('init-dev')
     }
   })
 }
