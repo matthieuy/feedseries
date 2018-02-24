@@ -65,9 +65,9 @@
           <a v-show="show.slug" @click="openURL('bs')" class="nav-group-item"><img src="static/links/bs.png"> BetaSeries</a>
           <a v-show="show.imdb" @click="openURL('imdb')" class="nav-group-item"><img src="static/links/imdb.png"> IMDb</a>
           <a v-show="show.tvdb" @click="openURL('tvdb')" class="nav-group-item"><img src="static/links/tvdb.png"> TheTVDB</a>
-          <span class="nav-group-item" @click="openLinkManager()" v-show="show.in_account">
+          <a class="nav-group-item" @click="openLinkManager()" v-show="show.in_account">
             <i class="fa fa-plus-circle"></i> Gérer les liens
-          </span>
+          </a>
         </nav>
       </div>
       <div class="pane">
