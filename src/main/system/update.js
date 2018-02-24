@@ -54,10 +54,12 @@ class Updater {
     })
 
     // Interval check
-    this.setUpdateInterval(localStore.get(localStore.key.UPDATE.INTERVAL, 1))
-    ipcMain.on('interval-update', (event, intervalCheck) => {
-      this.setUpdateInterval(intervalCheck)
-    })
+    if (process.env.NODE_ENV !== 'development') {
+      this.setUpdateInterval(localStore.get(localStore.key.UPDATE.INTERVAL, 1))
+      ipcMain.on('interval-update', (event, intervalCheck) => {
+        this.setUpdateInterval(intervalCheck)
+      })
+    }
 
     this._init = true
     return this
