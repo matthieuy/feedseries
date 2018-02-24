@@ -110,9 +110,8 @@
         padding-top: 0;
       }
       ul {
-        margin: 0;
         padding-left: 15px;
-        list-style-position: inside;
+        margin-left: 10px;
       }
     }
     .close {
