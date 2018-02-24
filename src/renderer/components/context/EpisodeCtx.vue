@@ -1,7 +1,7 @@
 <template>
   <context-menu ref="ctx" @ctx-open="onOpen">
     <li class="ctx-header">{{ episode.show.title }} - {{ episode.code }}</li>
-    <li class="ctx-divider" v-show="!episode.isSeen"></li>
+    <li class="ctx-divider"></li>
     <li class="ctx-item" v-show="!episode.isSeen && !episode.show.isArchived" @click="markView(episode)"><i class="fa fa-eye"></i> Marquer "vu"</li>
     <li class="ctx-item" v-show="episode.isSeen && !episode.show.isArchived" @click="unmarkView(episode)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
     <li class="ctx-item" v-show="!episode.isDownloaded && !episode.isSeen" @click="markDL(episode, true)"><i class="fa fa-download"></i> Marquer "récupéré"</li>
