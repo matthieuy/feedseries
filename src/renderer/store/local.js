@@ -35,6 +35,7 @@ const key = {
   UPDATE: {
     PRERELEASE: 'update.alpha', // {Boolean} Can use pre-release update
     NOTE: 'update.note', // {Array} Release notes from autoUpdater
+    INTERVAL: 'update.interval', // {Integer} Interval betwean 2 check (in hour)
   },
   DOWNLOAD: {
     DIR: 'dl.dir', // {String} Last download dir

@@ -75,6 +75,19 @@
       <div class="checkbox">
         <label :class="{strike: !update_alpha}"><input type="checkbox" v-model="update_alpha" readonly disabled />Récupérer les versions non stable</label>
       </div>
+      <div class="form-group">
+        <label>
+          Intervalle entre 2 vérifications automatique :
+          <select v-model="update_interval">
+            <option value="1">1 heure</option>
+            <option value="6">6 heures</option>
+            <option value="12">12 heures</option>
+            <option value="24">24 heures</option>
+            <option value="168">7 jours</option>
+            <option value="0">jamais</option>
+          </select>
+        </label>
+      </div>
     </fieldset>
 
     <div class="text-center btn-list">
@@ -87,7 +100,7 @@
 </template>
 
 <script>
-  import { remote } from 'electron'
+  import { remote, ipcRenderer } from 'electron'
   import { mapState } from 'vuex'
   import Autolauch from 'auto-launch'
 
@@ -117,6 +130,7 @@
         dl_dir: '',
         dl_ask: true,
         update_alpha: false,
+        update_interval: 1,
         special: true,
       }
     },
@@ -141,6 +155,7 @@
         this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
         this.dl_ask = localStore.get(localStore.key.DOWNLOAD.ASK, true)
         this.update_alpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
+        this.update_interval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
       },
       /**
        * Save the configuration
@@ -171,6 +186,10 @@
         if (this.sizehistory !== localStore.get(localStore.key.HISTORY_SIZE, 5)) {
           this.$store.commit(types.MUTATIONS.CHANGE_HISTORY_SIZE, this.sizehistory)
         }
+
+        // Update
+        localStore.set(localStore.key.UPDATE.INTERVAL, this.update_interval)
+        ipcRenderer.send('interval-update', this.update_interval)
 
         // Special
         if (this.special !== localStore.get(localStore.key.EPISODES.SPECIAL, true)) {

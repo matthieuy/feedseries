@@ -23,6 +23,7 @@ class Updater {
     this._byUser = false
     this._percent = 0
     this._webcontent = null
+    this._interval = null
   }
 
   /**
@@ -44,7 +45,7 @@ class Updater {
     autoUpdater.on('error', this.error)
 
     // IPC
-    ipcMain.on('check-update', (byUser) => {
+    ipcMain.on('check-update', (event, byUser) => {
       this.check(byUser)
     })
     ipcMain.on('start-update', (event) => {
@@ -52,11 +53,11 @@ class Updater {
       autoUpdater.downloadUpdate()
     })
 
-    // Check interval
-    let intervalCheck = 3600
-    setInterval(() => {
-      this.check(false)
-    }, 1000 * intervalCheck)
+    // Interval check
+    this.setUpdateInterval(localStore.get(localStore.key.UPDATE.INTERVAL, 1))
+    ipcMain.on('interval-update', (event, intervalCheck) => {
+      this.setUpdateInterval(intervalCheck)
+    })
 
     this._init = true
     return this
@@ -72,6 +73,19 @@ class Updater {
   }
 
   /**
+   * Set the interval check
+   * @param {Integer} intervalCheck
+   */
+  setUpdateInterval = (intervalCheck) => {
+    clearInterval(this._interval)
+    if (intervalCheck) {
+      setInterval(() => {
+        this.check(false)
+      }, 3600000 * intervalCheck)
+    }
+  }
+
+  /**
    * Update is available
    * @param {Object} infos
    */
@@ -84,6 +98,7 @@ class Updater {
       width: 400,
       height: 500,
       frame: false,
+      skipTaskbar: false,
     })
   }
 
