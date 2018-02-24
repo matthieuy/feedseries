@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="options">
     <h1 class="text-center">Options</h1>
 
     <fieldset>
@@ -38,6 +38,13 @@
     </fieldset>
 
     <fieldset>
+      <legend>Épisodes</legend>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="special" /> Afficher les épisodes spéciaux</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Timeline</legend>
       <div class="form-group">
         <label>
@@ -68,23 +75,38 @@
       <div class="checkbox">
         <label :class="{strike: !update_alpha}"><input type="checkbox" v-model="update_alpha" readonly disabled />Récupérer les versions non stable</label>
       </div>
+      <div class="form-group">
+        <label>
+          Intervalle entre 2 vérifications automatique :
+          <select v-model="update_interval">
+            <option value="1">1 heure</option>
+            <option value="6">6 heures</option>
+            <option value="12">12 heures</option>
+            <option value="24">24 heures</option>
+            <option value="168">7 jours</option>
+            <option value="0">jamais</option>
+          </select>
+        </label>
+      </div>
     </fieldset>
 
-    <div class="text-center">
+    <div class="text-center btn-list">
       <button class="btn btn-nav" @click="openConf()" v-if="env === 'development'"><i class="fa fa-pencil-alt"></i>Éditer le fichier de configuration</button>
       <button class="btn btn-nav" @click="purge()"><i class="fa fa-trash"></i> Réinitialiser</button>
       <button class="btn btn-nav" @click="save()"><i class="fa fa-save"></i> Sauvegarder</button>
     </div>
+    <div class="clearfix"></div>
   </div>
 </template>
 
 <script>
-  import { remote } from 'electron'
+  import { remote, ipcRenderer } from 'electron'
   import { mapState } from 'vuex'
   import Autolauch from 'auto-launch'
 
+  import api from '../api'
   import { localStore, types } from '../store/index'
-  import { Cache } from '../db/index'
+  import { Cache } from '../db'
 
   let launcher = new Autolauch({
     name: remote.app.getName(),
@@ -108,6 +130,8 @@
         dl_dir: '',
         dl_ask: true,
         update_alpha: false,
+        update_interval: 1,
+        special: true,
       }
     },
     computed: {
@@ -122,6 +146,7 @@
         this.route_save = localStore.get(localStore.key.ROUTE.SAVE, false)
         this.timeline = localStore.get(localStore.key.TIMELINE.NB, 30)
         this.timeline_himself = localStore.get(localStore.key.TIMELINE.HIMSELF, false)
+        this.special = localStore.get(localStore.key.EPISODES.SPECIAL, true)
         this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
         this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
@@ -130,6 +155,7 @@
         this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
         this.dl_ask = localStore.get(localStore.key.DOWNLOAD.ASK, true)
         this.update_alpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
+        this.update_interval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
       },
       /**
        * Save the configuration
@@ -159,6 +185,20 @@
         // History
         if (this.sizehistory !== localStore.get(localStore.key.HISTORY_SIZE, 5)) {
           this.$store.commit(types.MUTATIONS.CHANGE_HISTORY_SIZE, this.sizehistory)
+        }
+
+        // Update
+        localStore.set(localStore.key.UPDATE.INTERVAL, this.update_interval)
+        ipcRenderer.send('interval-update', this.update_interval)
+
+        // Special
+        if (this.special !== localStore.get(localStore.key.EPISODES.SPECIAL, true)) {
+          let intSpecial = (this.special) ? 1 : 0
+          api.members.setOption('specials', intSpecial).then((value) => {
+            value = (value === 1)
+            localStore.set(localStore.key.EPISODES.SPECIAL, value)
+            this.special = value
+          })
         }
 
         // Autoload
@@ -224,6 +264,9 @@
 </script>
 
 <style lang="scss">
+  .btn-list {
+    margin-bottom: 15px;
+  }
   .dl_dir {
     background-color: #FFFFFF;
     padding: 3px 5px;

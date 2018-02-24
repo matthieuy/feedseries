@@ -11,6 +11,7 @@ This is a temporary TODO file need to be reorganize
   - [ ] List of suggests
 - [ ] Subscribe
 - [ ] Planning
+- [ ] Connexion with modal
 - [ ] Show page :
   - [ ] List of seasons / episodes
   - [ ] Comments
@@ -22,11 +23,8 @@ This is a temporary TODO file need to be reorganize
   - [ ] Mark DL / view
   - [ ] Subtitles
   - [ ] Seen by...
-- [ ] Options :
-  - [ ] Special episodes
 - [ ] DropWindow :
   - [ ] Create and detect where is systray
   - [ ] Catch drop file
   - [ ] display result in main window
 - [ ] CrashReporter
-- [ ] Check : https://blog.dcpos.ch/how-to-make-your-electron-app-sexy

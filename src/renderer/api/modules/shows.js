@@ -18,6 +18,11 @@ export default {
       if (response.status === 200 && response.data.hasOwnProperty('member')) {
         let member = response.data.member
 
+        // Options
+        if (member.hasOwnProperty('options') && member.options.hasOwnProperty('specials')) {
+          localStore.set(localStore.key.EPISODES.SPECIAL, member.options.specials)
+        }
+
         // Save shows in DB
         if (member.hasOwnProperty('shows')) {
           let promises = []

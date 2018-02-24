@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import { Cache, Show } from '../../db'
+import { localStore } from '../../store'
 
 export default {
   /**
@@ -36,6 +37,11 @@ export default {
           delete member.shows
         }
 
+        // Options
+        if (member.hasOwnProperty('options') && member.options.hasOwnProperty('specials')) {
+          localStore.set(localStore.key.EPISODES.SPECIAL, member.options.specials)
+        }
+
         // Clear data (favorites,...) we can have from DB
         delete member.favorites
         delete member.favorite_movies
@@ -44,6 +50,23 @@ export default {
         Cache.set(cacheId, member, 30)
 
         return Promise.resolve(member)
+      }
+    })
+  },
+  /**
+   * Set a option
+   * @param {string} name (downloaded, global, specials, notation, timelag, friendship)
+   * @param {Integer|String} value (1 ou 0, pour friendship : open|requests|friends|nobody, pour episodes_tri : nom, date, vide)
+   * @return {ConcurentPromise|*|PromiseLike<T>|Promise<T>}
+   */
+  setOption (name, value) {
+    return Vue.http.post('/members/option', {
+      name: name,
+      value: value,
+    }).then((response) => {
+      if (response.status === 200 && response.data.hasOwnProperty('option')) {
+        let option = response.data.option
+        return Promise.resolve(option.value)
       }
     })
   },

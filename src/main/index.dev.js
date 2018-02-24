@@ -9,6 +9,7 @@ import { app } from 'electron'
 import log from 'electron-log'
 
 // Set environment for development
+console.time('init-dev')
 process.env.NODE_ENV = 'development'
 app.isQuiting = true
 log.transports.console.level = 'debug'
