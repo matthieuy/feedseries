@@ -55,6 +55,7 @@ const actions = {
    * @return {boolean}
    */
   [types.OPEN_LINK] (context, obj) {
+    console.log('[LINK] Open', obj)
     let url = ''
     if (obj.constructor.name === 'Episode' || obj.typeObj === 'Episode') {
       url = `https://www.betaseries.com/episode/${obj.show.slug}/${obj.code.toLowerCase()}`
