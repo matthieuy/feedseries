@@ -79,7 +79,7 @@ export default {
 
             // Fix incomplete informations
             if (!episodeSaved.show) {
-              episodeSaved.show = show
+              // episodeSaved.show = show
             }
             resolve(episodeSaved)
           })
