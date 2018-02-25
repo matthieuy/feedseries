@@ -47,7 +47,7 @@
         <div class="season">
           <table class="table-striped">
             <tbody>
-            <show-tr v-for="episode in season.episodes" :key="episode.id" :show="show" :episode="episode">&nbsp;</show-tr>
+            <show-tr v-for="episode in season.episodes" :key="episode._id" :show="show" :episode="episode">&nbsp;</show-tr>
             </tbody>
           </table>
         </div>
@@ -90,13 +90,23 @@
       },
     },
     methods: {
+      loadEpisodes () {
+        this.isLoading = true
+        this.$store.commit(types.episodes.MUTATIONS.SET_EPISODES, [])
+        this.$store.dispatch(types.episodes.ACTIONS.LOAD_EPISODES, this.show).then((episodes) => {
+          this.isLoading = false
+        })
+      },
+    },
+    watch: {
+      show (show) {
+        console.log('Update', show)
+        this.loadEpisodes()
+      },
     },
     mounted () {
       console.info('[VUE] Mount show:summary.vue')
-
-      this.$store.dispatch(types.episodes.ACTIONS.LOAD_EPISODES, this.show).then((episodes) => {
-        this.isLoading = false
-      })
+      this.loadEpisodes()
     },
   }
 </script>
