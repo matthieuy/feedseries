@@ -76,11 +76,6 @@ export default {
         let p = new Promise((resolve, reject) => {
           Episode.findOneAndUpdate({_id: episode.id + ''}, Episode.cleanProperties(episode), {upsert: true}).then((episodeSaved) => {
             nbEpisodes++
-
-            // Fix incomplete informations
-            if (!episodeSaved.show) {
-              // episodeSaved.show = show
-            }
             resolve(episodeSaved)
           })
         })
