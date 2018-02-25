@@ -21,9 +21,7 @@
           <div class="btn-group">
             <button class="btn btn-default btn-dropdown dropdown" :class="{disabled: !history.length}">
               <div class="dropdown-content" v-if="history.length">
-                <div class="dropdown-item" v-for="link in history">
-                  <router-link :to="link.path">{{ link.label }}</router-link>
-                </div>
+                <router-link :to="link.path" class="dropdown-item" v-for="link in history" :key="link.path">{{ link.label }}</router-link>
                 <div class="dropdown-divider" v-if="history.length"></div>
                 <div class="dropdown-item" v-if="history.length" @click="clearHistory()">
                   <i class="fa fa-trash"></i>

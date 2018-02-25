@@ -258,7 +258,13 @@ const getters = {
     let seasons = {}
     let special = localStore.get(localStore.key.EPISODES.SPECIAL, true)
 
-    state.episodes.forEach((episode) => {
+    let episodes = state.episodes.map((a) => Object.assign({}, a))
+    episodes.forEach((episode) => {
+      // Show not loaded
+      if (!episode.show) {
+        episode.show = show
+      }
+
       // Not this show
       if (episode.show._id !== show._id) {
         return false

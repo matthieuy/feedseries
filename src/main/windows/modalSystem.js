@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron'
 import { localStore } from '../../renderer/store'
 
 export default {
@@ -39,14 +39,26 @@ export default {
       },
     }, options)
 
+    // Create window
     const win = this.windows[name] = new BrowserWindow(options)
     win.loadURL(`${global.winURL}/modal.html#${url}`, {
       userAgent: global.userAgent,
     })
     win.setMenu(null)
     win.once('ready-to-show', () => { win.show() })
+
+    // Close event
+    if (!globalShortcut.isRegistered('Escape') && (typeof options.escape === 'undefined' || options.escape)) {
+      globalShortcut.register('Escape', () => {
+        win.close()
+      })
+    }
+
     win.once('close', () => {
       this.parent.webContents.send('modal-close', name)
+      if (globalShortcut.isRegistered('Escape')) {
+        globalShortcut.unregister('Escape')
+      }
     })
     win.once('closed', () => { delete this.windows[name] })
     if (process.env.NODE_ENV === 'development' && localStore.get(localStore.key.DEVTOOLS, false)) {

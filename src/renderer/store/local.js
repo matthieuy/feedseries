@@ -41,6 +41,10 @@ const key = {
     DIR: 'dl.dir', // {String} Last download dir
     ASK: 'dl.ask', // {Boolean} Ask where save
   },
+  COMMENTS: {
+    NB: 'comments.nb', // {Integer} Nb of comment to load
+    ORDER: 'comments.order', // {String} (asc|desc) Order of comments
+  },
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history
   HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history

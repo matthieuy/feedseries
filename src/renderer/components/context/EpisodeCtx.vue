@@ -1,7 +1,7 @@
 <template>
   <context-menu ref="ctx" @ctx-open="onOpen">
     <li class="ctx-header">{{ episode.show.title }} - {{ episode.code }}</li>
-    <li class="ctx-divider" v-show="!episode.isSeen"></li>
+    <li class="ctx-divider"></li>
     <li class="ctx-item" v-show="!episode.isSeen && !episode.show.isArchived" @click="markView(episode)"><i class="fa fa-eye"></i> Marquer "vu"</li>
     <li class="ctx-item" v-show="episode.isSeen && !episode.show.isArchived" @click="unmarkView(episode)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
     <li class="ctx-item" v-show="!episode.isDownloaded && !episode.isSeen" @click="markDL(episode, true)"><i class="fa fa-download"></i> Marquer "récupéré"</li>
@@ -18,6 +18,7 @@
       <img :src="link.icon" width="16" height="16" onerror="this.src='static/empty.png'"> {{ link.name }}
     </li>
     <li class="ctx-item" v-show="!hideShow" @click="gotoShow(episode.show)"><i class="fa fa-id-card"></i> Fiche de la série</li>
+    <li class="ctx-item" v-show="episode.youtube" @click="openWeb('https://www.youtube-nocookie.com/embed/' + episode.youtube)"><img src="static/links/youtube.png" /> Voir sur YouTube</li>
     <li class="ctx-item" @click="openWeb(episode)"><img src="static/links/bs.png" /> Voir l'épisode sur BS</li>
   </context-menu>
 </template>

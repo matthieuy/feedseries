@@ -67,6 +67,8 @@
               return 'fa-archive'
             case 'add_serie':
               return 'fa-plus-circle'
+            case 'recommandation':
+              return 'fa-thumbs-up'
           }
         },
       },
@@ -114,6 +116,7 @@
         .title { cursor: pointer; }
         .title.disabled { cursor: not-allowed; }
     }
-    .fa-star { color: #b4af12; }
+    .fa-star, .fa-thumbs-up { color: #b4af12; }
+    .fa-plus-circle { color: #195625; }
   }
 </style>

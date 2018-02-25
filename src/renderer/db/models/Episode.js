@@ -17,6 +17,7 @@ class Episode extends Document {
       isDownloaded: Boolean,
       isSeen: Boolean,
       friends: Array,
+      youtube: String,
     })
   }
 
@@ -100,6 +101,9 @@ class Episode extends Document {
 
     if (episode.hasOwnProperty('watched_by') && episode.watched_by.length) {
       properties.friends = episode.watched_by
+    }
+    if (episode.hasOwnProperty('youtube_id') && episode.youtube_id) {
+      properties.youtube = episode.youtube_id
     }
 
     return properties

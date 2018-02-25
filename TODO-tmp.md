@@ -13,8 +13,6 @@ This is a temporary TODO file need to be reorganize
 - [ ] Planning
 - [ ] Connexion with modal
 - [ ] Show page :
-  - [ ] List of seasons / episodes
-  - [ ] Comments
   - [ ] Suggest
 - [ ] Episode page :
   - [ ] Display

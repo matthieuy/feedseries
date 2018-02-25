@@ -36,6 +36,9 @@ Vue.filter('defaut', (value, defaultValue) => {
 })
 
 function plurialize (value, singular, plurial) {
+  if (typeof value === 'undefined') {
+    return plurial
+  }
   return (value <= 1) ? `${value} ${singular}` : `${value} ${plurial}`
 }
 Vue.filter('plurialize', (value, singular, plurial) => {

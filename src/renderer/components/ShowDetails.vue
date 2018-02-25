@@ -12,9 +12,11 @@
             <span v-if="show.characters > 0">{{ show.characters|plurialize('personnage', 'personnages') }}</span>
             <span v-else>Personnages</span>
           </router-link>
-          <!--
-          <a class="nav-group-item" v-show="show.comments"><i class="fa fa-comments"></i> {{ show.comments|plurialize('commentaire', 'commentaires')}}</a>
-          -->
+          <router-link :to="{name: 'show.comments', params: { id: $route.params.id }}" :class="{active: $route.name === 'show.comments'}" class="nav-group-item">
+            <i class="fa fa-comments"></i>
+            <span v-if="show.comments > 0">{{ show.comments|plurialize('commentaire', 'commentaires')}}</span>
+            <span v-else>Commentaires</span>
+          </router-link>
           <router-link :to="{name: 'show.similars', params: { id: $route.params.id }}" :class="{active: $route.name === 'show.similars'}" class="nav-group-item">
             <i class="fa fa-paste"></i>
             <span v-if="show.similars > 0">{{ show.similars|plurialize('série similaire', 'séries similaires') }}</span>
@@ -48,11 +50,15 @@
               <i class="fa fa-heart"></i> Retirer des favoris
             </button>
           </div>
+          <div class="nav-group-item" v-show="show.in_account">
+            <button class="btn btn-nav btn-action btn-delete-show cursor" @click="deleteShow()">
+              <i class="fa fa-minus-circle"></i> Supprimer la série
+            </button>
+          </div>
         </nav>
         <nav class="nav-group" v-show="show">
           <h5 class="nav-group-title">
             Liens
-            <i @click="openLinkManager()" v-show="show.in_account" class="cursor fa fa-plus-circle"></i>
           </h5>
           <a v-for="link in links" @click="openURL(link)" class="nav-group-item">
             <img :src="link.icon" width="16" height="16" onerror="this.src='static/empty.png'"> {{ link.name }}
@@ -61,13 +67,9 @@
           <a v-show="show.slug" @click="openURL('bs')" class="nav-group-item"><img src="static/links/bs.png"> BetaSeries</a>
           <a v-show="show.imdb" @click="openURL('imdb')" class="nav-group-item"><img src="static/links/imdb.png"> IMDb</a>
           <a v-show="show.tvdb" @click="openURL('tvdb')" class="nav-group-item"><img src="static/links/tvdb.png"> TheTVDB</a>
-        </nav>
-        <nav class="nav-group nav-group-bottom">
-          <div class="nav-group-item" v-show="show.in_account">
-            <button class="btn btn-nav btn-action btn-delete-show cursor" @click="deleteShow()">
-              <i class="fa fa-minus-circle"></i> Supprimer la série
-            </button>
-          </div>
+          <a class="nav-group-item" @click="openLinkManager()" v-show="show.in_account">
+            <i class="fa fa-plus-circle"></i> Gérer les liens
+          </a>
         </nav>
       </div>
       <div class="pane">
@@ -336,7 +338,5 @@
   }
   .btn-delete-show {
     color: Tomato;
-    position: absolute;
-    bottom: 20px;
   }
 </style>

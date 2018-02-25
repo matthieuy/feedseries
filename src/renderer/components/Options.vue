@@ -48,12 +48,31 @@
       <legend>Timeline</legend>
       <div class="form-group">
         <label>
-          Nombre d'évènement à charger :
+          Nombre d'évènements par page :
           <input type="number" v-model="timeline" max="50" min="5"/>
         </label>
       </div>
       <div class="checkbox">
         <label><input type="checkbox" v-model="timeline_himself" /> Inclure ses actions</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Commentaires</legend>
+      <div class="form-group">
+        <label>
+          Nombre de commentaires par page :
+          <input type="number" v-model="comments_nb" max="50" min="5" />
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Ordre d'affichage :
+          <select v-model="comments_order">
+            <option value="asc">Croissant</option>
+            <option value="desc">Décroissant</option>
+          </select>
+        </label>
       </div>
     </fieldset>
 
@@ -132,6 +151,8 @@
         update_alpha: false,
         update_interval: 1,
         special: true,
+        comments_nb: 30,
+        comments_order: 'desc',
       }
     },
     computed: {
@@ -156,6 +177,8 @@
         this.dl_ask = localStore.get(localStore.key.DOWNLOAD.ASK, true)
         this.update_alpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
         this.update_interval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
+        this.comments_nb = localStore.get(localStore.key.COMMENTS.NB, 30)
+        this.comments_order = localStore.get(localStore.key.COMMENTS.ORDER, 'desc')
       },
       /**
        * Save the configuration
@@ -167,6 +190,8 @@
         localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
         localStore.set(localStore.key.DOWNLOAD.ASK, this.dl_ask)
         localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
+        localStore.set(localStore.key.COMMENTS.NB, this.between(this.comments_nb, 5, 50))
+        localStore.set(localStore.key.COMMENTS.ORDER, this.comments_order)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
