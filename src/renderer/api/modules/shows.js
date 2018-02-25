@@ -124,7 +124,7 @@ export default {
     }).then((response) => {
       if (response.status === 200 && response.data.hasOwnProperty('show')) {
         let show = Show.cleanProperties(response.data.show)
-        Show.findOneAndUpdate({ _id: show.id }, show, { upsert: true })
+        Show.findOneAndUpdate({ _id: show._id }, show, { upsert: true })
         this.setCache(show)
 
         return Promise.resolve(show)
