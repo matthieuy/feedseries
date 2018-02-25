@@ -47,7 +47,7 @@
         <div class="season">
           <table class="table-striped">
             <tbody>
-            <show-tr v-for="episode in season.episodes" :key="episode._id" :show="show" :episode="episode">&nbsp;</show-tr>
+            <show-tr v-for="episode in season.episodes" :key="episode.id" :show="show" :episode="episode">&nbsp;</show-tr>
             </tbody>
           </table>
         </div>

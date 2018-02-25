@@ -12,9 +12,11 @@
             <span v-if="show.characters > 0">{{ show.characters|plurialize('personnage', 'personnages') }}</span>
             <span v-else>Personnages</span>
           </router-link>
-          <!--
-          <a class="nav-group-item" v-show="show.comments"><i class="fa fa-comments"></i> {{ show.comments|plurialize('commentaire', 'commentaires')}}</a>
-          -->
+          <router-link :to="{name: 'show.comments', params: { id: $route.params.id }}" :class="{active: $route.name === 'show.comments'}" class="nav-group-item">
+            <i class="fa fa-comments"></i>
+            <span v-if="show.comments > 0">{{ show.comments|plurialize('commentaire', 'commentaires')}}</span>
+            <span v-else>Commentaires</span>
+          </router-link>
           <router-link :to="{name: 'show.similars', params: { id: $route.params.id }}" :class="{active: $route.name === 'show.similars'}" class="nav-group-item">
             <i class="fa fa-paste"></i>
             <span v-if="show.similars > 0">{{ show.similars|plurialize('série similaire', 'séries similaires') }}</span>

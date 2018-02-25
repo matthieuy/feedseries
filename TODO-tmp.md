@@ -13,7 +13,6 @@ This is a temporary TODO file need to be reorganize
 - [ ] Planning
 - [ ] Connexion with modal
 - [ ] Show page :
-  - [ ] Comments
   - [ ] Suggest
 - [ ] Episode page :
   - [ ] Display

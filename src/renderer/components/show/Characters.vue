@@ -36,9 +36,7 @@
     },
     beforeRouteUpdate (to, from, next) {
       this.$store.commit(types.show.MUTATIONS.SET_CHARACTERS, [])
-      this.loadCharacters({
-        _id: to.params.id,
-      })
+      this.loadCharacters(this.show)
       next()
     },
   }

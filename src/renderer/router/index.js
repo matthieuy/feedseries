@@ -48,6 +48,12 @@ const router = new Router({
           name: 'show.similars',
           component: require('@/components/show/Similars').default,
         },
+        // Comments
+        {
+          path: 'comments',
+          name: 'show.comments',
+          component: require('@/components/show/Comments').default,
+        },
       ],
     },
     // Timeline
