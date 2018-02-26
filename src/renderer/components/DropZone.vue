@@ -67,6 +67,8 @@
             isDownloaded: episode.user.downloaded,
             isSeen: episode.user.seen,
           }
+          window.removeEventListener('keydown', this.escapeListener)
+          window.addEventListener('keydown', this.escapeListener)
         }).catch((error) => {
           this.isSearching = false
           if (error.code === 4001) {
@@ -103,7 +105,13 @@
         this.showDrop = false
         this.isSearching = false
         this.episode = {}
+        window.removeEventListener('keydown', this.escapeListener)
         return false
+      },
+      escapeListener (event) {
+        if (event.which === 27) {
+          this.close()
+        }
       },
     },
     mounted () {
