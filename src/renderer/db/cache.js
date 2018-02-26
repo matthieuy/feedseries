@@ -1,4 +1,5 @@
 import ElectronStore from 'electron-store'
+import fs from 'fs'
 
 class Cache {
   constructor () {
@@ -119,6 +120,15 @@ class Cache {
    */
   reset = () => {
     this._cacheStore.clear()
+  }
+
+  /**
+   * Get the cache size (in bytes)
+   * @return {number}
+   */
+  getSize = () => {
+    let stats = fs.statSync(this._cacheStore.path)
+    return stats.size || 0
   }
 
   /**

@@ -2,10 +2,9 @@ This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
 - [ ] Options :
-  - [ ] Clear DB
-  - [ ] Clear cache
   - [ ] Clear cache file
   - [ ] Resync
+  - [ ] Save on exit page
 - [ ] On disconnect :
   - [ ] Clear DB
 - [ ] Notifications :

@@ -109,6 +109,25 @@
       </div>
     </fieldset>
 
+    <fieldset>
+      <legend>Cache et bases de données</legend>
+      <div class="btn-list">
+        <button class="btn btn-nav" @click="clearCache()" v-if="fileSize.cache">Vider le cache local ({{ fileSize.cache | size }})</button>
+        <button class="btn btn-nav" v-if="fileSize.shows" @click="clearDb('shows')">
+          Vider la BDD des séries ({{ fileSize.shows | size }})
+        </button>
+        <button class="btn btn-nav" v-if="fileSize.episodes" @click="clearDb('episodes')">
+          Vider la BDD des épisodes ({{ fileSize.episodes | size }})
+        </button>
+        <button class="btn btn-nav" v-if="fileSize.subtitles" @click="clearDb('subtitles')">
+          Vider la BDD des sous-titres ({{ fileSize.subtitles | size }})
+        </button>
+        <button class="btn btn-nav" v-if="fileSize.links" @click="clearDb('links')">
+          Vider la BDD des liens ({{ fileSize.links | size }})
+        </button>
+      </div>
+    </fieldset>
+
     <div class="text-center btn-list">
       <button class="btn btn-nav" @click="openConf()" v-if="env === 'development'"><i class="fa fa-pencil-alt"></i>Éditer le fichier de configuration</button>
       <button class="btn btn-nav" @click="purge()"><i class="fa fa-trash"></i> Réinitialiser</button>
@@ -125,7 +144,7 @@
 
   import api from '../api'
   import { localStore, types } from '../store/index'
-  import { Cache } from '../db'
+  import db, { Cache } from '../db'
 
   let launcher = new Autolauch({
     name: remote.app.getName(),
@@ -136,6 +155,7 @@
     data () {
       return {
         env: process.env.NODE_ENV,
+        fileSize: {},
         systray: true,
         autoload: false,
         route_save: false,
@@ -238,11 +258,7 @@
         })
 
         // Notification
-        /* eslint-disable no-new */
-        new window.Notification(remote.app.getName(), {
-          body: 'Options sauvegardées avec succès !',
-          icon: 'static/icons/icon.png',
-        })
+        this.addNotification('Options sauvegardées avec succès !')
 
         this.load()
       },
@@ -269,11 +285,45 @@
         this.load()
       },
       /**
+       * Clear the local cache
+       */
+      clearCache () {
+        Cache.reset()
+        this.addNotification('Cache vidé avec succès !')
+        this.fileSize.cache = Cache.getSize()
+      },
+      /**
+       * Clear a DB
+       * @param {String} name The DB name
+       */
+      clearDb (name) {
+        db.clearDb(name).then(() => {
+          console.log(`[DB] Delete "${name}.db"`)
+          this.addNotification('Purge de la base de donnée avec succès !')
+          this.fileSize[name] = db.getSize(name)
+        })
+      },
+      addNotification (text) {
+        /* eslint-disable no-new */
+        new window.Notification(remote.app.getName(), {
+          body: text,
+          icon: 'static/icons/icon.png',
+        })
+      },
+      /**
        * Open config in editor
        */
       openConf () {
         localStore.openInEditor()
       },
+      /**
+       * Get value with limit
+       * @param {Integer} value
+       * @param {Integer} min
+       * @param {Integer} max
+       * @private
+       * @return {Integer}
+       */
       between (value, min, max) {
         return Math.min(max, Math.max(min, value))
       },
@@ -284,12 +334,19 @@
       launcher.isEnabled().then((enabled) => {
         this.autoload = enabled
       })
+      this.fileSize = {
+        cache: Cache.getSize(),
+        episodes: db.getSize('episodes'),
+        shows: db.getSize('shows'),
+        subtitles: db.getSize('subtitles'),
+        links: db.getSize('links'),
+      }
     },
   }
 </script>
 
 <style lang="scss">
-  .btn-list {
+  .btn-list .btn {
     margin-bottom: 15px;
   }
   .dl_dir {
