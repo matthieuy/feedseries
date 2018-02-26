@@ -43,6 +43,7 @@
         api.subtitles.getShow(episode.show).then((subtitles) => {
           if (!subtitles.length) {
             this.$refs.ctx.ctxVisible = false
+            this.onCtxClose()
           }
         })
 
@@ -68,6 +69,7 @@
        */
       escapeListener (event) {
         if (event.which === 27) {
+          console.log(this.$refs)
           this.$refs.ctx.ctxVisible = false
           this.onCtxClose()
         }
