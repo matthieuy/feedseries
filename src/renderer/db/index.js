@@ -1,4 +1,5 @@
 import camo from 'camo'
+import fs from 'fs'
 import { remote } from 'electron'
 
 // Load models
@@ -12,6 +13,10 @@ import Cache from './cache'
 let Database = function () {
   this._database = null
 
+  /**
+   * Init the database
+   * @return {Promise}
+   */
   this.init = () => {
     if (!this._database) {
       return new Promise((resolve, reject) => {
@@ -29,6 +34,9 @@ let Database = function () {
     }
   }
 
+  /**
+   * Set the interval to compress DB
+   */
   this.compact = () => {
     global.dbCollection = camo.getClient().driver()
     for (let collection in global.dbCollection) {
@@ -39,6 +47,40 @@ let Database = function () {
         })
       }
     }
+  }
+
+  /**
+   * Get the DB path
+   * @param {String} dbName
+   * @return {string}
+   */
+  this.getPath = (dbName) => {
+    return require('path').join(remote.app.getPath('userData'), dbName + '.db')
+  }
+
+  /**
+   * Clear a DB
+   * @param {String} dbName
+   * @return {Promise}
+   */
+  this.clearDb = (dbName) => {
+    return new Promise((resolve, reject) => {
+      fs.unlink(this.getPath(dbName), resolve)
+    })
+  }
+
+  /**
+   * Get the DB size
+   * @param {String} dbName
+   * @return {number}
+   */
+  this.getSize = (dbName) => {
+    let path = this.getPath(dbName)
+    if (fs.existsSync(path)) {
+      let stats = fs.statSync(path)
+      return stats.size || 0
+    }
+    return 0
   }
 }
 

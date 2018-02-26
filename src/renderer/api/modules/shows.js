@@ -76,11 +76,6 @@ export default {
         let p = new Promise((resolve, reject) => {
           Episode.findOneAndUpdate({_id: episode.id + ''}, Episode.cleanProperties(episode), {upsert: true}).then((episodeSaved) => {
             nbEpisodes++
-
-            // Fix incomplete informations
-            if (!episodeSaved.show) {
-              episodeSaved.show = show
-            }
             resolve(episodeSaved)
           })
         })
@@ -129,7 +124,7 @@ export default {
     }).then((response) => {
       if (response.status === 200 && response.data.hasOwnProperty('show')) {
         let show = Show.cleanProperties(response.data.show)
-        Show.findOneAndUpdate({ _id: show.id }, show, { upsert: true })
+        Show.findOneAndUpdate({ _id: show._id }, show, { upsert: true })
         this.setCache(show)
 
         return Promise.resolve(show)

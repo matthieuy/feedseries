@@ -28,7 +28,7 @@ class Episode extends Document {
   static getUnseen () {
     return this.find({isSeen: false}, {populate: true, sort: '_id'}).then((episodes) => {
       episodes = episodes.filter((episode) => {
-        return episode.show && episode.show.isArchived === false
+        return episode.show && episode.show.in_account && episode.show.isArchived === false
       })
 
       return Promise.resolve(episodes)

@@ -1,8 +1,9 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
-- [ ] On disconnect :
-  - [ ] Clear DB
+- [ ] Options :
+  - [ ] Resync
+  - [ ] Save on exit page
 - [ ] Notifications :
   - [ ] Fix problem with W10 1709
 - [ ] Suggests :
