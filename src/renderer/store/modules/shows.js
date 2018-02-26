@@ -298,7 +298,7 @@ const getters = {
   [types.GETTERS.SHOWS]: (state) => (status, order, reverse) => {
     // Filter
     let shows = state.shows.filter((show) => {
-      if (typeof show.title === 'undefined') {
+      if (typeof show.title === 'undefined' || !show.in_account) {
         return false
       }
       switch (status) {
