@@ -45,7 +45,7 @@
         <div class="favorites">
           <span v-for="show in favorites">
             <router-link :to="{ name: 'show', params: { id: show._id }}" class="img">
-              <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="200" :alt="show.title">
+              <img :src="getFavoriteImg(show)" width="200" :alt="show.title">
             </router-link>
           </span>
         </div>
@@ -124,6 +124,9 @@
           return `background-image: url('${news.picture_url}');`
         }
         return ''
+      },
+      getFavoriteImg (favorite) {
+        return api.shows.getShowImgUrl(favorite._id, 200, 295)
       },
     },
     watch: {
