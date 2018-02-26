@@ -52,7 +52,7 @@
           </div>
           <div class="nav-group-item" v-show="show.in_account">
             <button class="btn btn-nav btn-action btn-delete-show cursor" @click="deleteShow()">
-              <i class="fa fa-minus-circle"></i> Supprimer la série
+              <i class="fa fa-trash"></i> Supprimer la série
             </button>
           </div>
         </nav>
