@@ -1,5 +1,5 @@
 <template>
-  <context-menu ref="ctx" @ctx-open="onOpen">
+  <context-menu ref="ctx" @ctx-open="onOpen" @ctx-close="onCtxClose" @ctx-cancel="onCtxClose">
     <li class="ctx-header">{{ subtitles.length|plurialize('sous-titre', 'sous-titres') }}</li>
     <li class="ctx-divider" v-show="subtitles.length"></li>
     <li class="ctx-item" v-for="subtitle in subtitles" @click="downloadSubtitle(subtitle)">
@@ -53,6 +53,23 @@
           if (thisTag !== this.$parent.$refs[i].$options._componentTag) {
             this.$parent.$refs[i].$refs.ctx.ctxVisible = false
           }
+        }
+        window.addEventListener('keydown', this.escapeListener)
+      },
+      /**
+       * On close ctx : remove listener
+       */
+      onCtxClose () {
+        window.removeEventListener('keydown', this.escapeListener)
+      },
+      /**
+       * When press Escape key
+       * @param event
+       */
+      escapeListener (event) {
+        if (event.which === 27) {
+          this.$refs.ctx.ctxVisible = false
+          this.onCtxClose()
         }
       },
     },
