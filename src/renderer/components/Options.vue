@@ -112,17 +112,20 @@
     <fieldset>
       <legend>Cache et bases de données</legend>
       <div class="btn-list">
-        <button class="btn btn-nav" @click="clearCache()" v-if="fileSize.cache">Vider le cache local ({{ fileSize.cache | size }})</button>
-        <button class="btn btn-nav" v-if="fileSize.shows" @click="clearDb('shows')">
+        <button class="btn btn-nav" @click="clearCache()" v-show="fileSize.cache">Vider le cache local ({{ fileSize.cache | size }})</button>
+        <button class="btn btn-nav" @click="rmCacheData()">
+          Supprimer les fichiers en cache <span v-show="fileSize.data">({{ fileSize.data | size }})</span>
+        </button>
+        <button class="btn btn-nav" v-show="fileSize.shows" @click="clearDb('shows')">
           Vider la BDD des séries ({{ fileSize.shows | size }})
         </button>
-        <button class="btn btn-nav" v-if="fileSize.episodes" @click="clearDb('episodes')">
+        <button class="btn btn-nav" v-show="fileSize.episodes" @click="clearDb('episodes')">
           Vider la BDD des épisodes ({{ fileSize.episodes | size }})
         </button>
-        <button class="btn btn-nav" v-if="fileSize.subtitles" @click="clearDb('subtitles')">
+        <button class="btn btn-nav" v-show="fileSize.subtitles" @click="clearDb('subtitles')">
           Vider la BDD des sous-titres ({{ fileSize.subtitles | size }})
         </button>
-        <button class="btn btn-nav" v-if="fileSize.links" @click="clearDb('links')">
+        <button class="btn btn-nav" v-show="fileSize.links" @click="clearDb('links')">
           Vider la BDD des liens ({{ fileSize.links | size }})
         </button>
       </div>
@@ -303,6 +306,22 @@
           this.fileSize[name] = db.getSize(name)
         })
       },
+      /**
+       * Delete all files in Cache data
+       */
+      rmCacheData () {
+        Cache.rmCacheData().then(() => {
+          this.refreshDataCacheSize()
+          this.addNotification(`Fichiers du cache supprimés :\n${Cache.getCacheDataDir()}`)
+        }).catch((err) => {
+          console.log('Error clear data cache', err)
+          this.addNotification(`Erreur lors de la suppression du dossier de cache :\n${Cache.getCacheDataDir()}`)
+        })
+      },
+      /**
+       * Add a notification
+       * @param text
+       */
       addNotification (text) {
         /* eslint-disable no-new */
         new window.Notification(remote.app.getName(), {
@@ -327,6 +346,14 @@
       between (value, min, max) {
         return Math.min(max, Math.max(min, value))
       },
+      /**
+       * Refresh (async) the cache data size
+       */
+      refreshDataCacheSize () {
+        Cache.getCacheDataSize().then((size) => {
+          this.$set(this.fileSize, 'data', size)
+        })
+      },
     },
     mounted () {
       console.log('[VUE] Mount Options.vue')
@@ -334,6 +361,8 @@
       launcher.isEnabled().then((enabled) => {
         this.autoload = enabled
       })
+
+      // Get size of cache/DB
       this.fileSize = {
         cache: Cache.getSize(),
         episodes: db.getSize('episodes'),
@@ -341,6 +370,7 @@
         subtitles: db.getSize('subtitles'),
         links: db.getSize('links'),
       }
+      this.refreshDataCacheSize()
     },
   }
 </script>

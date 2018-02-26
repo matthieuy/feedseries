@@ -1,5 +1,6 @@
 import ElectronStore from 'electron-store'
 import fs from 'fs'
+import path from 'path'
 
 class Cache {
   constructor () {
@@ -129,6 +130,52 @@ class Cache {
   getSize = () => {
     let stats = fs.statSync(this._cacheStore.path)
     return stats.size || 0
+  }
+
+  /**
+   * Get the cache data size
+   * @return {Promise}
+   */
+  getCacheDataSize = () => {
+    return new Promise((resolve, reject) => {
+      let cacheDir = this.getCacheDataDir()
+      let size = 0
+
+      fs.readdir(cacheDir, (err, files) => {
+        if (err) {
+          return reject(err)
+        }
+        files.forEach((file) => {
+          let stats = fs.statSync(path.join(cacheDir, file))
+          size += stats.size
+        })
+        resolve(size)
+      })
+    })
+  }
+
+  /**
+   * Remove the cache data files
+   * @return {Promise}
+   */
+  rmCacheData = () => {
+    return new Promise((resolve, reject) => {
+      let cacheDir = this.getCacheDataDir()
+      fs.readdir(cacheDir, (e, files) => {
+        files.forEach((file) => {
+          fs.unlinkSync(path.join(cacheDir, file))
+        })
+        resolve()
+      })
+    })
+  }
+
+  /**
+   * Get the cache data path
+   * @return {string}
+   */
+  getCacheDataDir = () => {
+    return path.join(path.dirname(this._cacheStore.path), 'Cache')
   }
 
   /**

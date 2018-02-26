@@ -2,7 +2,6 @@ This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
 - [ ] Options :
-  - [ ] Clear cache file
   - [ ] Resync
   - [ ] Save on exit page
 - [ ] Notifications :
