@@ -5,8 +5,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Clear cache file
   - [ ] Resync
   - [ ] Save on exit page
-- [ ] On disconnect :
-  - [ ] Clear DB
 - [ ] Notifications :
   - [ ] Fix problem with W10 1709
 - [ ] Suggests :

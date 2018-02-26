@@ -1,7 +1,7 @@
 import { shell } from 'electron'
 
 import api from '../api'
-import { Cache } from '../db'
+import db, { Cache } from '../db'
 import localStore from '../store/local'
 
 const types = {
@@ -38,10 +38,16 @@ const actions = {
   [types.LOGOUT] (context) {
     return new Promise((resolve, reject) => {
       api.auth.disconnect().then(() => {
+        console.info('[LOGOUT]')
         context.commit(types.LOGOUT)
+
+        // Clear DB
         localStore.delete(localStore.key.LOGIN)
         Cache.reset()
-        console.info('[LOGOUT]')
+        let dbNames = ['shows', 'episodes', 'subtitles']
+        dbNames.forEach((dbName) => {
+          db.clearDb(dbName)
+        })
         resolve()
       }).catch(() => {
         reject(new Error())
