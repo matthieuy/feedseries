@@ -55,6 +55,7 @@
     methods: {
       loadComments (show) {
         this.isLoading = true
+        this.$store.commit(types.show.MUTATIONS.SET_COMMENTS, [])
         this.$store.dispatch(types.show.ACTIONS.LOAD_COMMENTS, show).then(() => {
           this.isLoading = false
         })
@@ -76,11 +77,14 @@
     },
     mounted () {
       console.info('[VUE] Mount show:comments')
-      this.loadComments(this.show)
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        vm.loadComments({ _id: to.params.id })
+      })
     },
     beforeRouteUpdate (to, from, next) {
-      this.$store.commit(types.show.MUTATIONS.SET_COMMENTS, [])
-      this.loadComments(this.show)
+      this.loadComments({ _id: to.params.id })
       next()
     },
   }

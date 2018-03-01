@@ -27,16 +27,20 @@
     },
     methods: {
       loadCharacters (show) {
+        this.$store.commit(types.show.MUTATIONS.SET_CHARACTERS, [])
         this.$store.dispatch(types.show.ACTIONS.LOAD_CHARACTERS, show)
       },
     },
     mounted () {
       console.info('[VUE] Mount show:characters')
-      this.loadCharacters(this.show)
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        vm.loadCharacters({ _id: to.params.id })
+      })
     },
     beforeRouteUpdate (to, from, next) {
-      this.$store.commit(types.show.MUTATIONS.SET_CHARACTERS, [])
-      this.loadCharacters(this.show)
+      this.loadCharacters({ _id: to.params.id })
       next()
     },
   }

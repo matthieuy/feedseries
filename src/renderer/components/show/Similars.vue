@@ -32,18 +32,20 @@
     },
     methods: {
       loadSimilars (show) {
+        this.$store.commit(types.show.MUTATIONS.SET_SIMILARS, [])
         this.$store.dispatch(types.show.ACTIONS.LOAD_SIMILARS, show)
       },
     },
     mounted () {
       console.info('[VUE] Mount show:similars')
-      this.loadSimilars(this.show)
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm => {
+        vm.loadSimilars({ _id: to.params.id })
+      })
     },
     beforeRouteUpdate (to, from, next) {
-      this.$store.commit(types.show.MUTATIONS.SET_SIMILARS, [])
-      this.loadSimilars({
-        _id: to.params.id,
-      })
+      this.loadSimilars({ _id: to.params.id })
       next()
     },
   }
