@@ -4,7 +4,7 @@
     <div class="window-content">
       <ul>
         <li v-for="event in timeline.events" class="event">
-          <img :src="userAvatar(event.userId)" alt="" width="24" height="24" />
+          <img :id="'event-avatar-' + event.id" :src="userAvatar(event)" alt="" width="24" height="24" />
           <i class="type-icon fa" :class="iconType(event.type)"></i>
           <span :title="event.date | formatDate('ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
           {{ event.user }} <span v-html="event.html" v-on:click.prevent=""></span>
@@ -55,8 +55,14 @@
             this.disableMore = false
           })
         },
-        userAvatar (userId) {
-          return api.members.getAvatarURL(userId, 24)
+        userAvatar (event) {
+          fetch(api.members.getAvatarURL(event.userId, 24)).then((response) => {
+            if (response.status === 200) {
+              document.getElementById(`event-avatar-${event.id}`).src = response.url
+            }
+          })
+
+          return 'static/empty.png'
         },
         iconType (type) {
           switch (type) {
