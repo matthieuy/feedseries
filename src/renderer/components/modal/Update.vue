@@ -55,6 +55,7 @@
     mounted () {
       console.log('[VUE] Mount modal/Update.vue')
       this.updates = localStore.get(localStore.key.UPDATE.NOTE, [])
+      localStore.delete(localStore.key.UPDATE.NOTE)
       if (this.updates.length) {
         this.lastVersion = this.updates[0].version
       }

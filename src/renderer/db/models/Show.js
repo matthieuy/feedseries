@@ -29,7 +29,6 @@ class Show extends Document {
       remaining: Number,
       progress: Number,
       image: String,
-      poster: String,
       note: Number,
     })
   }
@@ -100,7 +99,6 @@ class Show extends Document {
       progress: show.user.status,
       description: show.description,
       image: (show.images.show) ? show.images.show.replace('https://www.betaseries.com/images/fonds/show/', '') : null,
-      poster: (show.images.poster) ? show.images.poster.replace('https://www.betaseries.com/images/fonds/poster/', '') : null,
       note: Math.round(show.notes.mean * 10) / 10,
     }
   }

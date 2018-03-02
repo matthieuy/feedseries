@@ -15,6 +15,12 @@ This is a temporary TODO file need to be reorganize
 - [ ] Connexion with modal
 - [ ] Show page :
   - [ ] Suggest
+  - [ ] Comments :
+    - [ ] BBCode :
+      - [ ] URL
+      - [ ] Spoiler
+    - [ ] Post a comment
+    - [ ] Post a reply
 - [ ] Episode page :
   - [ ] Display
   - [ ] Spoiler

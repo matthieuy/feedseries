@@ -2,8 +2,7 @@
   <div>
     <div class="pull-left img-container">
       <router-link :to="{name: 'show', params: { id: show._id }}">
-        <img :src="'https://www.betaseries.com/images/fonds/poster/' + show.poster" width="100" class="pull-left" v-if="show.poster">
-        <div class="pull-left replace-img" v-show="!show.poster"></div>
+        <img v-bind:id="'poster' + show._id" src="static/empty.png" width="100" height="147" class="pull-left">
       </router-link>
     </div>
     <div class="box-info-container">
@@ -34,12 +33,21 @@
 </template>
 
 <script>
+  import api from '../api'
+
   export default {
     props: ['show'],
     methods: {
       nl2br (text) {
         return text.replace(/\n/g, '<br>')
       },
+    },
+    mounted () {
+      fetch(api.shows.getShowImgUrl(this.show._id, 100, 147)).then((response) => {
+        if (response.status === 200) {
+          document.getElementById('poster' + this.show._id).src = response.url
+        }
+      })
     },
   }
 </script>

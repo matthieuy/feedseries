@@ -1,5 +1,5 @@
 <template>
-  <context-menu ref="ctx" @ctx-open="onOpen">
+  <context-menu ref="ctx" @ctx-open="onOpen" @ctx-close="onCtxClose" @ctx-cancel="onCtxClose">
     <li class="ctx-header">{{ episode.show.title }} - {{ episode.code }}</li>
     <li class="ctx-divider"></li>
     <li class="ctx-item" v-show="!episode.isSeen && !episode.show.isArchived" @click="markView(episode)"><i class="fa fa-eye"></i> Marquer "vu"</li>
@@ -98,6 +98,7 @@
             this.$parent.$refs[i].$refs.ctx.ctxVisible = false
           }
         }
+        window.addEventListener('keydown', this.escapeListener)
       },
       /**
        * Open show|episode on BS (external link)
@@ -112,6 +113,22 @@
        */
       gotoShow (show) {
         this.$router.push({name: 'show', params: {id: show._id}})
+      },
+      /**
+       * On close ctx : remove listener
+       */
+      onCtxClose () {
+        window.removeEventListener('keydown', this.escapeListener)
+      },
+      /**
+       * When press Escape key
+       * @param event
+       */
+      escapeListener (event) {
+        if (event.which === 27) {
+          this.$refs.ctx.ctxVisible = false
+          this.onCtxClose()
+        }
       },
     },
   }

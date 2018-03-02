@@ -8,7 +8,7 @@
     </div>
     <div class="result-file" v-show="episode.id">
       <h1>{{ episode.show_title }}</h1>
-      <img :src="episode.show_img" v-if="episode.show_img" width="120" alt="">
+      <img :src="episode.show_img" v-if="episode.show_img" width="100" alt="">
       <div class="name">{{ episode.code}} - {{ episode.title}}</div>
       <div>{{ episode.filename }}</div>
       <div>
@@ -62,11 +62,13 @@
             filename: file.name,
             show_id: episode.show.id,
             show_title: episode.show.title,
-            show_img: api.shows.getShowImgUrl(episode.show.id, 120),
+            show_img: api.shows.getShowImgUrl(episode.show.id, 100, 147),
             in_account: episode.show.in_account,
             isDownloaded: episode.user.downloaded,
             isSeen: episode.user.seen,
           }
+          window.removeEventListener('keydown', this.escapeListener)
+          window.addEventListener('keydown', this.escapeListener)
         }).catch((error) => {
           this.isSearching = false
           if (error.code === 4001) {
@@ -103,7 +105,13 @@
         this.showDrop = false
         this.isSearching = false
         this.episode = {}
+        window.removeEventListener('keydown', this.escapeListener)
         return false
+      },
+      escapeListener (event) {
+        if (event.which === 27) {
+          this.close()
+        }
       },
     },
     mounted () {

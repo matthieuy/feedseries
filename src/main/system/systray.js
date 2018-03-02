@@ -4,7 +4,7 @@
  */
 'use strict'
 
-import { app, BrowserWindow, Menu, Tray } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, Tray } from 'electron'
 
 const template = [
   {
@@ -13,6 +13,15 @@ const template = [
       let mainWindow = BrowserWindow.fromId(2)
       mainWindow.show()
     },
+  },
+  {
+    label: 'Vérifier les mises à jour',
+    click () {
+      ipcMain.emit('check-update', true)
+    },
+  },
+  {
+    type: 'separator',
   },
   {
     label: 'Quitter',
@@ -35,6 +44,7 @@ export default {
       this.mainWindow = mainWindow
       this.tray = new Tray(`${__static}/icons/128x128.png`)
       this.contextMenu = Menu.buildFromTemplate(template)
+      this.tray.setToolTip(app.getName())
 
       // Left click : show mainWindow
       this.tray.on('click', () => {

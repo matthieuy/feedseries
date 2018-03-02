@@ -44,6 +44,7 @@
         clearTimeout(delayQuery)
         if (query.length) {
           delayQuery = setTimeout(() => {
+            this.results = []
             this.isSearching = true
             api.shows.search(query).then((results) => {
               this.isSearching = false

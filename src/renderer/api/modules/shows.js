@@ -341,13 +341,13 @@ export default {
    * @param {Integer|null} size Size of img
    * @return {String} The URL
    */
-  getShowImgUrl (showId, size) {
+  getShowImgUrl (showId, width, height) {
     let url = Vue.http.defaults.baseURL + '/pictures/shows?'
     url += 'v=' + Vue.http.defaults.headers.common['X-BetaSeries-Version']
     url += '&key=' + Vue.http.defaults.headers.common['X-BetaSeries-Key']
     url += '&id=' + showId
-    if (typeof size !== 'undefined') {
-      url += '&width=' + size + '&height=' + size
+    if (typeof width !== 'undefined') {
+      url += (typeof height !== 'undefined') ? '&width=' + width + '&height=' + height : '&width=' + width + '&height=' + width
     }
     return url
   },
