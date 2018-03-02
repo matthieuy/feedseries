@@ -1,20 +1,16 @@
 /**
- * This file is used specifically and only for development. It installs
- * `electron-debug` & `vue-devtools`. There shouldn't be any need to
- *  modify this file, but it can be used to extend your development
- *  environment.
+ * This file is used specifically and only for development.
  */
 
 import { app } from 'electron'
 import log from 'electron-log'
 
 // Set environment for development
-console.time('init-dev')
 process.env.NODE_ENV = 'development'
 app.isQuiting = true
 log.transports.console.level = 'debug'
 log.transports.file.level = 'debug'
-global.winURL = 'http://localhost:9080'
+global.winURL = 'http://localhost:9080/'
 global.userAgent = 'FeedSeries (dev)'
 log.debug('Environment : dev')
 
@@ -36,4 +32,4 @@ app.on('ready', () => {
 })
 
 // Require `main` process to boot app
-require('./index')
+require('./main')
