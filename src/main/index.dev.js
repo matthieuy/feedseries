@@ -10,7 +10,7 @@ process.env.NODE_ENV = 'development'
 app.isQuiting = true
 log.transports.console.level = 'debug'
 log.transports.file.level = 'debug'
-global.winURL = 'http://localhost:9080/'
+global.winURL = 'http://localhost:9080'
 global.userAgent = 'FeedSeries (dev)'
 log.debug('Environment : dev')
 

@@ -159,6 +159,7 @@
       return {
         env: process.env.NODE_ENV,
         fileSize: {},
+        needRestart: true,
         systray: true,
         autoload: false,
         route_save: false,
@@ -313,6 +314,7 @@
         Cache.rmCacheData().then(() => {
           this.refreshDataCacheSize()
           this.addNotification(`Fichiers du cache supprimés :\n${Cache.getCacheDataDir()}`)
+          this.needRestart = true
         }).catch((err) => {
           console.log('Error clear data cache', err)
           this.addNotification(`Erreur lors de la suppression du dossier de cache :\n${Cache.getCacheDataDir()}`)
@@ -371,6 +373,19 @@
         links: db.getSize('links'),
       }
       this.refreshDataCacheSize()
+    },
+    beforeRouteLeave (to, from, next) {
+      if (this.needRestart) {
+        remote.dialog.showMessageBox(remote.getCurrentWindow(), {
+          type: 'info',
+          title: 'Redémarrage',
+          message: 'FeedSeries doit redémarrer pour appliquer les paramètres',
+          buttons: ['Ok'],
+        })
+        remote.app.relaunch()
+        remote.app.exit(0)
+      }
+      next()
     },
   }
 </script>
