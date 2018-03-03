@@ -159,7 +159,7 @@
       return {
         env: process.env.NODE_ENV,
         fileSize: {},
-        needRestart: true,
+        needRestart: false,
         systray: true,
         autoload: false,
         route_save: false,

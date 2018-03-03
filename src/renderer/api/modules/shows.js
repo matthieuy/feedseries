@@ -146,9 +146,13 @@ export default {
     })
       .then((response) => {
         let show = Show.cleanProperties(response.data.show)
+        this.setCache(show)
         return Show.findOneAndUpdate({ _id: show.id }, show, { upsert: true })
       })
       .catch((e) => {
+        if (e.data.hasOwnProperty('errors') && e.data.errors.length && e.data.errors[0].code === 2003) {
+          return Promise.resolve(show)
+        }
         console.error('Error add show', e)
         return Promise.reject(new Error('Impossible de rajouter la série'))
       })

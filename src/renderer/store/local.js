@@ -7,6 +7,7 @@ import ElectronStore from 'electron-store'
 const key = {
   LOGIN: 'login', // {String} current login
   TOKEN: 'token', // {String} user token
+  ID_USER: 'userId', // {Integer} User id
   HOMEPAGE: {
     FAVORITE: 'homepage.favorite', // {Boolean} Display favorites on homepage
     NEWS: 'homepage.news', // {Boolean} Display news on homepage
