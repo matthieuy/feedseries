@@ -68,6 +68,12 @@ const router = new Router({
       name: 'search',
       component: require('@/components/Search').default,
     },
+    // Recommendations
+    {
+      path: '/recommendations',
+      name: 'recommendations',
+      component: require('@/components/Recommendations').default,
+    },
     // Options
     {
       name: 'options',

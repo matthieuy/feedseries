@@ -36,6 +36,9 @@
             <router-link :to="{name: 'search'}" class="btn btn-default" :class="{active: $route.name === 'search'}">
               <i class="fa fa-search"></i>
             </router-link>
+            <router-link :to="{name: 'recommendations'}" class="btn btn-default" :class="{active: $route.name === 'recommendations'}">
+              <i class="fa fa-thumbs-up" :class="{red: nbRecommendations > 0}"></i>
+            </router-link>
           </div>
 
           <div class="btn-group pull-right">
@@ -64,7 +67,7 @@
 
 <script>
   import { ipcRenderer, remote } from 'electron'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
 
   import LoginModal from './components/LoginModal'
   import DropZone from './components/DropZone'
@@ -84,6 +87,9 @@
     },
     computed: {
       ...mapState(['history']),
+      ...mapGetters({
+        nbRecommendations: types.recommendations.GETTERS.NB_WAIT,
+      }),
     },
     methods: {
       // Disconnect the user
@@ -137,4 +143,7 @@
 
 <style lang="scss">
   @import "assets/scss/theme";
+  .fa.red, .active .fa.red {
+    color: #b4171f;
+  }
 </style>
