@@ -42,6 +42,7 @@ const actions = {
   },
   [types.ACTIONS.LOAD_RECOMMENDATIONS] (context) {
     return api.recommendations.getList().then((recommendations) => {
+      console.log('Check recommendations', recommendations.length)
       context.commit(types.MUTATIONS.SET_RECOMMENDATIONS, recommendations)
       return Promise.resolve(recommendations)
     })

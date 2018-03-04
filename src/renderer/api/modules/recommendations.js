@@ -13,7 +13,7 @@ export default {
   getList () {
     if (Cache.isValid(this.cacheId)) {
       let list = Cache.get(this.cacheId)
-      console.log('[API Cache] Recommendations:getList', list)
+      console.log('[API Cache] Recommendations:getList')
       return Promise.resolve(list)
     }
 

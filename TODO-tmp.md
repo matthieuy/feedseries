@@ -7,9 +7,7 @@ This is a temporary TODO file need to be reorganize
 - [ ] Notifications :
   - [ ] Fix problem with W10 1709
 - [ ] Suggests :
-  - [ ] Check new with interval
   - [ ] Suggest a show to friend
-  - [ ] List of suggests
 - [ ] Subscribe
 - [ ] Planning
 - [ ] Connexion with modal

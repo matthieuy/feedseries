@@ -83,6 +83,7 @@
       return {
         isDisconnecting: false,
         devToolsOpen: false,
+        recommendationNotif: 0,
       }
     },
     computed: {
@@ -111,6 +112,20 @@
         localStore.set(localStore.key.HISTORY, [])
       },
     },
+    watch: {
+      nbRecommendations (nbRecommendations) {
+        if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
+          let notif = new window.Notification(remote.app.getName(), {
+            body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
+            icon: 'static/icons/icon.png',
+          })
+          notif.onclick = () => {
+            this.$router.push({name: 'recommendations'})
+          }
+          this.recommendationNotif = nbRecommendations
+        }
+      },
+    },
     mounted () {
       console.info('[VUE] Mount App.vue')
 
@@ -133,22 +148,15 @@
           console.info('[SplashScreen] Hide')
           ipcRenderer.send('app-ready')
         })
+
+        // Recommendations
+        window.recommendation = setInterval(() => {
+          this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS)
+        }, localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 3600000)
       }).catch(() => {
         this.$store.commit(types.MUTATIONS.LOGOUT)
         ipcRenderer.send('app-ready')
       })
-
-      // Recommendation
-      let nbRecommendations = this.nbRecommendations
-      if (nbRecommendations > 0 && this.$route.name === 'recommendations') {
-        let notif = new window.Notification(remote.app.getName(), {
-          body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
-          icon: 'static/icons/icon.png',
-        })
-        notif.onclick = () => {
-          this.$router.push({name: 'recommendations'})
-        }
-      }
     },
   }
 </script>
