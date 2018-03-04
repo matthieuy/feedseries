@@ -7,6 +7,7 @@ import ElectronStore from 'electron-store'
 const key = {
   LOGIN: 'login', // {String} current login
   TOKEN: 'token', // {String} user token
+  ID_USER: 'userId', // {Integer} User id
   HOMEPAGE: {
     FAVORITE: 'homepage.favorite', // {Boolean} Display favorites on homepage
     NEWS: 'homepage.news', // {Boolean} Display news on homepage
@@ -35,7 +36,7 @@ const key = {
   UPDATE: {
     PRERELEASE: 'update.alpha', // {Boolean} Can use pre-release update
     NOTE: 'update.note', // {Array} Release notes from autoUpdater
-    INTERVAL: 'update.interval', // {Integer} Interval betwean 2 check (in hour)
+    INTERVAL: 'update.interval', // {Integer} Interval between 2 check (in hour)
   },
   DOWNLOAD: {
     DIR: 'dl.dir', // {String} Last download dir
@@ -44,6 +45,9 @@ const key = {
   COMMENTS: {
     NB: 'comments.nb', // {Integer} Nb of comment to load
     ORDER: 'comments.order', // {String} (asc|desc) Order of comments
+  },
+  RECOMMENDATIONS: {
+    INTERVAL: 'recommendations.interval', // {Integer} Interval between 2 check (in hour)
   },
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history

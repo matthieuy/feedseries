@@ -19,7 +19,7 @@
     <div class="updates">
       <div class="update" v-for="update in updates">
         <h3>v{{ update.version }} :</h3>
-        <div class="note" v-html="update.note"></div>
+        <div class="note" v-html="update.note" @click="clickNote($event)"></div>
       </div>
       <div class="clearfix"></div>
     </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import { remote, ipcRenderer } from 'electron'
+  import { remote, ipcRenderer, shell } from 'electron'
   import { localStore } from '../../store'
 
   export default {
@@ -45,6 +45,12 @@
       startDownload () {
         ipcRenderer.send('start-update')
       },
+      clickNote (event) {
+        event.preventDefault()
+        if (event.target.href) {
+          shell.openExternal(event.target.href)
+        }
+      },
       /**
        * Close the modal
        */
@@ -55,7 +61,7 @@
     mounted () {
       console.log('[VUE] Mount modal/Update.vue')
       this.updates = localStore.get(localStore.key.UPDATE.NOTE, [])
-      localStore.delete(localStore.key.UPDATE.NOTE)
+      // localStore.delete(localStore.key.UPDATE.NOTE)
       if (this.updates.length) {
         this.lastVersion = this.updates[0].version
       }
@@ -79,6 +85,10 @@
 
   #modal {
     color: $txtColor;
+    a {
+      color: #FFF;
+      font-weight: bold;
+    }
     h1 {
       margin: 0 20px;
       -webkit-app-region: drag;

@@ -27,6 +27,7 @@ export default {
     }).then((response) => {
       if (response.status === 200 && response.data.hasOwnProperty('member')) {
         let member = response.data.member
+        localStore.set(localStore.key.ID_USER, member.id)
 
         // Save shows in DB
         if (member.hasOwnProperty('shows') && member.shows.length) {

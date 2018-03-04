@@ -36,6 +36,9 @@
             <router-link :to="{name: 'search'}" class="btn btn-default" :class="{active: $route.name === 'search'}">
               <i class="fa fa-search"></i>
             </router-link>
+            <router-link :to="{name: 'recommendations'}" class="btn btn-default" :class="{active: $route.name === 'recommendations'}">
+              <i class="fa fa-thumbs-up" :class="{red: nbRecommendations > 0}"></i>
+            </router-link>
           </div>
 
           <div class="btn-group pull-right">
@@ -64,7 +67,7 @@
 
 <script>
   import { ipcRenderer, remote } from 'electron'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
 
   import LoginModal from './components/LoginModal'
   import DropZone from './components/DropZone'
@@ -80,10 +83,14 @@
       return {
         isDisconnecting: false,
         devToolsOpen: false,
+        recommendationNotif: 0,
       }
     },
     computed: {
       ...mapState(['history']),
+      ...mapGetters({
+        nbRecommendations: types.recommendations.GETTERS.NB_WAIT,
+      }),
     },
     methods: {
       // Disconnect the user
@@ -103,6 +110,20 @@
       clearHistory () {
         this.$store.commit(types.MUTATIONS.SET_HISTORY, [])
         localStore.set(localStore.key.HISTORY, [])
+      },
+    },
+    watch: {
+      nbRecommendations (nbRecommendations) {
+        if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
+          let notif = new window.Notification(remote.app.getName(), {
+            body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
+            icon: 'static/icons/icon.png',
+          })
+          notif.onclick = () => {
+            this.$router.push({name: 'recommendations'})
+          }
+          this.recommendationNotif = nbRecommendations
+        }
       },
     },
     mounted () {
@@ -127,6 +148,11 @@
           console.info('[SplashScreen] Hide')
           ipcRenderer.send('app-ready')
         })
+
+        // Recommendations
+        window.recommendation = setInterval(() => {
+          this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS)
+        }, localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 3600000)
       }).catch(() => {
         this.$store.commit(types.MUTATIONS.LOGOUT)
         ipcRenderer.send('app-ready')
@@ -137,4 +163,11 @@
 
 <style lang="scss">
   @import "assets/scss/theme";
+  .fa.red, .active .fa.red {
+    animation: recommendation-animation 1s steps(2) infinite;
+  }
+  @keyframes recommendation-animation {
+    0% { color: #b4171f; }
+    100% { color: initial; }
+  }
 </style>

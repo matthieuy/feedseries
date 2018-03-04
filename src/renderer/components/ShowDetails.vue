@@ -36,7 +36,7 @@
             </button>
           </div>
           <div class="nav-group-item" v-show="show.in_account && show.isArchived">
-            <button class="btn btn-nav btn-action cursor" @click="unarchive(false)">
+            <button class="btn btn-nav btn-action cursor" @click="archive(false)">
               <i class="fa fa-archive"></i> Sortir des archives
             </button>
           </div>

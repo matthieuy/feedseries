@@ -43,6 +43,7 @@ const actions = {
 
         // Clear DB
         localStore.delete(localStore.key.LOGIN)
+        localStore.delete(localStore.key.ID_USER)
         Cache.reset()
         let dbNames = ['shows', 'episodes', 'subtitles']
         dbNames.forEach((dbName) => {
@@ -63,7 +64,7 @@ const actions = {
   [types.OPEN_LINK] (context, obj) {
     console.log('[LINK] Open', obj)
     let url = ''
-    if (obj.constructor.name === 'Episode' || obj.typeObj === 'Episode') {
+    if (obj.constructor.name === 'Episode' || obj.typeObj === 'Episode' || obj.code) {
       url = `https://www.betaseries.com/episode/${obj.show.slug}/${obj.code.toLowerCase()}`
     } else if (obj.constructor.name === 'Show' || obj.typeObj === 'Show') {
       url = `https://www.betaseries.com/serie/${obj.slug}`

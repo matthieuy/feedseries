@@ -110,6 +110,23 @@
     </fieldset>
 
     <fieldset>
+      <legend>Recommandations</legend>
+      <div class="form-group">
+        <label>
+          Intervalle entre 2 vérifications de nouvelles recommandations :
+          <select v-model="recommendation_interval">
+            <option value="1">1 heure</option>
+            <option value="6">6 heures</option>
+            <option value="12">12 heures</option>
+            <option value="24">24 heures</option>
+            <option value="168">7 jours</option>
+            <option value="0">jamais</option>
+          </select>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Cache et bases de données</legend>
       <div class="btn-list">
         <button class="btn btn-nav" @click="clearCache()" v-show="fileSize.cache">Vider le cache local ({{ fileSize.cache | size }})</button>
@@ -159,7 +176,7 @@
       return {
         env: process.env.NODE_ENV,
         fileSize: {},
-        needRestart: true,
+        needRestart: false,
         systray: true,
         autoload: false,
         route_save: false,
@@ -177,6 +194,7 @@
         special: true,
         comments_nb: 30,
         comments_order: 'desc',
+        recommendation_interval: 2,
       }
     },
     computed: {
@@ -203,6 +221,7 @@
         this.update_interval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
         this.comments_nb = localStore.get(localStore.key.COMMENTS.NB, 30)
         this.comments_order = localStore.get(localStore.key.COMMENTS.ORDER, 'desc')
+        this.recommendation_interval = localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)
       },
       /**
        * Save the configuration
@@ -248,6 +267,15 @@
             localStore.set(localStore.key.EPISODES.SPECIAL, value)
             this.special = value
           })
+        }
+
+        // Recommendation
+        if (this.recommendation_interval !== localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)) {
+          localStore.set(localStore.key.RECOMMENDATIONS.INTERVAL, this.recommendation_interval)
+          clearInterval(window.recommendation)
+          window.recommendation = setInterval(() => {
+            this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS)
+          }, localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 3600000)
         }
 
         // Autoload

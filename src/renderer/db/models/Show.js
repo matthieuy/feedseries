@@ -66,7 +66,7 @@ class Show extends Document {
    * @param {Integer} id
    */
   static getById (id) {
-    return this.findOne({ _id: id }, { populate: true })
+    return this.findOne({ _id: id + '' }, { populate: true })
   }
 
   /**
