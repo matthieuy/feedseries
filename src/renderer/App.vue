@@ -137,6 +137,18 @@
         this.$store.commit(types.MUTATIONS.LOGOUT)
         ipcRenderer.send('app-ready')
       })
+
+      // Recommendation
+      let nbRecommendations = this.nbRecommendations
+      if (nbRecommendations > 0 && this.$route.name === 'recommendations') {
+        let notif = new window.Notification(remote.app.getName(), {
+          body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
+          icon: 'static/icons/icon.png',
+        })
+        notif.onclick = () => {
+          this.$router.push({name: 'recommendations'})
+        }
+      }
     },
   }
 </script>
@@ -144,6 +156,10 @@
 <style lang="scss">
   @import "assets/scss/theme";
   .fa.red, .active .fa.red {
-    color: #b4171f;
+    animation: recommendation-animation 1s steps(2) infinite;
+  }
+  @keyframes recommendation-animation {
+    0% { color: #b4171f; }
+    100% { color: initial; }
   }
 </style>

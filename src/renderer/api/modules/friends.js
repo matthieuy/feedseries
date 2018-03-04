@@ -19,8 +19,8 @@ export default {
 
     console.info('[API] Firedns:getList')
     return Vue.http.get('/friends/list').then((response) => {
-      if (response.status === 200 && response.data.hasOwnProperty('friends')) {
-        let friends = response.data.friends
+      if (response.status === 200 && response.data.hasOwnProperty('users')) {
+        let friends = response.data.users
         Cache.set(this.cacheId, friends, this.cacheTtl)
 
         return Promise.resolve(friends)

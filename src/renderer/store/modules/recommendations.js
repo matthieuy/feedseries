@@ -11,6 +11,7 @@ const types = {
   },
   GETTERS: {
     NB_WAIT: 'recommendations.wait',
+    ALL: 'recommendations.list',
   },
 }
 
@@ -43,11 +44,47 @@ const getters = {
       return 0
     }
 
-    console.log(state.recommendations)
-
     return state.recommendations.filter((recommendation) => {
       return recommendation.status === 'wait' && recommendation.to_id === userId
     }).length
+  },
+  [types.GETTERS.ALL]: (state) => (filterName, status) => {
+    let userId = localStore.get(localStore.key.ID_USER, false)
+    if (!userId) {
+      return []
+    }
+
+    let recommendations = state.recommendations.filter((recommendation) => {
+      // Filter by filter
+      if ((filterName === 'received' && recommendation.to_id !== userId) || (filterName === 'sended' && recommendation.from_id !== userId)) {
+        return false
+      }
+
+      // Filter by status
+      if (status !== 'all' && status !== recommendation.status) {
+        return false
+      }
+      return true
+    })
+
+    recommendations.sort((a, b) => {
+      let orderStatus = ['wait', 'accept', 'decline']
+      for (let i = 0; i < orderStatus.length; i++) {
+        if (a.status === orderStatus[i] && b.status !== orderStatus[i]) {
+          return -1
+        } else if (b.status === orderStatus[i] && a.status !== orderStatus[i]) {
+          return 1
+        }
+      }
+
+      if (a.status === b.status) {
+        return b.id - a.id
+      }
+
+      return 0
+    })
+
+    return recommendations
   },
 }
 
