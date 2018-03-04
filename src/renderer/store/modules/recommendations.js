@@ -1,10 +1,13 @@
+import Vue from 'vue'
+
 import api from '../../api'
 import localStore from '../local'
 import { types as typesRootAction } from '../actions'
 
 const types = {
   MUTATIONS: {
-    SET_RECOMMENDATIONS: 'recommendations.set',
+    SET_RECOMMENDATIONS: 'recommendations.setAll',
+    SET_RECOMMENDATION: 'recommendations.set',
   },
   ACTIONS: {
     LOAD_RECOMMENDATIONS: 'recommendations.load',
@@ -22,6 +25,14 @@ const state = {
 const mutations = {
   [types.MUTATIONS.SET_RECOMMENDATIONS] (state, recommendations) {
     state.recommendations = recommendations
+  },
+  [types.MUTATIONS.SET_RECOMMENDATION] (state, recommendation) {
+    for (let i = 0; i < state.recommendations.length; i++) {
+      if (state.recommendations[i].id === recommendation.id) {
+        Vue.set(state.recommendations, i, recommendation)
+        break
+      }
+    }
   },
 }
 
@@ -55,16 +66,10 @@ const getters = {
     }
 
     let recommendations = state.recommendations.filter((recommendation) => {
-      // Filter by filter
-      if ((filterName === 'received' && recommendation.to_id !== userId) || (filterName === 'sended' && recommendation.from_id !== userId)) {
-        return false
-      }
-
-      // Filter by status
-      if (status !== 'all' && status !== recommendation.status) {
-        return false
-      }
-      return true
+      // Filter
+      let filterType = ((filterName === 'received' && recommendation.to_id !== userId) || (filterName === 'sended' && recommendation.from_id !== userId))
+      let filterStatus = (status !== 'all' && status !== recommendation.status)
+      return !(filterType || filterStatus)
     })
 
     recommendations.sort((a, b) => {

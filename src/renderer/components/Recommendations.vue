@@ -32,7 +32,7 @@
           <li class="list-group-header">
             <h1 class="text-center">Recommandations</h1>
           </li>
-          <li v-for="recommendation in recommendations" class="list-group-item">
+          <li v-for="recommendation in recommendations" class="list-group-item" @contextmenu.prevent="$refs.RecommendationCtx.$refs.ctx.open($event, recommendation)">
             <span v-show="recommendation.to_id === userId">
               <i class="fa" :class="faIcon(recommendation.status)"></i>
               <img :src="userAvatar(recommendation.from_id)" class="avatar">
@@ -61,17 +61,22 @@
         </ul>
       </div>
     </div>
+    <recommendation-ctx ref="RecommendationCtx">&nbsp;</recommendation-ctx>
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
 
+  import RecommendationCtx from './context/Recommandation'
   import api from '../api'
   import { Show } from '../db'
   import { types, localStore } from '../store'
 
   export default {
+    components: {
+      RecommendationCtx,
+    },
     data () {
       return {
         filter: 'received',
