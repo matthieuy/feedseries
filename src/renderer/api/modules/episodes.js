@@ -150,6 +150,9 @@ export default {
         return Promise.resolve(response.data.episode)
       })
       .catch((error) => {
+        if (error.data.errors) {
+          return Promise.reject(error.data.errors[0])
+        }
         return Promise.reject(error)
       })
   },
