@@ -114,6 +114,7 @@
     },
     watch: {
       nbRecommendations (nbRecommendations) {
+        console.log('New recommandations : ', nbRecommendations)
         if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
           let notif = new window.Notification(remote.app.getName(), {
             body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
@@ -122,8 +123,8 @@
           notif.onclick = () => {
             this.$router.push({name: 'recommendations'})
           }
-          this.recommendationNotif = nbRecommendations
         }
+        this.recommendationNotif = nbRecommendations
       },
     },
     mounted () {

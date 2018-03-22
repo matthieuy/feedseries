@@ -116,6 +116,7 @@
           Intervalle entre 2 vérifications de nouvelles recommandations :
           <select v-model="recommendation_interval">
             <option value="1">1 heure</option>
+            <option value="2">2 heures</option>
             <option value="6">6 heures</option>
             <option value="12">12 heures</option>
             <option value="24">24 heures</option>
