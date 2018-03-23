@@ -69,6 +69,7 @@
             case 'add_serie':
               return 'fa-plus-circle'
             case 'recommandation':
+            case 'recommandation_accept':
               return 'fa-thumbs-up'
             case 'del_serie':
               return 'fa-trash'
