@@ -20,11 +20,11 @@
     <fieldset>
       <div class="form-group">
         <label for="name">Nom :</label>
-        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" required maxlength="20" />
+        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" v-on:keyup.enter="enterKey()" required maxlength="20" autofocus />
       </div>
       <div class="form-group">
         <label>Adresse :</label>
-        <input id="url" type="url" class="form-control" placeholder="https://..." v-model="url" required/>
+        <input id="url" type="url" class="form-control" placeholder="https://..." v-model="url" v-on:keyup.enter="enterKey()" required/>
       </div>
 
       <div class="form-actions text-center">
@@ -86,6 +86,12 @@
         return false
       },
       /**
+       * Press enter key
+       */
+      enterKey () {
+        return (this.idLink) ? this.edit() : this.add()
+      },
+      /**
        * Delete a link
        * @param {Link} link
        */
@@ -100,6 +106,7 @@
         this.idLink = link._id
         this.name = link.name
         this.url = link.url
+        document.getElementById('name').focus()
       },
       /**
        * Reset Form
@@ -108,6 +115,7 @@
         this.idLink = null
         this.name = ''
         this.url = ''
+        document.getElementById('name').focus()
       },
       /**
        * Check form
