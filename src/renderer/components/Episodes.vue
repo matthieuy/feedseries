@@ -55,11 +55,12 @@
                 <router-link :to="{name: 'show', params: { id: episode.show._id }}">{{ episode.show.title }}</router-link>
               </strong> {{ episode.code }}
               <i class="fa fa-heart" v-show="episode.show.isFavorited" title="Favoris"></i>
+              <i class="fa fa-circle" :style="episode.show.status | statusColor" v-show="episode.show.status == 'Ended'"></i>
               <i class="fa fa-download" v-show="filter === 'all' && episode.isDownloaded" title="Épisode récupéré"></i>
               <i
-                class="fa fa-file-alt cursor"
-                :title="getSubtitles(episode).length|plurialize('sous-titre', 'sous-titres')"
-                @click="$refs.SubtitleCtx.$refs.ctx.open($event, episode)"></i>
+                  class="fa fa-file-alt cursor"
+                  :title="getSubtitles(episode).length|plurialize('sous-titre', 'sous-titres')"
+                  @click="$refs.SubtitleCtx.$refs.ctx.open($event, episode)"></i>
               <div class="friends-seen">
                 <i class="fa fa-users cursor" v-show="episode.friends"></i>
                 <div class="friends-content">

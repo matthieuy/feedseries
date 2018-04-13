@@ -54,6 +54,12 @@ const router = new Router({
           name: 'show.comments',
           component: require('@/components/show/Comments').default,
         },
+        // Suggest
+        {
+          path: 'suggest',
+          name: 'show.suggest',
+          component: require('@/components/show/Suggest').default,
+        },
       ],
     },
     // Timeline
