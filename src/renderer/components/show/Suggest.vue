@@ -52,10 +52,10 @@
       send () {
         this.selected.forEach((friendId, i) => {
           api.recommendations.create(this.show, friendId, this.comment)
-              .catch((e) => {
-                alert(e.message)
-                this.selected.push(friendId)
-              })
+            .catch((e) => {
+              alert(e.message)
+              this.selected.push(friendId)
+            })
         })
         this.selected = []
         this.comment = ''
@@ -82,10 +82,10 @@
       getFriendsList () {
         return api.friends.getList().then((friends) => {
           this.friends = friends
-              .filter(friend => friend.in_account)
-              .sort((a, b) => {
-                return a.login.localeCompare(b.login)
-              })
+            .filter(friend => friend.in_account)
+            .sort((a, b) => {
+              return a.login.localeCompare(b.login)
+            })
         })
       },
     },
