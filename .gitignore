@@ -9,3 +9,4 @@ npm-debug.log.*
 old/
 thumbs.db
 !.gitkeep
+yarn-error.log
