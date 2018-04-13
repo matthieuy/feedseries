@@ -13,6 +13,9 @@
             <router-link :to="{name: 'shows'}" class="btn btn-default" :class="{active: $route.name === 'shows'}">
               <i class="fa fa-list"></i>
             </router-link>
+            <router-link :to="{name: 'calendar'}" class="btn btn-default" :class="{active: $route.name === 'calendar'}">
+              <i class="fa fa-calendar-alt"></i>
+            </router-link>
             <router-link :to="{name: 'timeline'}" class="btn btn-default" :class="{active: $route.name === 'timeline'}">
               <i class="fa fa-users"></i>
             </router-link>
@@ -45,7 +48,7 @@
             <router-link :to="{name: 'options'}" class="btn btn-default" :class="{active: $route.name === 'options'}">
               <i class="fa fa-cog"></i>
             </router-link>
-            <button class="btn btn-default" @click="devTools()" :class="{active: devToolsOpen}">
+            <button class="btn btn-default" @click="devTools()" :class="{active: devToolsOpen}" v-if="isDev">
               <i class="fa fa-bug"></i>
             </button>
             <button class="btn btn-default" @click="disconnect()">
@@ -83,6 +86,7 @@
       return {
         isDisconnecting: false,
         devToolsOpen: false,
+        isDev: false,
         recommendationNotif: 0,
       }
     },
@@ -131,9 +135,12 @@
       console.info('[VUE] Mount App.vue')
 
       // Dev tools
-      this.devToolsOpen = remote.getCurrentWindow().isDevToolsOpened()
-      remote.getCurrentWebContents().on('devtools-opened', () => { this.devToolsOpen = true })
-      remote.getCurrentWebContents().on('devtools-closed', () => { this.devToolsOpen = false })
+      if (process.env.NODE_ENV === 'development') {
+        this.isDev = true
+        this.devToolsOpen = remote.getCurrentWindow().isDevToolsOpened()
+        remote.getCurrentWebContents().on('devtools-opened', () => { this.devToolsOpen = true })
+        remote.getCurrentWebContents().on('devtools-closed', () => { this.devToolsOpen = false })
+      }
 
       // History
       this.$store.commit(types.MUTATIONS.SET_HISTORY, localStore.get(localStore.key.HISTORY, []))

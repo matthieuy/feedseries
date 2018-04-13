@@ -51,6 +51,7 @@ let template = [
         label: 'DevTools',
         accelerator: 'F12',
         type: 'checkbox',
+        visible: false,
         click (menuItem, browserWindow) {
           browserWindow.webContents.toggleDevTools()
         },
@@ -103,6 +104,7 @@ export default {
     // DevTools
     let devToolsItem = menu.getMenuItemById('devtools')
     let webContents = win.webContents
+    devToolsItem.visible = (process.env.NODE_ENV === 'development')
     devToolsItem.checked = webContents.isDevToolsOpened()
     webContents.on('devtools-opened', () => {
       devToolsItem.checked = true
