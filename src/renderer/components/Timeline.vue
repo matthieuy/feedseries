@@ -71,6 +71,8 @@
             case 'recommandation':
             case 'recommandation_accept':
               return 'fa-thumbs-up'
+            case 'recommandation_decline':
+              return 'fa-thumbs-down'
             case 'del_serie':
               return 'fa-trash'
           }
