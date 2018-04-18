@@ -4,7 +4,7 @@ import { Cache } from '../../db'
 
 export default {
   cacheId: 'recommendation',
-  cacheTtl: 7200,
+  cacheTtl: 7000,
 
   /**
    * Get recommandation promise
