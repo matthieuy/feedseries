@@ -19,6 +19,12 @@ const router = new Router({
       name: 'episodes',
       component: require('@/components/Episodes').default,
     },
+    // Calendar
+    {
+      path: '/calendar',
+      name: 'calendar',
+      component: require('@/components/Calendar').default,
+    },
     // Shows
     {
       path: '/shows',

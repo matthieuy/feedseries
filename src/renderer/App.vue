@@ -13,11 +13,9 @@
             <router-link :to="{name: 'shows'}" class="btn btn-default" :class="{active: $route.name === 'shows'}">
               <i class="fa fa-list"></i>
             </router-link>
-            <!--
             <router-link :to="{name: 'calendar'}" class="btn btn-default" :class="{active: $route.name === 'calendar'}">
               <i class="fa fa-calendar-alt"></i>
             </router-link>
-            -->
             <router-link :to="{name: 'timeline'}" class="btn btn-default" :class="{active: $route.name === 'timeline'}">
               <i class="fa fa-users"></i>
             </router-link>
