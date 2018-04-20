@@ -1,11 +1,20 @@
 <template>
   <div>
-    <full-calendar :class="{loading: isLoading}" class="fc fc-unthemed fc-ltr" :event-sources="eventSources" @event-render="eventRender" @event-loading="eventLoading"></full-calendar>
+    <full-calendar
+      :class="{loading: isLoading}"
+      class="fc fc-unthemed fc-ltr"
+      :config="config"
+      :event-sources="eventSources"
+      @event-render="eventRender"
+      @event-view-render="eventViewRender"
+      @event-loading="eventLoading"
+    ></full-calendar>
   </div>
 </template>
 
 <script>
   import api from '../api'
+  import { localStore } from '../store'
   import FullCalendar from './FullCalendar'
 
   export default {
@@ -15,6 +24,9 @@
     data () {
       return {
         isLoading: true,
+        config: {
+          defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
+        },
         eventSources: [
           // Member planning
           {
@@ -53,6 +65,12 @@
         if (view.name === 'listMonth') {
           let title = el[0].querySelector('.fc-list-item-title')
           title.innerHTML += ` - <i>${event.episode.title}</i>`
+        }
+      },
+      eventViewRender (view, el) {
+        if (view.name !== this.config.defaultView) {
+          this.config.defaultView = view.name
+          localStore.set(localStore.key.PLANNING.VIEW, view.name)
         }
       },
     },

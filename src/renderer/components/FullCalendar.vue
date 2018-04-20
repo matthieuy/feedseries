@@ -91,6 +91,9 @@
           loading (...args) {
             self.$emit('event-loading', ...args)
           },
+          viewRender (...args) {
+            self.$emit('event-view-render', ...args)
+          },
         }
       },
     },
