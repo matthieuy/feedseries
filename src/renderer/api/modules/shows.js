@@ -147,10 +147,12 @@ export default {
       .then((response) => {
         let show = Show.cleanProperties(response.data.show)
         this.setCache(show)
-        return Show.findOneAndUpdate({ _id: show.id }, show, { upsert: true })
+        let showSaved = Show.findOneAndUpdate({ _id: show.id }, show, { upsert: true })
+        return (showSaved) ? Promise.resolve(showSaved) : Promise.resolve(show)
       })
       .catch((e) => {
-        if (e.data.hasOwnProperty('errors') && e.data.errors.length && e.data.errors[0].code === 2003) {
+        if (e.data && e.data.hasOwnProperty('errors') && e.data.errors.length && e.data.errors[0].code === 2003) {
+          Cache.invalidateByTags({show: show._id})
           return Promise.resolve(show)
         }
         console.error('Error add show', e)
