@@ -62,9 +62,18 @@
         this.isLoading = isLoading
       },
       eventRender (event, el, view) {
+        let iconsEl
         if (view.name === 'listMonth') {
+          // Add title
           let title = el[0].querySelector('.fc-list-item-title')
           title.innerHTML += ` - <i>${event.episode.title}</i>`
+          iconsEl = title
+        } else {
+          iconsEl = el[0].querySelector('.fc-content')
+        }
+
+        if (event.episode.user.downloaded) {
+          iconsEl.innerHTML += `<i class="fa fa-download"></i>`
         }
       },
       eventViewRender (view, el) {
@@ -81,7 +90,15 @@
   @import "../assets/scss/vars.scss";
   @import "../assets/scss/fullcalendar.scss";
 
-  div#calendar { margin: 0 25px 15px 25px; }
+  div#calendar {
+    margin: 0 25px 15px 25px;
+    .fa-download {
+      color: #08417d;
+    }
+    .fa {
+      margin-left: 5px;
+    }
+  }
 
   .fc-unthemed td.fc-today {
     background: lighten($navActiveBg, 10%);

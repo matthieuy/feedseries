@@ -1,7 +1,5 @@
 This is a temporary TODO file need to be reorganize
 
-- [ ] Bugfix :
-  - [ ] Add serie on serie page without feedback
 - [ ] isLogged => isVerified
 - [ ] Options :
   - [ ] Resync
