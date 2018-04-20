@@ -2,7 +2,7 @@
   "name": "feedseries",
   "desktopName": "FeedSeries",
   "productName": "FeedSeries",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": "Matthieu YK <matthieuy+git@riseup.net>",
   "description": "Suivez votre actualité sériephile",
   "license": "MIT",
