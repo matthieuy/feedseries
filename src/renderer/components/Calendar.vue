@@ -26,6 +26,12 @@
         isLoading: true,
         config: {
           defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
+          eventOrder (a, b) {
+            if (a.miscProps.episode.user.downloaded !== b.miscProps.episode.user.downloaded) {
+              return a.miscProps.episode.user.downloaded ? -1 : 1
+            }
+            return a.title.localeCompare(b.title)
+          },
         },
         eventSources: [
           // Member planning
@@ -38,6 +44,7 @@
                 cb(events)
               })
             },
+            className: 'member-planning',
             color: '#6d6c6d',
           },
           // Firsts episodes planning
@@ -51,6 +58,7 @@
                 cb(events)
               })
             },
+            className: 'premieres',
             color: '#c3c3c3',
             textColor: '#282c34',
           },
