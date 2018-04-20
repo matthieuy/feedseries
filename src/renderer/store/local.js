@@ -29,6 +29,9 @@ const key = {
     ORDER: 'shows.order', // {String} (alphabetical|progression|remaining_time|remaining_episodes) Order of shows
     REVERSE: 'shows.reverse', // {Boolean} Reverse order
   },
+  PLANNING: {
+    VIEW: 'planning.view', // {String} (listMonth|month) The default calendar view
+  },
   ROUTE: {
     SAVE: 'route.save', // {Boolean} Save the last route
     LAST: 'route.last', // {String} The last route path

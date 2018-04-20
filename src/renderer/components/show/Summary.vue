@@ -1,7 +1,7 @@
 <template>
   <div v-show="show">
     <div>
-      <div class="binfo description">{{ show.description }}</div>
+      <div class="binfo description" v-show="show.description">{{ show.description }}</div>
       <div class="binfo">
         <span class="fa fa-star"></span>
         {{ show.note }}
@@ -14,11 +14,11 @@
         <i class="far fa-clock"></i>
         {{ show.nb_seasons|plurialize('saison', 'saisons') }} - {{ show.nb_episodes|plurialize('épisode', 'épisodes') }} de {{ show.runtime|duration}}
       </div>
-      <div class="binfo">
+      <div class="binfo" v-show="show.genres.length">
         <i class="fa fa-tag"></i>
         {{ show.genres|join(', ') }}
       </div>
-      <div class="binfo">
+      <div class="binfo" v-show="show.network">
         <i class="fa fa-tv"></i>
         {{ show.network }}
       </div>
