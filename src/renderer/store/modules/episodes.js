@@ -214,18 +214,7 @@ const getters = {
         return false
       }
 
-      let filterCond = (filterName === 'all' || (filterName === 'get' && !episode.isDownloaded) || (filterName === 'view' && !episode.isSeen && episode.isDownloaded))
-
-      // Limit
-      if (limit === 0) {
-        return filterCond
-      }
-      let idShow = (episode.show) ? episode.show._id || episode.show.id : episode._id || episode.id
-      if (filterCond) {
-        episodesByShow[idShow] = (episodesByShow.hasOwnProperty(idShow)) ? episodesByShow[idShow] + 1 : 1
-      }
-
-      return (episodesByShow[idShow] <= limit && filterCond)
+      return (filterName === 'all' || (filterName === 'get' && !episode.isDownloaded) || (filterName === 'view' && !episode.isSeen && episode.isDownloaded))
     })
 
     // Order
@@ -243,6 +232,15 @@ const getters = {
         return a.show.title.localeCompare(b.show.title)
       }
     })
+
+    // Limit
+    episodes = episodes.filter((episode) => {
+      let idShow = (episode.show) ? episode.show._id || episode.show.id : episode._id || episode.id
+      episodesByShow[idShow] = (episodesByShow.hasOwnProperty(idShow)) ? episodesByShow[idShow] + 1 : 1
+
+      return (episodesByShow[idShow] <= limit)
+    })
+
     if (reverse) {
       episodes.reverse()
     }
