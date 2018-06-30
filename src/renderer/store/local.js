@@ -12,6 +12,7 @@ const key = {
     FAVORITE: 'homepage.favorite', // {Boolean} Display favorites on homepage
     NEWS: 'homepage.news', // {Boolean} Display news on homepage
     NB_NEWS: 'homepage.news_nb', // {Integer} Number of news
+    GRAPH_FINISH: 'homepage.graph_finish', // {Boolean} Display finished show in the graph
   },
   EPISODES: {
     FILTER: 'episodes.filter', // {String} Filter (view|get|all)
@@ -71,6 +72,7 @@ let store = new ElectronStore({
       favorite: true,
       news: true,
       news_nb: 10,
+      graph_finish: false,
     },
     timeline: {
       nb: 30,

@@ -27,6 +27,9 @@
         <label><input type="checkbox" v-model="homepage_favorite" /> Afficher les favoris</label>
       </div>
       <div class="checkbox">
+        <label><input type="checkbox" v-model="graph_finish" /> Afficher les séries terminées dans le graph</label>
+      </div>
+      <div class="checkbox">
         <label><input type="checkbox" v-model="homepage_news" /> Afficher les news </label>
       </div>
       <div class="form-group">
@@ -186,6 +189,7 @@
         srtVF: true,
         homepage_favorite: true,
         homepage_news: true,
+        graph_finish: false,
         nb_news: 10,
         sizehistory: 5,
         dl_dir: '',
@@ -214,6 +218,7 @@
         this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
         this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
+        this.graph_finish = localStore.get(localStore.key.HOMEPAGE.GRAPH_FINISH, false)
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
         this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
@@ -232,6 +237,7 @@
         localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
         localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
         localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
+        localStore.set(localStore.key.HOMEPAGE.GRAPH_FINISH, this.graph_finish)
         localStore.set(localStore.key.DOWNLOAD.ASK, this.dl_ask)
         localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
         localStore.set(localStore.key.COMMENTS.NB, this.between(this.comments_nb, 5, 50))
