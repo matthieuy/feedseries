@@ -75,6 +75,8 @@
               return 'fa-thumbs-down'
             case 'del_serie':
               return 'fa-trash'
+            case 'badge':
+              return 'fa-trophy'
           }
         },
       },
@@ -125,5 +127,6 @@
     .fa-star, .fa-thumbs-up { color: #b4af12; }
     .fa-plus-circle { color: #195625; }
     .fa-trash { color: #fb1710; }
+    .fa-trophy { color: #ecf000; }
   }
 </style>

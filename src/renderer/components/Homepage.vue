@@ -9,7 +9,7 @@
             <div class="binfo" v-if="stats.friends"><i class="fa fa-users"></i> {{ stats.friends|plurialize('ami', 'amis') }}</div>
             <div class="binfo"><i class="fa fa-certificate"></i> {{ stats.xp }} XP</div>
             <div class="binfo" v-if="stats.comments"><i class="fa fa-comments"></i> {{ stats.comments|plurialize('commentaire', 'commentaires') }}</div>
-            <div class="binfo" v-if="stats.badges"><i class="fa fa-bookmark"></i> {{ stats.badges|plurialize('badge', 'badges') }}</div>
+            <div class="binfo" v-if="stats.badges"><i class="fa fa-trophy"></i> {{ stats.badges|plurialize('badge', 'badges') }}</div>
             <div class="binfo" v-if="stats.written_words"><i class="fa fa-pencil-alt"></i> {{ stats.written_words|plurialize('mot écrit', 'mots écrits') }}</div>
             <div class="clearfix"></div>
           </div>
