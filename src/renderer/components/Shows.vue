@@ -53,7 +53,7 @@
                 </div>
               </div>
               <div class="pull-right text-right">
-                {{ show.progress }}%
+                {{ show.progress }}% <span v-if="show.progress"> - {{ show.last }}</span>
                 <span v-if="show.remaining"><br>{{ show.remaining }} ép. | {{ (show.remaining * show.runtime)|duration }}</span>
               </div>
             </div>

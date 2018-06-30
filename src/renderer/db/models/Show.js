@@ -28,6 +28,7 @@ class Show extends Document {
       isFavorited: Boolean,
       remaining: Number,
       progress: Number,
+      last: String,
       image: String,
       note: Number,
     })
@@ -97,6 +98,7 @@ class Show extends Document {
       isFavorited: show.user.favorited,
       remaining: show.user.remaining,
       progress: show.user.status,
+      last: show.user.last,
       description: show.description,
       image: (show.images.show) ? show.images.show.replace('https://www.betaseries.com/images/fonds/show/', '') : null,
       note: Math.round(show.notes.mean * 10) / 10,
