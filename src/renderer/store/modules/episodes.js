@@ -238,12 +238,14 @@ const getters = {
     })
 
     // Limit
-    episodes = episodes.filter((episode) => {
-      let idShow = (episode.show) ? episode.show._id || episode.show.id : episode._id || episode.id
-      episodesByShow[idShow] = (episodesByShow.hasOwnProperty(idShow)) ? episodesByShow[idShow] + 1 : 1
+    if (limit) {
+      episodes = episodes.filter((episode) => {
+        let idShow = (episode.show) ? episode.show._id || episode.show.id : episode._id || episode.id
+        episodesByShow[idShow] = (episodesByShow.hasOwnProperty(idShow)) ? episodesByShow[idShow] + 1 : 1
 
-      return (episodesByShow[idShow] <= limit)
-    })
+        return (episodesByShow[idShow] <= limit)
+      })
+    }
 
     if (reverse) {
       episodes.reverse()
