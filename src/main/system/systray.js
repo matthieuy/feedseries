@@ -41,8 +41,10 @@ export default {
    */
   init (mainWindow) {
     if (this.tray === null) {
+      let localStore = require('../../renderer/store/local').default
+      let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
       this.mainWindow = mainWindow
-      this.tray = new Tray(`${__static}/icons/128x128.png`)
+      this.tray = new Tray(`${__static}/icons/128x128${whiteIcon}.png`)
       this.contextMenu = Menu.buildFromTemplate(template)
       this.tray.setToolTip(app.getName())
 

@@ -74,12 +74,14 @@ if (isNotSingleInstance) {
  * Create main window *
  **********************/
 function createWindow () {
+  let localStore = require('../renderer/store/local').default
+  let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
   mainWindow = new BrowserWindow({
     height: 600,
     minWidth: 850,
     minHeight: 500,
     useContentSize: true,
-    icon: (process.platform === 'win32') ? __static + '/icons/icon.ico' : __static + '/icons/icon.png',
+    icon: (process.platform === 'win32') ? __static + '/icons/icon' + whiteIcon + '.ico' : __static + '/icons/icon' + whiteIcon + '.png',
     center: true,
     title: app.getName(),
     backgroundColor: '#36393E',
@@ -92,7 +94,6 @@ function createWindow () {
   })
 
   // Load main window
-  let localStore = require('../renderer/store/local').default
   console.log('Main : ', global.winURL)
   let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? global.winURL + '/index.html#' + localStore.get(localStore.key.ROUTE.LAST) : global.winURL + '/index.html'
   log.info('Load URL', mainWindowURL)

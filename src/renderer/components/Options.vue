@@ -8,6 +8,9 @@
         <label><input type="checkbox" v-model="systray" /> Réduire dans le systray à la fermeture de la fenêtre</label>
       </div>
       <div class="checkbox">
+        <label><input type="checkbox" v-model="whiteicon" /> Icône clair</label>
+      </div>
+      <div class="checkbox">
         <label><input type="checkbox" v-model="autoload" /> Démarrer avec le système</label>
       </div>
       <div class="checkbox">
@@ -200,6 +203,7 @@
         comments_nb: 30,
         comments_order: 'desc',
         recommendation_interval: 2,
+        whiteicon: false,
       }
     },
     computed: {
@@ -228,6 +232,7 @@
         this.comments_nb = localStore.get(localStore.key.COMMENTS.NB, 30)
         this.comments_order = localStore.get(localStore.key.COMMENTS.ORDER, 'desc')
         this.recommendation_interval = localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)
+        this.whiteicon = localStore.get(localStore.ket.WHITE_ICON, false)
       },
       /**
        * Save the configuration
@@ -242,6 +247,7 @@
         localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
         localStore.set(localStore.key.COMMENTS.NB, this.between(this.comments_nb, 5, 50))
         localStore.set(localStore.key.COMMENTS.ORDER, this.comments_order)
+        localStore.set(localStore.key.WHITE_ICON, this.whiteicon)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {

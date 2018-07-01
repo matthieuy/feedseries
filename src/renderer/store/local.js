@@ -57,6 +57,7 @@ const key = {
   HISTORY: 'history', // {Array} The navigator history
   HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history
   DEVTOOLS: 'devtools', // {Boolean} Devtools is open
+  WHITE_ICON: 'whiteicon', // {Boolean} Icon app is white
 }
 
 let store = new ElectronStore({
@@ -91,6 +92,7 @@ let store = new ElectronStore({
     devtools: false,
     history: [],
     sizehistory: 5,
+    whiteicon: false,
   },
 })
 store.key = key
