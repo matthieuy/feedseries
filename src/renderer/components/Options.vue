@@ -51,6 +51,13 @@
     </fieldset>
 
     <fieldset>
+      <legend>Calendrier</legend>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="calendar_save"/> Sauvegarder le dernier mois affiché</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>Timeline</legend>
       <div class="form-group">
         <label>
@@ -204,6 +211,7 @@
         comments_order: 'desc',
         recommendation_interval: 2,
         whiteicon: false,
+        calendar_save: false,
       }
     },
     computed: {
@@ -232,7 +240,8 @@
         this.comments_nb = localStore.get(localStore.key.COMMENTS.NB, 30)
         this.comments_order = localStore.get(localStore.key.COMMENTS.ORDER, 'desc')
         this.recommendation_interval = localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)
-        this.whiteicon = localStore.get(localStore.ket.WHITE_ICON, false)
+        this.whiteicon = localStore.get(localStore.key.WHITE_ICON, false)
+        this.calendar_save = localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)
       },
       /**
        * Save the configuration
@@ -248,6 +257,7 @@
         localStore.set(localStore.key.COMMENTS.NB, this.between(this.comments_nb, 5, 50))
         localStore.set(localStore.key.COMMENTS.ORDER, this.comments_order)
         localStore.set(localStore.key.WHITE_ICON, this.whiteicon)
+        localStore.set(localStore.key.CALENDAR.SAVE_DATE, this.calendar_save)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {

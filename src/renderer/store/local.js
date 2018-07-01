@@ -22,6 +22,10 @@ const key = {
     SPECIAL: 'episodes.special', // {Boolean} Show special episode
     SRT_VF_ONLY: 'vf', // {Boolean} Show only VF subtitle
   },
+  CALENDAR: {
+    SAVE_DATE: 'calendar.save_date', // {Boolean} Save the last date display
+    LAST_DATE: 'calendar.month', // {String} The last date to display
+  },
   TIMELINE: {
     NB: 'timeline.nb', // {Integer} Nb of event per page
     HIMSELF: 'timeline.himself', // {Integer} (0|1) Include himself actions

@@ -25,6 +25,7 @@
       return {
         isLoading: true,
         config: {
+          defaultDate: (localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)) ? localStore.get(localStore.key.CALENDAR.LAST_DATE, null) : null,
           defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
           eventOrder (a, b) {
             if (a.miscProps.episode.user.downloaded !== b.miscProps.episode.user.downloaded) {
@@ -89,6 +90,7 @@
           this.config.defaultView = view.name
           localStore.set(localStore.key.PLANNING.VIEW, view.name)
         }
+        localStore.set(localStore.key.CALENDAR.LAST_DATE, view.calendar.currentDate.format('YYYY-MM') + '-01')
       },
     },
   }
