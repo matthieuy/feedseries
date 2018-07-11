@@ -3,7 +3,7 @@
     <div class="drag"></div>
     <div class="close" @click="close()">&times;</div>
     <div class="header">
-      <img src="static/icons/icon.png" width="128" height="128">
+      <img src="static/icons/icon-b.png" width="128" height="128">
       <div>FeedSeries v{{ version }}</div>
     </div>
     <div class="credits">

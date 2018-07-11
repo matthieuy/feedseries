@@ -8,6 +8,9 @@
         <label><input type="checkbox" v-model="systray" /> Réduire dans le systray à la fermeture de la fenêtre</label>
       </div>
       <div class="checkbox">
+        <label><input type="checkbox" v-model="whiteicon" /> Icône clair</label>
+      </div>
+      <div class="checkbox">
         <label><input type="checkbox" v-model="autoload" /> Démarrer avec le système</label>
       </div>
       <div class="checkbox">
@@ -27,6 +30,9 @@
         <label><input type="checkbox" v-model="homepage_favorite" /> Afficher les favoris</label>
       </div>
       <div class="checkbox">
+        <label><input type="checkbox" v-model="graph_finish" /> Afficher les séries terminées dans le graph</label>
+      </div>
+      <div class="checkbox">
         <label><input type="checkbox" v-model="homepage_news" /> Afficher les news </label>
       </div>
       <div class="form-group">
@@ -41,6 +47,13 @@
       <legend>Épisodes</legend>
       <div class="checkbox">
         <label><input type="checkbox" v-model="special" /> Afficher les épisodes spéciaux</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Calendrier</legend>
+      <div class="checkbox">
+        <label><input type="checkbox" v-model="calendar_save"/> Sauvegarder le dernier mois affiché</label>
       </div>
     </fieldset>
 
@@ -186,6 +199,7 @@
         srtVF: true,
         homepage_favorite: true,
         homepage_news: true,
+        graph_finish: false,
         nb_news: 10,
         sizehistory: 5,
         dl_dir: '',
@@ -196,6 +210,8 @@
         comments_nb: 30,
         comments_order: 'desc',
         recommendation_interval: 2,
+        whiteicon: false,
+        calendar_save: false,
       }
     },
     computed: {
@@ -214,6 +230,7 @@
         this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
         this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
         this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
+        this.graph_finish = localStore.get(localStore.key.HOMEPAGE.GRAPH_FINISH, false)
         this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
         this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
         this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
@@ -223,6 +240,8 @@
         this.comments_nb = localStore.get(localStore.key.COMMENTS.NB, 30)
         this.comments_order = localStore.get(localStore.key.COMMENTS.ORDER, 'desc')
         this.recommendation_interval = localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)
+        this.whiteicon = localStore.get(localStore.key.WHITE_ICON, false)
+        this.calendar_save = localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)
       },
       /**
        * Save the configuration
@@ -232,10 +251,13 @@
         localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
         localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
         localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
+        localStore.set(localStore.key.HOMEPAGE.GRAPH_FINISH, this.graph_finish)
         localStore.set(localStore.key.DOWNLOAD.ASK, this.dl_ask)
         localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
         localStore.set(localStore.key.COMMENTS.NB, this.between(this.comments_nb, 5, 50))
         localStore.set(localStore.key.COMMENTS.ORDER, this.comments_order)
+        localStore.set(localStore.key.WHITE_ICON, this.whiteicon)
+        localStore.set(localStore.key.CALENDAR.SAVE_DATE, this.calendar_save)
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {

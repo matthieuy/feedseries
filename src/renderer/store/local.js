@@ -12,6 +12,7 @@ const key = {
     FAVORITE: 'homepage.favorite', // {Boolean} Display favorites on homepage
     NEWS: 'homepage.news', // {Boolean} Display news on homepage
     NB_NEWS: 'homepage.news_nb', // {Integer} Number of news
+    GRAPH_FINISH: 'homepage.graph_finish', // {Boolean} Display finished show in the graph
   },
   EPISODES: {
     FILTER: 'episodes.filter', // {String} Filter (view|get|all)
@@ -20,6 +21,10 @@ const key = {
     REVERSE: 'episodes.reverse', // {Boolean} Reverse order
     SPECIAL: 'episodes.special', // {Boolean} Show special episode
     SRT_VF_ONLY: 'vf', // {Boolean} Show only VF subtitle
+  },
+  CALENDAR: {
+    SAVE_DATE: 'calendar.save_date', // {Boolean} Save the last date display
+    LAST_DATE: 'calendar.month', // {String} The last date to display
   },
   TIMELINE: {
     NB: 'timeline.nb', // {Integer} Nb of event per page
@@ -56,6 +61,7 @@ const key = {
   HISTORY: 'history', // {Array} The navigator history
   HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history
   DEVTOOLS: 'devtools', // {Boolean} Devtools is open
+  WHITE_ICON: 'whiteicon', // {Boolean} Icon app is white
 }
 
 let store = new ElectronStore({
@@ -71,6 +77,7 @@ let store = new ElectronStore({
       favorite: true,
       news: true,
       news_nb: 10,
+      graph_finish: false,
     },
     timeline: {
       nb: 30,
@@ -89,6 +96,7 @@ let store = new ElectronStore({
     devtools: false,
     history: [],
     sizehistory: 5,
+    whiteicon: false,
   },
 })
 store.key = key

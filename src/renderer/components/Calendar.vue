@@ -25,9 +25,10 @@
       return {
         isLoading: true,
         config: {
+          defaultDate: (localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)) ? localStore.get(localStore.key.CALENDAR.LAST_DATE, null) : null,
           defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
           eventOrder (a, b) {
-            if (a.miscProps.episode.user.downloaded !== b.miscProps.episode.user.downloaded) {
+            if (a.miscProps.episode.user && b.miscProps.episode.user && a.miscProps.episode.user.downloaded !== b.miscProps.episode.user.downloaded) {
               return a.miscProps.episode.user.downloaded ? -1 : 1
             }
             return a.title.localeCompare(b.title)
@@ -37,7 +38,9 @@
           // Member planning
           {
             events (start, end, timezone, cb) {
-              api.planning.getMember(start).then((events) => {
+              api.planning.getMemberBetween(start, end).then((events) => {
+              // api.planning.getMember(start).then((events) => {
+                console.log(events)
                 cb(events)
               }).catch(() => {
                 let events = []
@@ -70,25 +73,26 @@
         this.isLoading = isLoading
       },
       eventRender (event, el, view) {
-        let iconsEl
+        // let iconsEl
         if (view.name === 'listMonth') {
           // Add title
           let title = el[0].querySelector('.fc-list-item-title')
           title.innerHTML += ` - <i>${event.episode.title}</i>`
-          iconsEl = title
-        } else {
-          iconsEl = el[0].querySelector('.fc-content')
+        //   iconsEl = title
+        // } else {
+        //   iconsEl = el[0].querySelector('.fc-content')
         }
 
-        if (event.episode.user.downloaded) {
-          iconsEl.innerHTML += `<i class="fa fa-download"></i>`
-        }
+        // if (event.episode.user && event.episode.user.downloaded) {
+        //   iconsEl.innerHTML += `<i class="fa fa-download"></i>`
+        // }
       },
       eventViewRender (view, el) {
         if (view.name !== this.config.defaultView) {
           this.config.defaultView = view.name
           localStore.set(localStore.key.PLANNING.VIEW, view.name)
         }
+        localStore.set(localStore.key.CALENDAR.LAST_DATE, view.calendar.currentDate.format('YYYY-MM') + '-01')
       },
     },
   }
