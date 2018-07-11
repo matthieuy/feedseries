@@ -7,11 +7,14 @@ export default {
    * @return {Promise}
    */
   getMember (start) {
+    let params = {
+      unseen: 1,
+      month: start.add(15, 'days').format('YYYY-MM'),
+    }
+    console.log('[API] Planning::getMember', params)
+
     return Vue.http.get('/planning/member', {
-      params: {
-        unseen: 1,
-        month: start.add(15, 'days').format('YYYY-MM'),
-      },
+      params,
     }).then((response) => {
       let events = []
       if (response.status === 200 && response.data.hasOwnProperty('episodes')) {
@@ -21,6 +24,36 @@ export default {
             start: episode.date,
             title: `${episode.show.title} - ${episode.code}`,
             episode: episode,
+          })
+        })
+      }
+      return Promise.resolve(events)
+    }).catch(() => {
+      return Promise.reject(new Error('Impossible de récupérer le planning'))
+    })
+  },
+  getMemberBetween (start, end) {
+    let params = {
+      type: 'show',
+      start: start.format('YYYY-MM-DD'),
+      end: end.format('YYYY-MM-DD'),
+    }
+    console.log('[API] Planning::getMemberBetween', params)
+
+    return Vue.http.get('/planning/calendar', {
+      params,
+    }).then((response) => {
+      let events = []
+      if (response.status === 200 && response.data.hasOwnProperty('days')) {
+        response.data.days.forEach((day) => {
+          day.events.filter((e) => {
+            return !e.payload.seen && e.payload.episode !== '1' && e.type === 'episode_release'
+          }).forEach((e) => {
+            events.push({
+              start: day.date,
+              title: `${e.payload.show_title} - ${e.payload.code}`,
+              episode: e.payload,
+            })
           })
         })
       }
