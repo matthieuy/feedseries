@@ -70,6 +70,7 @@ export default {
           user: event.user,
           userId: event.user_id,
           html: event.html,
+          ref: event.ref_id,
           note: (event.data.note) ? event.data.note : 0,
         })
       })

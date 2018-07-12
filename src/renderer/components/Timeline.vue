@@ -7,7 +7,7 @@
           <img :class="'event-avatar-' + event.id" :src="userAvatar(event)" alt="" width="24" height="24" />
           <i class="type-icon fa" :class="iconType(event.type)"></i>
           <span :title="event.date | formatDate('ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
-          {{ event.user }} <span v-html="event.html" v-on:click.prevent=""></span>
+          {{ event.user }} <span v-html="event.html" :class="{link: isLinkEnabled(event)}" @click="clickLink(event, $event)"></span>
           <span class="fa fa-star" v-show="event.note" v-for="star in event.note"></span>
         </li>
       </ul>
@@ -39,6 +39,16 @@
         ]),
       },
       methods: {
+        isLinkEnabled (event) {
+          let types = ['archive', 'unarchive', 'add_serie', 'del_serie']
+          return types.indexOf(event.type) !== -1 && event.ref
+        },
+        clickLink (event, e) {
+          e.preventDefault()
+          if (this.isLinkEnabled(event)) {
+            this.$router.push({name: 'show', params: { id: event.ref }})
+          }
+        },
         getList () {
           this.isLoading = true
           this.$store.dispatch(types.timeline.ACTIONS.LOAD).then(() => {
@@ -118,6 +128,10 @@
         font-weight: bold;
         text-decoration: none;
         cursor: default;
+      }
+      .link a {
+        text-decoration: underline;
+        cursor: pointer;
       }
     }
     .toolbar-footer {
