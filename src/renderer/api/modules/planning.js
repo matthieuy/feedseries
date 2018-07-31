@@ -45,9 +45,11 @@ export default {
     }).then((response) => {
       let events = []
       if (response.status === 200 && response.data.hasOwnProperty('days')) {
+        let month = start.add(15, 'days').format('YYYY-MM')
+
         response.data.days.forEach((day) => {
           day.events.filter((e) => {
-            return !e.payload.seen && e.payload.episode !== '1' && e.type === 'episode_release'
+            return !e.payload.seen && e.type === 'episode_release' && (e.payload.episode !== '1' || day.date.indexOf(month) === -1)
           }).forEach((e) => {
             events.push({
               start: day.date,

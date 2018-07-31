@@ -40,7 +40,7 @@
             events (start, end, timezone, cb) {
               api.planning.getMemberBetween(start, end).then((events) => {
               // api.planning.getMember(start).then((events) => {
-                console.log(events)
+              // console.log(events)
                 cb(events)
               }).catch(() => {
                 let events = []
