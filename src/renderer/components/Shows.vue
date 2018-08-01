@@ -30,14 +30,16 @@
           <span class="nav-group-item" :class="{active: order === 'remaining_episodes'}"  @click="changeOrder('remaining_episodes')">Épisodes restants</span>
         </nav>
       </div>
-      <div class="pane">
+      <div id="pane-shows" class="pane">
         <ul class="list-group">
           <li class="list-group-header">
             <h1 class="text-center">Mes séries</h1>
           </li>
-          <li class="list-group-header">
+          <li id="li-search" class="list-group-header">
             <input type="search" v-model="filterQuery" v-show="!isLoading" class="form-control" placeholder="Filtrer les séries" autofocus>
           </li>
+        </ul>
+        <ul id="list-shows" class="list-group">
           <li v-show="isLoading" class="text-center">Chargement en cours...</li>
           <li class="list-group-item show-item-view" v-for="show in shows" v-show="!isLoading">
             <div @contextmenu.prevent="$refs.ShowCtx.$refs.ctx.open($event, show)">
@@ -123,12 +125,38 @@
     },
     mounted () {
       console.info('[VUE] Mount Shows.vue')
+      document.getElementById('pane-shows').addEventListener('scroll', scrollListener)
       this.loadList()
     },
+    beforeDestroy () {
+      document.getElementById('pane-shows').removeEventListener('scroll', scrollListener)
+    },
+  }
+
+  /**
+   * Listener on scroll pane (for stickly searchbar)
+   * @param {Event} e
+   */
+  function scrollListener (e) {
+    let pane = document.getElementById('pane-shows')
+    let sticky = document.getElementById('li-search').offsetTop
+    if (e.target.scrollTop >= sticky) {
+      pane.classList.add('stickly')
+    } else {
+      pane.classList.remove('stickly')
+    }
   }
 </script>
 
 <style lang="scss">
+  .stickly {
+    margin-top: 50px;
+    #li-search {
+      position: fixed;
+      width: 100%;
+      top: 35px;
+    }
+  }
   .fa-circle {
     font-size: 8px;
   }
