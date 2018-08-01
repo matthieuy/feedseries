@@ -35,7 +35,7 @@
         let parentRef = this.$parent.$refs
         let thisTag = this.$options._componentTag
         for (let i in parentRef) {
-          if (thisTag !== this.$parent.$refs[i].$options._componentTag) {
+          if (thisTag !== this.$parent.$refs[i].$options._componentTag && this.$parent.$refs[i].$refs.ctx) {
             this.$parent.$refs[i].$refs.ctx.ctxVisible = false
           }
         }
