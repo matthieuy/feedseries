@@ -55,6 +55,9 @@
           },
           eventAfterAllRender (view) {
             self.updateBtnDL(self.dlOnly)
+            if (view.name === 'listMonth' && self.dlOnly) {
+              self.hideHeader()
+            }
           },
           eventOrder (a, b) {
             // DL first
@@ -187,6 +190,19 @@
           document.getElementById('calendar').classList.remove('hide-not-dl')
         }
       },
+      hideHeader () {
+        document.querySelectorAll('.fc-list-heading').forEach((header) => {
+          let next = header
+          do {
+            next = next.nextSibling
+            if (!next || next.classList.contains('fc-list-heading') || next.classList.contains('dl')) {
+              break
+            }
+
+            header.classList.add('not-dl')
+          } while (true)
+        })
+      },
     },
   }
 
@@ -201,20 +217,20 @@
       let p = new Promise((resolve, reject) => {
         Episode.findOne({ _id: events[i].episode.id + '' }).then((ep) => {
           let className = []
-          let isDL = true
+          let isDL = false
 
           if (ep) {
             events[i].episode = ep
             className.push('db')
-            if (!ep.isDownloaded) {
-              isDL = false
+            if (ep.isDownloaded) {
+              isDL = true
             }
           } else {
             events[i].episode.notDB = true
             className.push('not-db')
             ep = events[i].episode
-            if (ep.user && ep.user.hasOwnProperty('downloaded') && !ep.user.downloaded) {
-              isDL = false
+            if (ep.user && ep.user.hasOwnProperty('downloaded') && ep.user.downloaded) {
+              isDL = true
             }
           }
 
