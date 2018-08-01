@@ -171,6 +171,9 @@
           if (episode.show.isFavorited) {
             iconsEl.innerHTML += `<i class="fa fa-heart"></i>`
           }
+          if (episode.show.status === 'Ended') {
+            iconsEl.innerHTML += '<i class="fa fa-circle" style="color: #fc605b"></i>'
+          }
         }
       },
       eventViewRender (view, el) {
@@ -203,6 +206,9 @@
           } while (true)
         })
       },
+    },
+    mounted () {
+      console.info('[VUE] Mount Calendar.vue')
     },
   }
 
