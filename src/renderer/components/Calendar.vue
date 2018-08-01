@@ -1,6 +1,7 @@
 <template>
   <div @contextmenu="rightClick">
     <full-calendar
+      id="calendar"
       :class="{loading: isLoading}"
       class="fc fc-unthemed fc-ltr"
       :config="config"
@@ -50,10 +51,11 @@
                 let btn = document.getElementsByClassName('fc-dlonly-button')[0]
                 if (self.dlOnly) {
                   btn.classList.add('fc-state-active')
+                  document.getElementById('calendar').classList.add('hide-not-dl')
                 } else {
                   btn.classList.remove('fc-state-active')
+                  document.getElementById('calendar').classList.remove('hide-not-dl')
                 }
-                self.$refs.calendar.$emit('rerender-events')
               },
             },
           },
@@ -112,18 +114,16 @@
       rightClick (e) {
         // Found event
         let el = e.target
+        let eventId
         while (el.nodeName !== 'HTML') {
-          if (el.nodeName === 'A') {
+          eventId = el.dataset.eventId
+          if (eventId) {
             break
           } else if (el.nodeName === 'BODY') {
             return false
           }
 
           el = el.parentNode
-        }
-        let eventId = el.dataset.eventId
-        if (!eventId) {
-          return false
         }
 
         let event = this.$refs.calendar.fireMethod('clientEvents', eventId)
@@ -144,15 +144,9 @@
       },
       eventRender (event, el, view) {
         let episode = event.episode
-
-        // Visibility
-        let visibility = (view.name === 'listMonth') ? 'table-row' : 'block'
-        let downloadedDB = (episode.hasOwnProperty('isDownloaded') && !episode.isDownloaded)
-        let downloadedNotDB = (episode.notDB && episode.user && episode.user.hasOwnProperty('downloaded') && !episode.user.downloaded)
-        if ((this.dlOnly && (downloadedDB || downloadedNotDB)) || episode.isSeen) {
-          visibility = 'none'
+        if (episode.isSeen) {
+          el[0].style.display = 'none'
         }
-        el[0].style.display = visibility
         el[0].dataset.eventId = event._id
 
         let iconsEl
@@ -200,12 +194,27 @@
       let p = new Promise((resolve, reject) => {
         Episode.findOne({ _id: events[i].episode.id + '' }).then((ep) => {
           let className = []
+          let isDL = true
+
           if (ep) {
             events[i].episode = ep
             className.push('db')
+            if (!ep.isDownloaded) {
+              isDL = false
+            }
           } else {
             events[i].episode.notDB = true
             className.push('not-db')
+            ep = events[i].episode
+            if (ep.user && ep.user.hasOwnProperty('downloaded') && !ep.user.downloaded) {
+              isDL = false
+            }
+          }
+
+          if (isDL) {
+            className.push('dl')
+          } else {
+            className.push('not-dl')
           }
           events[i].className = className
           resolve()
@@ -238,6 +247,9 @@
     .db {
       cursor: pointer;
     }
+  }
+  .hide-not-dl .not-dl {
+    display: none;
   }
 
   .fc-unthemed td.fc-today {
