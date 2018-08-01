@@ -59,6 +59,11 @@
               },
             },
           },
+          eventAfterAllRender (view) {
+            if (self.dlOnly) {
+              document.getElementById('calendar').classList.add('hide-not-dl')
+            }
+          },
           eventOrder (a, b) {
             // DL first
             if (a.miscProps.episode.isDownloaded !== b.miscProps.episode.isDownloaded) {
