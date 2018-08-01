@@ -71,6 +71,8 @@
   import { types, localStore } from '../store'
   import ShowCtx from './context/ShowCtx'
 
+  let pane
+
   export default {
     components: {
       ShowCtx,
@@ -125,11 +127,12 @@
     },
     mounted () {
       console.info('[VUE] Mount Shows.vue')
-      document.getElementById('pane-shows').addEventListener('scroll', scrollListener)
+      pane = document.getElementById('pane-shows')
+      pane.addEventListener('scroll', scrollListener)
       this.loadList()
     },
     beforeDestroy () {
-      document.getElementById('pane-shows').removeEventListener('scroll', scrollListener)
+      pane.removeEventListener('scroll', scrollListener)
     },
   }
 
@@ -138,7 +141,6 @@
    * @param {Event} e
    */
   function scrollListener (e) {
-    let pane = document.getElementById('pane-shows')
     let sticky = document.getElementById('li-search').offsetTop
     if (e.target.scrollTop >= sticky) {
       pane.classList.add('stickly')
