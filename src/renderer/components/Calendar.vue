@@ -1,33 +1,62 @@
 <template>
-  <div>
+  <div @contextmenu="rightClick">
     <full-calendar
       :class="{loading: isLoading}"
       class="fc fc-unthemed fc-ltr"
       :config="config"
       :event-sources="eventSources"
+      ref="calendar"
+      @event-selected="eventClick"
       @event-render="eventRender"
       @event-view-render="eventViewRender"
       @event-loading="eventLoading"
     ></full-calendar>
+    <episode-ctx ref="EpisodeCtx" @ctx-episode-close="ctxClose" :hide-show="true">&nbsp;</episode-ctx>
   </div>
 </template>
 
 <script>
   import api from '../api'
   import { localStore } from '../store'
+  import EpisodeCtx from './context/EpisodeCtx'
   import FullCalendar from './FullCalendar'
   import { Episode } from '../db'
 
   export default {
     components: {
+      EpisodeCtx,
       FullCalendar,
     },
     data () {
+      let self = this
+
       return {
         isLoading: true,
+        dlOnly: false,
+        eventSelected: null,
         config: {
           defaultDate: (localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)) ? localStore.get(localStore.key.CALENDAR.LAST_DATE, null) : null,
           defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
+          header: {
+            left: 'prev,next today dlonly',
+            center: 'title',
+            right: 'month listMonth',
+          },
+          customButtons: {
+            dlonly: {
+              text: 'Récupérés',
+              click () {
+                self.dlOnly = !self.dlOnly
+                let btn = document.getElementsByClassName('fc-dlonly-button')[0]
+                if (self.dlOnly) {
+                  btn.classList.add('fc-state-active')
+                } else {
+                  btn.classList.remove('fc-state-active')
+                }
+                self.$refs.calendar.$emit('rerender-events')
+              },
+            },
+          },
           eventOrder (a, b) {
             // DL first
             if (a.miscProps.episode.isDownloaded !== b.miscProps.episode.isDownloaded) {
@@ -73,8 +102,58 @@
       eventLoading (isLoading, view) {
         this.isLoading = isLoading
       },
+      eventClick (event, jsEvent) {
+        if (event.episode.notDB) {
+          return false
+        }
+        this.eventSelected = event
+        this.$refs.EpisodeCtx.$refs.ctx.open(jsEvent, event.episode)
+      },
+      rightClick (e) {
+        // Found event
+        let el = e.target
+        while (el.nodeName !== 'HTML') {
+          if (el.nodeName === 'A') {
+            break
+          } else if (el.nodeName === 'BODY') {
+            return false
+          }
+
+          el = el.parentNode
+        }
+        let eventId = el.dataset.eventId
+        if (!eventId) {
+          return false
+        }
+
+        let event = this.$refs.calendar.fireMethod('clientEvents', eventId)
+        if (event.length !== 1) {
+          return false
+        }
+        event = event[0]
+
+        this.eventClick(event, e)
+      },
+      ctxClose (episode) {
+        this.eventSelected.episode = episode
+        let self = this
+        setTimeout(() => {
+          self.$refs.calendar.$emit('remove-event', self.eventSelected._id)
+          self.$refs.calendar.$emit('render-event', self.eventSelected)
+        }, 150)
+      },
       eventRender (event, el, view) {
         let episode = event.episode
+
+        // Visibility
+        let visibility = (view.name === 'listMonth') ? 'table-row' : 'block'
+        let downloadedDB = (episode.hasOwnProperty('isDownloaded') && !episode.isDownloaded)
+        let downloadedNotDB = (episode.notDB && episode.user && episode.user.hasOwnProperty('downloaded') && !episode.user.downloaded)
+        if ((this.dlOnly && (downloadedDB || downloadedNotDB)) || episode.isSeen) {
+          visibility = 'none'
+        }
+        el[0].style.display = visibility
+        el[0].dataset.eventId = event._id
 
         let iconsEl
         if (view.name === 'listMonth') {
@@ -120,11 +199,15 @@
     for (let i = 0; i < events.length; i++) {
       let p = new Promise((resolve, reject) => {
         Episode.findOne({ _id: events[i].episode.id + '' }).then((ep) => {
+          let className = []
           if (ep) {
             events[i].episode = ep
+            className.push('db')
           } else {
             events[i].episode.notDB = true
+            className.push('not-db')
           }
+          events[i].className = className
           resolve()
         })
       })
@@ -148,6 +231,12 @@
     }
     .fa {
       margin-left: 5px;
+    }
+    .not-db {
+      cursor: not-allowed;
+    }
+    .db {
+      cursor: pointer;
     }
   }
 
