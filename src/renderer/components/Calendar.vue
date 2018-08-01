@@ -16,6 +16,7 @@
   import api from '../api'
   import { localStore } from '../store'
   import FullCalendar from './FullCalendar'
+  import { Episode } from '../db'
 
   export default {
     components: {
@@ -28,9 +29,11 @@
           defaultDate: (localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)) ? localStore.get(localStore.key.CALENDAR.LAST_DATE, null) : null,
           defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
           eventOrder (a, b) {
-            if (a.miscProps.episode.user && b.miscProps.episode.user && a.miscProps.episode.user.downloaded !== b.miscProps.episode.user.downloaded) {
-              return a.miscProps.episode.user.downloaded ? -1 : 1
+            // DL first
+            if (a.miscProps.episode.isDownloaded !== b.miscProps.episode.isDownloaded) {
+              return a.miscProps.episode.isDownloaded ? -1 : 1
             }
+
             return a.title.localeCompare(b.title)
           },
         },
@@ -39,9 +42,7 @@
           {
             events (start, end, timezone, cb) {
               api.planning.getMemberBetween(start, end).then((events) => {
-              // api.planning.getMember(start).then((events) => {
-              // console.log(events)
-                cb(events)
+                populateEvents(events, cb)
               }).catch(() => {
                 let events = []
                 cb(events)
@@ -55,7 +56,7 @@
             events (start, end, timezone, cb) {
               let day = start.add(15, 'days')
               api.planning.getPremieres(day).then((events) => {
-                cb(events)
+                populateEvents(events, cb)
               }).catch(() => {
                 let events = []
                 cb(events)
@@ -73,19 +74,31 @@
         this.isLoading = isLoading
       },
       eventRender (event, el, view) {
-        // let iconsEl
+        let episode = event.episode
+
+        let iconsEl
         if (view.name === 'listMonth') {
           // Add title
           let title = el[0].querySelector('.fc-list-item-title')
-          title.innerHTML += ` - <i>${event.episode.title}</i>`
-        //   iconsEl = title
-        // } else {
-        //   iconsEl = el[0].querySelector('.fc-content')
+          title.innerHTML += ` - <i>${episode.title}</i>`
+          iconsEl = title
+        } else {
+          iconsEl = el[0].querySelector('.fc-content')
         }
 
-        // if (event.episode.user && event.episode.user.downloaded) {
-        //   iconsEl.innerHTML += `<i class="fa fa-download"></i>`
-        // }
+        // Icons
+        if ((episode.user && episode.user.downloaded) || (!episode.notDB && episode.isDownloaded)) {
+          iconsEl.innerHTML += `<i class="fa fa-download"></i>`
+        }
+        if (!episode.notDB) {
+          if (episode.show.isArchived) {
+            iconsEl.innerHTML += `<i class="fa fa-archive"></i>`
+          }
+
+          if (episode.show.isFavorited) {
+            iconsEl.innerHTML += `<i class="fa fa-heart"></i>`
+          }
+        }
       },
       eventViewRender (view, el) {
         if (view.name !== this.config.defaultView) {
@@ -95,6 +108,32 @@
         localStore.set(localStore.key.CALENDAR.LAST_DATE, view.calendar.currentDate.format('YYYY-MM') + '-01')
       },
     },
+  }
+
+  /**
+   * Populate events with episodes
+   * @param events List of events
+   * @param cb Calendar Callback
+   */
+  function populateEvents (events, cb) {
+    let promisesList = []
+    for (let i = 0; i < events.length; i++) {
+      let p = new Promise((resolve, reject) => {
+        Episode.findOne({ _id: events[i].episode.id + '' }).then((ep) => {
+          if (ep) {
+            events[i].episode = ep
+          } else {
+            events[i].episode.notDB = true
+          }
+          resolve()
+        })
+      })
+      promisesList.push(p)
+    }
+
+    Promise.all(promisesList).then(() => {
+      cb(events)
+    })
   }
 </script>
 

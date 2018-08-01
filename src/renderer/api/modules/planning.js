@@ -32,6 +32,12 @@ export default {
       return Promise.reject(new Error('Impossible de récupérer le planning'))
     })
   },
+  /**
+   * Get events between date
+   * @param {Moment} start
+   * @param {Moment} end
+   * @returns {Promise}
+   */
   getMemberBetween (start, end) {
     let params = {
       type: 'show',
