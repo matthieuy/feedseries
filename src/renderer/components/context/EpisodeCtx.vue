@@ -43,14 +43,20 @@
        * @param {Episode} episode The episode
        */
       markView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode)
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode).then((result) => {
+          this.episode = result
+        })
+        this.episode.isSeen = true
       },
       /**
        * Mark episode as no view
        * @param {Episode} episode The episode
        */
       unmarkView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode)
+        this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode).then((result) => {
+          this.episode = result
+        })
+        this.episode.isSeen = false
       },
       /**
        * Mark episode as DL or not
@@ -61,7 +67,10 @@
         this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
           episode: episode,
           isDL: isDL,
+        }).then((result) => {
+          this.episode = result
         })
+        this.episode.isDownloaded = isDL
       },
       /**
        * Archive a show
@@ -94,7 +103,7 @@
         let parentRef = this.$parent.$refs
         let thisTag = this.$options._componentTag
         for (let i in parentRef) {
-          if (thisTag !== this.$parent.$refs[i].$options._componentTag) {
+          if (thisTag !== this.$parent.$refs[i].$options._componentTag && this.$parent.$refs[i].$refs.ctx) {
             this.$parent.$refs[i].$refs.ctx.ctxVisible = false
           }
         }
@@ -117,8 +126,9 @@
       /**
        * On close ctx : remove listener
        */
-      onCtxClose () {
+      onCtxClose (episode) {
         window.removeEventListener('keydown', this.escapeListener)
+        this.$emit('ctx-episode-close', episode)
       },
       /**
        * When press Escape key

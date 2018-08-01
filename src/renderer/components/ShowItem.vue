@@ -29,6 +29,9 @@
     <div class="text-center account-info" v-show="show.in_account">
       Série <span v-show="show.isArchived">(archivée)</span> déjà présente sur votre compte : {{ show.progress }}%<span v-show="show.remaining">, {{ show.remaining|plurialize('épisode', 'épisodes') }} à voir</span>
     </div>
+    <div class="text-center account-info" v-if="show.friends">
+      Série suivi par : {{ friendsName(show.friends) }}
+    </div>
   </div>
 </template>
 
@@ -40,6 +43,17 @@
     methods: {
       nl2br (text) {
         return text.replace(/\n/g, '<br>')
+      },
+      friendsName (friends) {
+        let logins = []
+        friends.forEach((friend) => {
+          logins.push(friend.login)
+        })
+
+        return logins.join(', ')
+      },
+      avatarURL (userId) {
+        return api.members.getAvatarURL(userId, 20)
       },
     },
     mounted () {

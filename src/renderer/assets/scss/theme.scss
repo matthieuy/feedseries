@@ -65,3 +65,31 @@ a {
     width: calc(100% - 15px);
   }
 }
+
+.friends-seen {
+  display: inline;
+  position: absolute;
+  margin-left: 4px;
+  .friends-content {
+    display: none;
+    padding: 5px 10px;
+    border: 1px solid rgba(0, 0, 0, .5);
+    box-shadow: 2px 2px 5px $ctxShadow;
+    z-index: 10;
+    div {
+      padding: 5px;
+      line-height: 20px;
+    }
+  }
+  &:hover .friends-content {
+    display: block;
+    position: relative;
+    background-color: $ctxBg;
+  }
+}
+
+img.avatars {
+  border-radius: 10px;
+  vertical-align: middle;
+  margin-right: 3px;
+}

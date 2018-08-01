@@ -32,6 +32,12 @@ export default {
       return Promise.reject(new Error('Impossible de récupérer le planning'))
     })
   },
+  /**
+   * Get events between date
+   * @param {Moment} start
+   * @param {Moment} end
+   * @returns {Promise}
+   */
   getMemberBetween (start, end) {
     let params = {
       type: 'show',
@@ -45,9 +51,11 @@ export default {
     }).then((response) => {
       let events = []
       if (response.status === 200 && response.data.hasOwnProperty('days')) {
+        let month = start.add(15, 'days').format('YYYY-MM')
+
         response.data.days.forEach((day) => {
           day.events.filter((e) => {
-            return !e.payload.seen && e.payload.episode !== '1' && e.type === 'episode_release'
+            return !e.payload.seen && e.type === 'episode_release' && (e.payload.episode !== '1' || day.date.indexOf(month) === -1)
           }).forEach((e) => {
             events.push({
               start: day.date,
