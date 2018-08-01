@@ -50,6 +50,7 @@
                 <i class="fa fa-circle" :style="show.status | statusColor"></i>
                 <i class="fa fa-archive" v-show="show.isArchived" title="Archivé"></i>
                 <i class="fa fa-heart" v-show="show.isFavorited" title="Favoris"></i>
+                <friend-bubble :friends="show.friends" :show="true"></friend-bubble>
                 <div>
                   {{ show.nb_seasons|plurialize('saison', 'saisons') }}, {{ show.nb_episodes|plurialize('épisode', 'épisodes') }}
                 </div>
@@ -70,12 +71,14 @@
 <script>
   import { types, localStore } from '../store'
   import ShowCtx from './context/ShowCtx'
+  import FriendBubble from './FriendBubble'
 
   let pane
 
   export default {
     components: {
       ShowCtx,
+      FriendBubble,
     },
     data () {
       return {
