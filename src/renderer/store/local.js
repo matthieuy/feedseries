@@ -25,6 +25,8 @@ const key = {
   CALENDAR: {
     SAVE_DATE: 'calendar.save_date', // {Boolean} Save the last date display
     LAST_DATE: 'calendar.month', // {String} The last date to display
+    VIEW: 'calendar.view', // {String} (listMonth|month) The default calendar view
+    DL_ONLY: 'calendar.dl', // {Boolean} Show DL only
   },
   TIMELINE: {
     NB: 'timeline.nb', // {Integer} Nb of event per page
@@ -33,9 +35,6 @@ const key = {
   SHOWS: {
     ORDER: 'shows.order', // {String} (alphabetical|progression|remaining_time|remaining_episodes) Order of shows
     REVERSE: 'shows.reverse', // {Boolean} Reverse order
-  },
-  PLANNING: {
-    VIEW: 'planning.view', // {String} (listMonth|month) The default calendar view
   },
   ROUTE: {
     SAVE: 'route.save', // {Boolean} Save the last route

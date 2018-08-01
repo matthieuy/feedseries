@@ -33,11 +33,11 @@
 
       return {
         isLoading: true,
-        dlOnly: false,
+        dlOnly: localStore.get(localStore.key.CALENDAR.DL_ONLY, false),
         eventSelected: null,
         config: {
           defaultDate: (localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)) ? localStore.get(localStore.key.CALENDAR.LAST_DATE, null) : null,
-          defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
+          defaultView: localStore.get(localStore.key.CALENDAR.VIEW, 'month'),
           header: {
             left: 'prev,next today dlonly',
             center: 'title',
@@ -48,21 +48,13 @@
               text: 'Récupérés',
               click () {
                 self.dlOnly = !self.dlOnly
-                let btn = document.getElementsByClassName('fc-dlonly-button')[0]
-                if (self.dlOnly) {
-                  btn.classList.add('fc-state-active')
-                  document.getElementById('calendar').classList.add('hide-not-dl')
-                } else {
-                  btn.classList.remove('fc-state-active')
-                  document.getElementById('calendar').classList.remove('hide-not-dl')
-                }
+                localStore.set(localStore.key.CALENDAR.DL_ONLY, self.dlOnly)
+                self.updateBtnDL(self.dlOnly)
               },
             },
           },
           eventAfterAllRender (view) {
-            if (self.dlOnly) {
-              document.getElementById('calendar').classList.add('hide-not-dl')
-            }
+            self.updateBtnDL(self.dlOnly)
           },
           eventOrder (a, b) {
             // DL first
@@ -181,9 +173,19 @@
       eventViewRender (view, el) {
         if (view.name !== this.config.defaultView) {
           this.config.defaultView = view.name
-          localStore.set(localStore.key.PLANNING.VIEW, view.name)
+          localStore.set(localStore.key.CALENDAR.VIEW, view.name)
         }
         localStore.set(localStore.key.CALENDAR.LAST_DATE, view.calendar.currentDate.format('YYYY-MM') + '-01')
+      },
+      updateBtnDL (dlOnly) {
+        let btn = document.getElementsByClassName('fc-dlonly-button')[0]
+        if (dlOnly) {
+          btn.classList.add('fc-state-active')
+          document.getElementById('calendar').classList.add('hide-not-dl')
+        } else {
+          btn.classList.remove('fc-state-active')
+          document.getElementById('calendar').classList.remove('hide-not-dl')
+        }
       },
     },
   }
