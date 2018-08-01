@@ -61,16 +61,7 @@
                   class="fa fa-file-alt cursor"
                   :title="getSubtitles(episode).length|plurialize('sous-titre', 'sous-titres')"
                   @click="$refs.SubtitleCtx.$refs.ctx.open($event, episode)"></i>
-              <div class="friends-seen">
-                <i class="fa fa-users cursor" v-show="episode.friends"></i>
-                <div class="friends-content">
-                  Vu par :
-                  <div v-for="friend in episode.friends">
-                    <img :src="avatarURL(friend.id)" width="20" height="20">
-                    {{ friend.login }}
-                  </div>
-                </div>
-              </div>
+              <friend-bubble :friends="episode.friends"></friend-bubble>
               <p>{{ episode.title }}</p>
             </div>
           </li>
@@ -87,11 +78,13 @@
   import { types, localStore } from '../store'
   import EpisodeCtx from './context/EpisodeCtx'
   import SubtitleCtx from './context/SubtitleCtx'
+  import FriendBubble from './FriendBubble'
 
   export default {
     components: {
       EpisodeCtx,
       SubtitleCtx,
+      FriendBubble,
     },
     data () {
       return {
@@ -163,33 +156,6 @@
     .fa-circle {
       vertical-align: text-top;
       line-height: 1em;
-    }
-  }
-
-  .friends-seen {
-    display: inline;
-    position: absolute;
-    margin-left: 4px;
-    .friends-content {
-      display: none;
-      padding: 5px 10px;
-      border: 1px solid rgba(0, 0, 0, .5);
-      box-shadow: 2px 2px 5px $ctxShadow;
-      z-index: 10;
-      div {
-        padding: 5px;
-        line-height: 20px;
-      }
-    }
-    img {
-      border-radius: 10px;
-      vertical-align: middle;
-      margin-right: 3px;
-    }
-    &:hover .friends-content {
-      display: block;
-      position: relative;
-      background-color: $ctxBg;
     }
   }
 </style>
