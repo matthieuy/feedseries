@@ -376,10 +376,12 @@
        * @param text
        */
       addNotification (text) {
+        let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
+
         /* eslint-disable no-new */
         new window.Notification(remote.app.getName(), {
           body: text,
-          icon: 'static/icons/icon.png',
+          icon: 'static/icons/icon' + whiteIcon + '.png',
         })
       },
       /**
