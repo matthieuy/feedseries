@@ -44,9 +44,9 @@
        */
       markView (episode) {
         this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode).then((result) => {
+          this.$emit('ctx-episode-close', result)
           this.episode = result
         })
-        this.episode.isSeen = true
       },
       /**
        * Mark episode as no view
@@ -54,9 +54,9 @@
        */
       unmarkView (episode) {
         this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode).then((result) => {
+          this.$emit('ctx-episode-close', result)
           this.episode = result
         })
-        this.episode.isSeen = false
       },
       /**
        * Mark episode as DL or not
@@ -68,9 +68,9 @@
           episode: episode,
           isDL: isDL,
         }).then((result) => {
+          this.$emit('ctx-episode-close', result)
           this.episode = result
         })
-        this.episode.isDownloaded = isDL
       },
       /**
        * Archive a show
@@ -128,7 +128,8 @@
        */
       onCtxClose (episode) {
         window.removeEventListener('keydown', this.escapeListener)
-        this.$emit('ctx-episode-close', episode)
+        // let self = this
+        // self.$emit('ctx-episode-close', self.episode)
       },
       /**
        * When press Escape key

@@ -136,10 +136,11 @@
       ctxClose (episode) {
         this.eventSelected.episode = episode
         let self = this
-        setTimeout(() => {
-          self.$refs.calendar.$emit('remove-event', self.eventSelected._id)
-          self.$refs.calendar.$emit('render-event', self.eventSelected)
-        }, 150)
+        console.log('ctx', episode)
+        // setTimeout(() => {
+        self.$refs.calendar.$emit('remove-event', self.eventSelected._id)
+        self.$refs.calendar.$emit('render-event', self.eventSelected)
+        // }, 150)
       },
       eventRender (event, el, view) {
         let episode = event.episode
