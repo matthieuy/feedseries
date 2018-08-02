@@ -256,8 +256,13 @@
         localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
         localStore.set(localStore.key.COMMENTS.NB, this.between(this.comments_nb, 5, 50))
         localStore.set(localStore.key.COMMENTS.ORDER, this.comments_order)
-        localStore.set(localStore.key.WHITE_ICON, this.whiteicon)
         localStore.set(localStore.key.CALENDAR.SAVE_DATE, this.calendar_save)
+
+        // Tray icon
+        if (this.whiteicon !== localStore.get(localStore.key.WHITE_ICON, false)) {
+          localStore.set(localStore.key.WHITE_ICON, this.whiteicon)
+          ipcRenderer.send('update-tray')
+        }
 
         // Timeline
         if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
