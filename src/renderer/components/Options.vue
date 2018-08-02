@@ -14,6 +14,9 @@
         <label><input type="checkbox" v-model="autoload" /> Démarrer avec le système</label>
       </div>
       <div class="checkbox">
+        <label><input type="checkbox" v-model="hide_menu" /> Cacher la barre de menu (affichable avec la touche "Alt") </label>
+      </div>
+      <div class="checkbox">
         <label><input type="checkbox" v-model="route_save" /> Afficher la dernière page visitée au chargement</label>
       </div>
       <div class="form-group">
@@ -213,6 +216,7 @@
         recommendation_interval: 2,
         whiteicon: false,
         calendar_save: false,
+        hide_menu: false,
       }
     },
     computed: {
@@ -243,6 +247,7 @@
         this.recommendation_interval = localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)
         this.whiteicon = localStore.get(localStore.key.WHITE_ICON, false)
         this.calendar_save = localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)
+        this.hide_menu = localStore.get(localStore.key.HIDE_MENU, true)
       },
       /**
        * Save the configuration
@@ -282,6 +287,14 @@
         // History
         if (this.sizehistory !== localStore.get(localStore.key.HISTORY_SIZE, 5)) {
           this.$store.commit(types.MUTATIONS.CHANGE_HISTORY_SIZE, this.sizehistory)
+        }
+
+        // Menubar
+        if (this.hide_menu !== localStore.get(localStore.key.HIDE_MENU, true)) {
+          let win = remote.getCurrentWindow()
+          win.setAutoHideMenuBar(this.hide_menu)
+          win.setMenuBarVisibility(!this.hide_menu)
+          localStore.set(localStore.key.HIDE_MENU, this.hide_menu)
         }
 
         // Update

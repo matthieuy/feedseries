@@ -61,6 +61,7 @@ const key = {
   HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history
   DEVTOOLS: 'devtools', // {Boolean} Devtools is open
   WHITE_ICON: 'whiteicon', // {Boolean} Icon app is white
+  HIDE_MENU: 'hidemenu', // {Boolean} Hide Menubar
 }
 
 let store = new ElectronStore({
