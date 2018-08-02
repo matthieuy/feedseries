@@ -147,7 +147,8 @@ export default {
       .then((response) => {
         let show = Show.cleanProperties(response.data.show)
         this.setCache(show)
-        let showSaved = Show.findOneAndUpdate({ _id: show.id }, show, { upsert: true })
+        let showId = (show._id) ? show._id : show.id
+        let showSaved = Show.findOneAndUpdate({ _id: showId }, show, { upsert: true })
         return (showSaved) ? Promise.resolve(showSaved) : Promise.resolve(show)
       })
       .catch((e) => {
@@ -344,7 +345,8 @@ export default {
   /**
    * Get the url of the show image
    * @param {Integer} showId The show ID
-   * @param {Integer|null} size Size of img
+   * @param {Integer|null} width Width of img
+   * @param {Integer|null} height Height of img
    * @return {String} The URL
    */
   getShowImgUrl (showId, width, height) {
