@@ -10,6 +10,7 @@ const types = {
     SET_RECOMMENDATION: 'recommendations.set',
   },
   ACTIONS: {
+    INTERVAL_RECOMMENDATION: 'recommendations.interval',
     LOAD_RECOMMENDATIONS: 'recommendations.load',
   },
   GETTERS: {
@@ -46,6 +47,12 @@ const actions = {
       context.commit(types.MUTATIONS.SET_RECOMMENDATIONS, recommendations)
       return Promise.resolve(recommendations)
     })
+  },
+  [types.ACTIONS.INTERVAL_RECOMMENDATION] (context) {
+    clearInterval(window.recommendation)
+    window.recommendation = setInterval(() => {
+      context.dispatch(types.ACTIONS.LOAD_RECOMMENDATIONS)
+    }, localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 3600000)
   },
 }
 

@@ -128,6 +128,7 @@
         <label>
           Intervalle entre 2 vérifications de nouvelles recommandations :
           <select v-model="recommendation_interval">
+            <option value="0.083" v-if="env === 'development'">5 minutes</option>
             <option value="1">1 heure</option>
             <option value="2">2 heures</option>
             <option value="6">6 heures</option>
@@ -300,10 +301,7 @@
         // Recommendation
         if (this.recommendation_interval !== localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)) {
           localStore.set(localStore.key.RECOMMENDATIONS.INTERVAL, this.recommendation_interval)
-          clearInterval(window.recommendation)
-          window.recommendation = setInterval(() => {
-            this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS)
-          }, localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 3600000)
+          this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
         }
 
         // Autoload
