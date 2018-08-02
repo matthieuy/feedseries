@@ -1,7 +1,6 @@
 <template>
-  <div @contextmenu="rightClick">
+  <div id="calendar" @contextmenu="rightClick">
     <full-calendar
-      id="calendar"
       :class="{loading: isLoading}"
       class="fc fc-unthemed fc-ltr"
       :config="config"
@@ -172,7 +171,7 @@
             iconsEl.innerHTML += `<i class="fa fa-heart"></i>`
           }
           if (episode.show.status === 'Ended') {
-            iconsEl.innerHTML += '<i class="fa fa-circle" style="' + this.$options.filter.statusColor(episode.show.status) + '"></i>'
+            iconsEl.innerHTML += '<i class="fa fa-circle" style="' + this.$options.filters.statusColor(episode.show.status) + '"></i>'
           }
         }
       },
