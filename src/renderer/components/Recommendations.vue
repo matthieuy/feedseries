@@ -26,6 +26,14 @@
             <i class="fa fa-handshake"></i> Toutes
           </a>
         </nav>
+        <nav class="nav-group">
+          <h5 class="nav-group-title">Actions</h5>
+          <div class="nav-group-item">
+            <div class="btn btn-nav btn-action btn-check" :class="{loading: isChecking}" @click="checkNew">
+              <i class="fa fa-redo" :class="{'fa-spin': isChecking}"></i> Vérifier
+            </div>
+          </div>
+        </nav>
       </div>
       <div class="pane">
         <ul class="list-group list-recommendations">
@@ -67,6 +75,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { remote } from 'electron'
 
   import RecommendationCtx from './context/Recommandation'
   import api from '../api'
@@ -84,6 +93,7 @@
         userId: false,
         friends: {},
         shows: {},
+        isChecking: false,
       }
     },
     computed: {
@@ -95,6 +105,29 @@
       },
     },
     methods: {
+      /**
+       * Force check new recommendations
+       */
+      checkNew () {
+        if (this.isChecking) {
+          return false
+        }
+        this.isChecking = true
+
+        this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
+        this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS).then((recommendations) => {
+          if (!this.nbRecommendations) {
+            let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
+            remote.dialog.showMessageBox(remote.getCurrentWindow(), {
+              title: 'Recommandation',
+              icon: 'static/icons/icon' + whiteIcon + '.png',
+              message: 'Pas de nouvelle recommandation',
+              buttons: ['Ok'],
+            })
+          }
+          this.isChecking = false
+        })
+      },
       userName (id) {
         return (this.friends.hasOwnProperty(id)) ? this.friends[id].login : 'un ami'
       },
@@ -150,6 +183,15 @@
     .fa-clock { color: #1a82fb; }
     .fa-thumbs-up { color: #91bb2b; }
     .fa-thumbs-down { color: #fb1710; }
+  }
+  .btn-check {
+    &.loading {
+      color: $navTitle;
+      cursor: default;
+    }
+    .fa {
+      vertical-align: middle;
+    }
   }
   .list-recommendations {
     .fa {
