@@ -137,8 +137,12 @@
           { label: 'abandonnées', y: stats.shows_abandoned, color: '#fdbc40' },
           { label: 'en cours', y: stats.shows_current, color: '#34c84a' },
           { label: 'à voir', y: stats.shows_to_watch, color: '#004012' },
-          { label: 'terminées', y: stats.shows_finished, color: '#fc605b' },
-        ].filter((point) => {
+        ]
+        if (localStore.get(localStore.key.HOMEPAGE.GRAPH_FINISH, false) && stats.shows_finished) {
+          dataPoints.push({ label: 'terminées', y: stats.shows_finished, color: '#fc605b' })
+        }
+
+        dataPoints = dataPoints.filter((point) => {
           return point.y > 0
         })
 

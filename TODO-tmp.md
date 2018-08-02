@@ -11,9 +11,6 @@ This is a temporary TODO file need to be reorganize
 - [ ] Connexion with modal
 - [ ] Show page :
   - [ ] Comments :
-    - [ ] BBCode :
-      - [ ] URL
-      - [ ] Spoiler
     - [ ] Post a comment
     - [ ] Post a reply
 - [ ] Episode page :
@@ -27,4 +24,3 @@ This is a temporary TODO file need to be reorganize
   - [ ] Create and detect where is systray
   - [ ] Catch drop file
   - [ ] display result in main window
-- [ ] CrashReporter

@@ -120,9 +120,10 @@
       nbRecommendations (nbRecommendations) {
         console.log('New recommandations : ', nbRecommendations)
         if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
+          let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
           let notif = new window.Notification(remote.app.getName(), {
             body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
-            icon: 'static/icons/icon.png',
+            icon: 'static/icons/icon' + whiteIcon + '.png',
           })
           notif.onclick = () => {
             this.$router.push({name: 'recommendations'})
@@ -158,9 +159,7 @@
         })
 
         // Recommendations
-        window.recommendation = setInterval(() => {
-          this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS)
-        }, localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 3600000)
+        this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
       }).catch(() => {
         this.$store.commit(types.MUTATIONS.LOGOUT)
         ipcRenderer.send('app-ready')

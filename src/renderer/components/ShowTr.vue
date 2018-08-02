@@ -1,5 +1,5 @@
 <template>
-  <tr :class="{seen: episode.isSeen}" @contextmenu.prevent="$parent.$refs.EpisodeCtx.$refs.ctx.open($event, episode)">
+  <tr class="show-item-view" :class="{seen: episode.isSeen}" @contextmenu.prevent="$parent.$refs.EpisodeCtx.$refs.ctx.open($event, episode)">
     <td>
       <div class="episode-info">
         <span v-show="episode.special" style="color: #1a82fb">[Spécial]</span>
@@ -14,6 +14,7 @@
           class="fa fa-file-alt cursor"
           :title="getSubtitles(episode).length|plurialize('sous-titre', 'sous-titres')"
           @click="$parent.$refs.SubtitleCtx.$refs.ctx.open($event, episode)"></i>
+        <friend-bubble :friends="episode.friends"></friend-bubble>
       </div>
     </td>
     <td class="pull-right icon-mark-view">
@@ -25,8 +26,12 @@
 
 <script>
   import { types } from '../store'
+  import FriendBubble from './FriendBubble'
 
   export default {
+    components: {
+      FriendBubble,
+    },
     props: ['show', 'episode'],
     methods: {
       markView (episode) {
@@ -44,3 +49,27 @@
     },
   }
 </script>
+
+<style lang="scss">
+  .show-item-view {
+    .fa {
+      margin-left: 3px;
+    }
+
+    .date.future {
+      color: #b4171f;
+      i:before {
+        font-size: 8px;
+        content: '\f071';
+        padding-right: 3px;
+      }
+    }
+    .icon-mark-view {
+      .fa {
+        font-size: 12px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+    }
+  }
+</style>

@@ -43,14 +43,20 @@
        * @param {Episode} episode The episode
        */
       markView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode)
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode).then((result) => {
+          this.$emit('ctx-episode-close', result)
+          this.episode = result
+        })
       },
       /**
        * Mark episode as no view
        * @param {Episode} episode The episode
        */
       unmarkView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode)
+        this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode).then((result) => {
+          this.$emit('ctx-episode-close', result)
+          this.episode = result
+        })
       },
       /**
        * Mark episode as DL or not
@@ -61,6 +67,9 @@
         this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
           episode: episode,
           isDL: isDL,
+        }).then((result) => {
+          this.$emit('ctx-episode-close', result)
+          this.episode = result
         })
       },
       /**
@@ -94,7 +103,7 @@
         let parentRef = this.$parent.$refs
         let thisTag = this.$options._componentTag
         for (let i in parentRef) {
-          if (thisTag !== this.$parent.$refs[i].$options._componentTag) {
+          if (thisTag !== this.$parent.$refs[i].$options._componentTag && this.$parent.$refs[i].$refs.ctx) {
             this.$parent.$refs[i].$refs.ctx.ctxVisible = false
           }
         }
@@ -117,8 +126,10 @@
       /**
        * On close ctx : remove listener
        */
-      onCtxClose () {
+      onCtxClose (episode) {
         window.removeEventListener('keydown', this.escapeListener)
+        // let self = this
+        // self.$emit('ctx-episode-close', self.episode)
       },
       /**
        * When press Escape key

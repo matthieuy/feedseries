@@ -30,17 +30,19 @@
           <span class="nav-group-item" :class="{active: order === 'remaining_episodes'}"  @click="changeOrder('remaining_episodes')">Épisodes restants</span>
         </nav>
       </div>
-      <div class="pane">
+      <div id="pane-shows" class="pane">
         <ul class="list-group">
           <li class="list-group-header">
             <h1 class="text-center">Mes séries</h1>
           </li>
-          <li class="list-group-header">
+          <li id="li-search" class="list-group-header">
             <input type="search" v-model="filterQuery" v-show="!isLoading" class="form-control" placeholder="Filtrer les séries" autofocus>
           </li>
+        </ul>
+        <ul id="list-shows" class="list-group">
           <li v-show="isLoading" class="text-center">Chargement en cours...</li>
           <li class="list-group-item show-item-view" v-for="show in shows" v-show="!isLoading">
-            <div @click="toggleShow(show)" @contextmenu.prevent="$refs.ShowCtx.$refs.ctx.open($event, show)">
+            <div @contextmenu.prevent="$refs.ShowCtx.$refs.ctx.open($event, show)">
               <div class="pull-left">
                 <router-link :to="{name: 'show', params: { id: show._id }}">
                   {{ show.title }}
@@ -48,7 +50,8 @@
                 <i class="fa fa-circle" :style="show.status | statusColor"></i>
                 <i class="fa fa-archive" v-show="show.isArchived" title="Archivé"></i>
                 <i class="fa fa-heart" v-show="show.isFavorited" title="Favoris"></i>
-                <div v-show="show.episodes !== 0">
+                <friend-bubble :friends="show.friends" :show="true"></friend-bubble>
+                <div>
                   {{ show.nb_seasons|plurialize('saison', 'saisons') }}, {{ show.nb_episodes|plurialize('épisode', 'épisodes') }}
                 </div>
               </div>
@@ -57,53 +60,31 @@
                 <span v-if="show.remaining"><br>{{ show.remaining }} ép. | {{ (show.remaining * show.runtime)|duration }}</span>
               </div>
             </div>
-
-            <div class="season-list" v-show="show._id === showIdToDisplay">
-              <i class="fa fa-spin fa-spinner" v-show="isLoadingEpisodes"></i>
-              <div class="season" v-for="season in seasons" v-show="!isLoadingEpisodes">
-                <div @click="toggleSeason(season)" class="cursor"  :class="{open: seasonToDisplay === season.number}">
-                  Saison {{ season.number }} <i class="fa fa-circle" :style="season.progress | statusColor"></i>
-                </div>
-
-                <table class="table-striped" v-show="seasonToDisplay === season.number">
-                  <tbody>
-                    <show-tr v-for="episode in season.episodes" :key="episode._id" :show="show" :episode="episode">&nbsp;</show-tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </li>
         </ul>
       </div>
     </div>
     <show-ctx ref="ShowCtx">&nbsp;</show-ctx>
-    <episode-ctx ref="EpisodeCtx" :hide-show="true">&nbsp;</episode-ctx>
-    <subtitle-ctx ref="SubtitleCtx">&nbsp;</subtitle-ctx>
   </div>
 </template>
 
 <script>
   import { types, localStore } from '../store'
-  import EpisodeCtx from './context/EpisodeCtx'
   import ShowCtx from './context/ShowCtx'
-  import SubtitleCtx from './context/SubtitleCtx'
-  import ShowTr from './ShowTr'
+  import FriendBubble from './FriendBubble'
+
+  let pane
 
   export default {
     components: {
       ShowCtx,
-      EpisodeCtx,
-      SubtitleCtx,
-      ShowTr,
+      FriendBubble,
     },
     data () {
       return {
         isLoading: true,
-        isLoadingEpisodes: true,
         filterQuery: '',
         status: 'current',
-        showIdToDisplay: 0,
-        seasonToDisplay: 0,
         order: localStore.get(localStore.key.SHOWS.ORDER, 'alphabetical'),
         orderReverse: localStore.get(localStore.key.SHOWS.REVERSE, false),
       }
@@ -111,6 +92,7 @@
     computed: {
       shows () {
         let shows = this.$store.getters[types.shows.GETTERS.SHOWS](this.status, this.order, this.orderReverse)
+        console.log(shows)
         if (!this.filterQuery.length) {
           return shows
         }
@@ -119,46 +101,8 @@
           return show.title.toLowerCase().indexOf(this.filterQuery) > -1
         })
       },
-      seasons () {
-        if (this.showIdToDisplay === 0) {
-          return []
-        }
-
-        let seasons = this.$store.getters[types.episodes.GETTERS.SEASON_LIST]({_id: this.showIdToDisplay})
-
-        // Set season to display
-        let lastSaison = seasons[seasons.length - 1]
-        this.seasonToDisplay = (lastSaison && lastSaison.hasOwnProperty('number')) ? lastSaison.number : 0
-        for (let i in seasons) {
-          if (seasons[i].progress < 100) {
-            this.seasonToDisplay = seasons[i].number
-            break
-          }
-        }
-
-        return seasons
-      },
     },
     methods: {
-      toggleSeason (season) {
-        this.seasonToDisplay = (this.seasonToDisplay === season.number) ? 0 : season.number
-      },
-      toggleShow (show) {
-        // None episodes
-        if (show.nb_episodes === 0) {
-          return false
-        }
-
-        // Hide
-        if (show._id === this.showIdToDisplay) {
-          this.showIdToDisplay = 0
-          return false
-        }
-
-        this.isLoadingEpisodes = true
-        this.showIdToDisplay = show._id
-        this.seasonToDisplay = 0
-      },
       changeOrder (order) {
         if (this.order === order) {
           this.orderReverse = !this.orderReverse
@@ -183,23 +127,42 @@
       orderReverse (reverse) {
         localStore.set(localStore.key.SHOWS.REVERSE, reverse)
       },
-      showIdToDisplay (showId) {
-        if (showId !== 0) {
-          this.$store.dispatch(types.episodes.ACTIONS.LOAD_EPISODES, {_id: showId})
-        }
-      },
-      seasons (seasons) {
-        this.isLoadingEpisodes = (seasons.length === 0)
-      },
     },
     mounted () {
       console.info('[VUE] Mount Shows.vue')
+      pane = document.getElementById('pane-shows')
+      pane.addEventListener('scroll', scrollListener)
       this.loadList()
     },
+    beforeDestroy () {
+      pane.removeEventListener('scroll', scrollListener)
+    },
+  }
+
+  /**
+   * Listener on scroll pane (for stickly searchbar)
+   * @param {Event} e
+   */
+  function scrollListener (e) {
+    let sticky = document.getElementById('li-search').offsetTop
+    if (e.target.scrollTop >= sticky) {
+      pane.classList.add('stickly')
+    } else {
+      pane.classList.remove('stickly')
+    }
   }
 </script>
 
 <style lang="scss">
+  .stickly {
+    margin-top: 50px;
+    #li-search {
+      position: fixed;
+      right: 12px;
+      left: 150px;
+      top: 35px;
+    }
+  }
   .fa-circle {
     font-size: 8px;
   }
@@ -214,27 +177,6 @@
     }
     .order-title .fa.reverse {
       transform: rotate(180deg);
-    }
-  }
-  .show-item-view {
-    .fa {
-      margin-left: 3px;
-    }
-
-    .date.future {
-      color: #b4171f;
-      i:before {
-        font-size: 8px;
-        content: '\f071';
-        padding-right: 3px;
-      }
-    }
-    .icon-mark-view {
-      .fa {
-        font-size: 12px;
-        margin-right: 10px;
-        vertical-align: middle;
-      }
     }
   }
 </style>

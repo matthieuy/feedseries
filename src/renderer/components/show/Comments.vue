@@ -7,14 +7,17 @@
         <img :src="comment.avatar" v-if="comment.avatar" width="40" height="40" />
         <img src="static/empty.png" v-if="!comment.avatar" width="40" height="40" />
         <span class="author">par {{ comment.login }}, <span :title="comment.date|formatDate('ddd DD MMM YYYY à HH:mm')">{{ comment.date|fromNow }}</span></span>
-        <p>{{ comment.text }}</p>
+        <span class="note" v-if="comment.user_note"><i class="fa fa-star" v-for="star in comment.user_note"></i></span>
+        <p class="bbcode" @click="clickComment($event)" v-html="bbcode(comment.text)"></p>
+
 
         <div v-if="comment.replies" style="margin-left: 30px;">
           <div class="comment" v-for="reply in getReplies(comment.inner_id)">
             <img :src="reply.avatar" v-if="reply.avatar" width="40" height="40" />
             <img src="static/empty.png" v-if="!reply.avatar" width="40" height="40" />
             <span class="author">par {{ reply.login }}, <span :title="reply.date|formatDate('ddd DD MMM YYYY à HH:mm')">{{ reply.date|fromNow }}</span></span>
-            <p>{{ reply.text }}</p>
+            <span class="note" v-if="reply.user_note"><i class="fa fa-star" v-for="star in reply.user_note"></i></span>
+            <p class="bbcode" @click="clickComment($event)" v-html="bbcode(reply.text)"></p>
           </div>
         </div>
       </div>
@@ -53,6 +56,24 @@
       },
     },
     methods: {
+      bbcode (text) {
+        text = text.replace(/\r\n/gi, '<br>')
+        text = text.replace(/\[i\](.*)\[\/i\]/gi, '<i>$1</i>')
+        text = text.replace(/https:\/\/(.*)/gi, '<a class="link">https://$1</a>')
+        text = text.replace(/\[spoiler\](.*)\[\/spoiler\]/gi, '<span class="spoiler"><button class="btn btn-nav spoiler-link"><span class="fa fa-exclamation-triangle"></span>Voir le spoiler</button><span class="spoiler-content">$1</span></span>')
+        return text
+      },
+      clickComment (e) {
+        // Spoiler
+        if (e.target.classList.contains('spoiler-link')) {
+          let parent = e.target.parentElement
+          parent.removeChild(parent.firstChild)
+          parent.classList.add('display')
+          console.log(parent)
+        } else if (e.target.classList.contains('link')) {
+          this.$store.dispatch(types.ACTIONS.OPEN_LINK, e.target.textContent)
+        }
+      },
       loadComments (show) {
         this.isLoading = true
         this.$store.commit(types.show.MUTATIONS.SET_COMMENTS, [])
@@ -107,6 +128,41 @@
     .author {
       font-style: italic;
       color: $navTitle;
+    }
+    .note {
+      font-size: 8px;
+      vertical-align: middle;
+      .fa {
+        padding-right: 1px;
+      }
+    }
+  }
+  .bbcode {
+    i {
+      font-style: italic;
+      color: lighten($navTitle, 20%);
+    }
+    .link {
+      cursor: pointer;
+      color: lighten($txtColor, 10%);
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    .spoiler-link {
+      cursor: pointer;
+      color: #a86768;
+      .fa {
+        font-size: 11px;
+        color: tomato;
+        vertical-align: middle;
+      }
+    }
+    .spoiler-content {
+      display: none;
+    }
+    .spoiler.display .spoiler-content {
+      display: block;
     }
   }
 </style>

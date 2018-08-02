@@ -1,171 +1,224 @@
 <template>
   <div id="options">
-    <h1 class="text-center">Options</h1>
+    <div class="tab-group">
+      <div class="tab-item" :class="{active: activeTab === 'display' }" @click="activeTab = 'display'">Affichage</div>
+      <div class="tab-item" :class="{active: activeTab === 'system' }" @click="activeTab = 'system'">Système</div>
+      <div class="tab-item" :class="{active: activeTab === 'cache' }" @click="activeTab = 'cache'">Cache</div>
+    </div>
 
-    <fieldset>
-      <legend>Système</legend>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="systray" /> Réduire dans le systray à la fermeture de la fenêtre</label>
-      </div>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="autoload" /> Démarrer avec le système</label>
-      </div>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="route_save" /> Afficher la dernière page visitée au chargement</label>
-      </div>
-      <div class="form-group">
-        <label>
-          Taille de l'historique :
-          <input type="number" v-model="sizehistory" max="12" min="1" />
-        </label>
-      </div>
-    </fieldset>
+    <!-- Display -->
+    <div v-show="activeTab === 'display'" class="tab-content">
+      <fieldset class="field-col">
+        <legend>Accueil</legend>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="homepageFavorite" /> Afficher les favoris sur la page d'accueil</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="homepageNews" /> Afficher les news sur la page d'accueil</label>
+        </div>
+        <div class="form-group">
+          <label>
+            Nombre de news à afficher :
+            <input type="number" v-model="nbNews" max="20" min="2" :class="{disabled: !homepageNews }" :disabled="!homepageNews"/>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="graphFinish" /> Afficher les séries terminées dans le graph</label>
+        </div>
+      </fieldset>
 
-    <fieldset>
-      <legend>Accueil</legend>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="homepage_favorite" /> Afficher les favoris</label>
-      </div>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="homepage_news" /> Afficher les news </label>
-      </div>
-      <div class="form-group">
-        <label>
-          Nombre de news à afficher :
-          <input type="number" v-model="nb_news" max="20" min="2" :class="{disabled: !homepage_news }" :disabled="!homepage_news"/>
-        </label>
-      </div>
-    </fieldset>
+      <fieldset class="field-col">
+        <legend>Timeline et commentaires</legend>
+        <div class="form-group">
+          <label>
+            Nombre d'évènements à afficher dans la timeline par page :
+            <input type="number" v-model="timeline" max="50" min="5"/>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="timelineHimself" /> Inclure vos actions dans la timeline</label>
+        </div>
+        <div class="form-group">
+          <label>
+            Nombre de commentaires par page :
+            <input type="number" v-model="commentsNb" max="50" min="5" />
+          </label>
+        </div>
+        <div class="form-group">
+          <label>
+            Ordre d'affichage des commentaires :
+            <select v-model="commentsOrder">
+              <option value="asc">Croissant</option>
+              <option value="desc">Décroissant</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
 
-    <fieldset>
-      <legend>Épisodes</legend>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="special" /> Afficher les épisodes spéciaux</label>
-      </div>
-    </fieldset>
+      <div class="clearfix"></div>
 
-    <fieldset>
-      <legend>Timeline</legend>
-      <div class="form-group">
-        <label>
-          Nombre d'évènements par page :
-          <input type="number" v-model="timeline" max="50" min="5"/>
-        </label>
-      </div>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="timeline_himself" /> Inclure ses actions</label>
-      </div>
-    </fieldset>
+      <fieldset>
+        <legend>Divers</legend>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="whiteicon" /> Utiliser un icône clair</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="hideMenu" /> Cacher la barre de menu (affichable avec la touche "Alt") </label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="special" /> Afficher les épisodes spéciaux</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="calendarSave"/> Retenir le dernier mois affiché dans le planning</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="srtVF" /> Afficher uniquement les sous-titres français</label>
+        </div>
+      </fieldset>
+    </div>
 
-    <fieldset>
-      <legend>Commentaires</legend>
-      <div class="form-group">
-        <label>
-          Nombre de commentaires par page :
-          <input type="number" v-model="comments_nb" max="50" min="5" />
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          Ordre d'affichage :
-          <select v-model="comments_order">
-            <option value="asc">Croissant</option>
-            <option value="desc">Décroissant</option>
-          </select>
-        </label>
-      </div>
-    </fieldset>
+    <!-- System -->
+    <div v-show="activeTab === 'system'" class="tab-content">
+      <fieldset class="field-col">
+        <legend>Démarrage et fermeture</legend>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="autoload" /> Lancer FeedSeries au démarrage du système</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="saveRoute" /> Afficher la dernière page visitée à l'ouverture de FeedSeries</label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="systray"/> Réduire dans le systray à la fermeture de la fenêtre</label>
+        </div>
+      </fieldset>
 
-    <fieldset>
-      <legend>Sous-titres</legend>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="srtVF" /> Afficher uniquement les sous-titres français</label>
-      </div>
-      <div class="form-group">
-          Dossier de téléchargement : <span class="dl_dir" @click="changeDlDir()">{{ dl_dir }}</span>
-      </div>
-      <div class="checkbox">
-        <label><input type="checkbox" v-model="dl_ask" /> Demander où télécharger les sous-titres</label>
-      </div>
-    </fieldset>
+      <fieldset class="field-col">
+        <legend>Téléchargement</legend>
+        <div class="form-group">
+          Dossier de téléchargement : <span class="dl-dir" @click="changeDlDir()">{{ dlDir }}</span>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" v-model="dlAsk" /> Choisir le dossier de destination avant le téléchargement</label>
+        </div>
+      </fieldset>
 
-    <fieldset>
-      <legend>Mise à jour</legend>
-      <div class="checkbox">
-        <label :class="{strike: !update_alpha}"><input type="checkbox" v-model="update_alpha" readonly disabled />Récupérer les versions non stable</label>
-      </div>
-      <div class="form-group">
-        <label>
-          Intervalle entre 2 vérifications automatique :
-          <select v-model="update_interval">
-            <option value="1">1 heure</option>
-            <option value="6">6 heures</option>
-            <option value="12">12 heures</option>
-            <option value="24">24 heures</option>
-            <option value="168">7 jours</option>
-            <option value="0">jamais</option>
-          </select>
-        </label>
-      </div>
-    </fieldset>
+      <div class="clearfix"></div>
 
-    <fieldset>
-      <legend>Recommandations</legend>
-      <div class="form-group">
-        <label>
-          Intervalle entre 2 vérifications de nouvelles recommandations :
-          <select v-model="recommendation_interval">
-            <option value="1">1 heure</option>
-            <option value="2">2 heures</option>
-            <option value="6">6 heures</option>
-            <option value="12">12 heures</option>
-            <option value="24">24 heures</option>
-            <option value="168">7 jours</option>
-            <option value="0">jamais</option>
-          </select>
-        </label>
-      </div>
-    </fieldset>
+      <fieldset>
+        <legend>Mise à jour</legend>
+        <div class="checkbox">
+          <label :class="{strikealpha: !updateAlpha}"><input type="checkbox" v-model="updateAlpha" readonly disabled />Récupérer les mises à jour intermédiaires</label>
+        </div>
+        <div class="form-group">
+          <label>
+            Vérifier la présence de mise à jour :
+            <select v-model="updateInterval">
+              <option value="1">1 heure</option>
+              <option value="6">6 heures</option>
+              <option value="12">12 heures</option>
+              <option value="24">24 heures</option>
+              <option value="168">7 jours</option>
+              <option value="0">jamais</option>
+            </select>
+          </label>
+        </div>
+        <button class="btn btn-nav" @click="checkUpdate">Vérifier maintenant</button>
+      </fieldset>
 
-    <fieldset>
-      <legend>Cache et bases de données</legend>
-      <div class="btn-list">
-        <button class="btn btn-nav" @click="clearCache()" v-show="fileSize.cache">Vider le cache local ({{ fileSize.cache | size }})</button>
-        <button class="btn btn-nav" @click="rmCacheData()">
-          Supprimer les fichiers en cache <span v-show="fileSize.data">({{ fileSize.data | size }})</span>
-        </button>
-        <button class="btn btn-nav" v-show="fileSize.shows" @click="clearDb('shows')">
-          Vider la BDD des séries ({{ fileSize.shows | size }})
-        </button>
-        <button class="btn btn-nav" v-show="fileSize.episodes" @click="clearDb('episodes')">
-          Vider la BDD des épisodes ({{ fileSize.episodes | size }})
-        </button>
-        <button class="btn btn-nav" v-show="fileSize.subtitles" @click="clearDb('subtitles')">
-          Vider la BDD des sous-titres ({{ fileSize.subtitles | size }})
-        </button>
-        <button class="btn btn-nav" v-show="fileSize.links" @click="clearDb('links')">
-          Vider la BDD des liens ({{ fileSize.links | size }})
-        </button>
-      </div>
-    </fieldset>
+      <fieldset>
+        <legend>Divers</legend>
 
-    <div class="text-center btn-list">
-      <button class="btn btn-nav" @click="save()"><i class="fa fa-save"></i> Sauvegarder</button>
-      <button class="btn btn-nav" @click="purge()"><i class="fa fa-trash"></i> Réinitialiser</button>
-      <button class="btn btn-nav" @click="openConf()" v-if="env === 'development'"><i class="fa fa-pencil-alt"></i>Éditer le fichier de configuration</button>
+        <div class="form-group">
+          <label>
+            Taille de l'historique de navigation :
+            <input type="number" v-model="sizeHistory" max="15" min="0" />
+          </label>
+        </div>
+        <div class="form-group">
+          <label>
+            Intervalle entre 2 vérifications de nouvelles recommandations :
+            <select v-model="recommendationInterval">
+              <option value="0.083" v-if="env === 'development'">5 minutes</option>
+              <option value="1">1 heure</option>
+              <option value="2">2 heures</option>
+              <option value="6">6 heures</option>
+              <option value="12">12 heures</option>
+              <option value="24">24 heures</option>
+              <option value="168">7 jours</option>
+              <option value="0">jamais</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="text-center">
+        <button class="btn btn-nav" @click="purge()"><i class="fa fa-trash"></i> Réinitialiser la configuration</button>
+      </div>
+    </div>
+
+    <!-- Cache -->
+    <div v-show="activeTab === 'cache'" class="tab-content">
+      <div class="text-center">
+        <button class="btn btn-nav" @click="openConf()" v-if="env === 'development'"><i class="fa fa-pencil-alt"></i>Éditer le fichier de configuration</button>
+      </div>
+
+      <div class="block-btns">
+        <div class="block-btn">
+          <div class="title">Cache local ({{ fileSize.cache | size }})</div>
+          <p>
+            Il contient les requêtes distantes pour accélérer l'affichage.
+            Vous pouvez le vider en cas de problème de synchro avec BetaSeries.
+          </p>
+          <div class="btns">
+            <button class="btn btn-nav" @click="clearCache()" v-show="fileSize.cache">Vider</button>
+          </div>
+        </div>
+
+        <div class="block-btn">
+          <div class="title">Cache système <span v-show="fileSize.data">({{ fileSize.data | size }})</span></div>
+          <p>
+            Il contient principalement les images téléchargés puis affichées dans FeedSeries.<br>
+            Un redémarrage de FeedSeries est nécessaire pour compléter le nettoyage.
+          </p>
+          <div class="btns">
+            <button class="btn btn-nav" @click="rmCacheData()">
+              Purger
+            </button>
+          </div>
+        </div>
+
+        <div class="block-btn">
+          <div class="title">Bases de données</div>
+          <p>
+            Les BDD contiennent les différents éléments (séries, épisodes,...) pour conserver une synchronisation avec BetaSeries.
+          </p>
+          <div class="btns">
+            <button class="btn btn-nav" v-show="fileSize.shows" @click="clearDb('shows')">
+              Séries ({{ fileSize.shows | size }})
+            </button>
+            <button class="btn btn-nav" v-show="fileSize.episodes" @click="clearDb('episodes')">
+              Épisodes ({{ fileSize.episodes | size }})
+            </button>
+            <button class="btn btn-nav" v-show="fileSize.subtitles" @click="clearDb('subtitles')">
+              Sous-titres ({{ fileSize.subtitles | size }})
+            </button>
+            <button class="btn btn-nav" v-show="fileSize.links" @click="clearDb('links')">
+              Liens perso ({{ fileSize.links | size }})
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="clearfix"></div>
   </div>
 </template>
 
 <script>
-  import { remote, ipcRenderer } from 'electron'
-  import { mapState } from 'vuex'
+  import { ipcRenderer, remote } from 'electron'
   import Autolauch from 'auto-launch'
-
   import api from '../api'
-  import { localStore, types } from '../store/index'
   import db, { Cache } from '../db'
+  import { localStore, types } from '../store'
 
   let launcher = new Autolauch({
     name: remote.app.getName(),
@@ -175,139 +228,96 @@
   export default {
     data () {
       return {
+        activeTab: 'display',
         env: process.env.NODE_ENV,
         fileSize: {},
         needRestart: false,
-        systray: true,
-        autoload: false,
-        route_save: false,
+        // Display
+        hideMenu: true,
+        saveRoute: false,
+        sizeHistory: 5,
+        homepageFavorite: true,
+        graphFinish: false,
+        homepageNews: true,
+        nbNews: 10,
+        special: false,
+        calendarSave: false,
         timeline: 30,
-        timeline_himself: false,
+        timelineHimself: false,
+        commentsNb: 30,
+        commentsOrder: 'desc',
         srtVF: true,
-        homepage_favorite: true,
-        homepage_news: true,
-        nb_news: 10,
-        sizehistory: 5,
-        dl_dir: '',
-        dl_ask: true,
-        update_alpha: false,
-        update_interval: 1,
-        special: true,
-        comments_nb: 30,
-        comments_order: 'desc',
-        recommendation_interval: 2,
+        recommendationInterval: 2,
+        // System
+        systray: true,
+        whiteicon: false,
+        autoload: false,
+        dlDir: '',
+        dlAsk: true,
+        updateInterval: 1,
+        updateAlpha: false,
       }
-    },
-    computed: {
-      ...mapState(['history']),
     },
     methods: {
       /**
        * Load the configuration from localStore
        */
       load () {
-        this.systray = localStore.get(localStore.key.SYSTRAY, true)
-        this.route_save = localStore.get(localStore.key.ROUTE.SAVE, false)
+        // Display
+        this.hideMenu = localStore.get(localStore.key.HIDE_MENU, true)
+        this.saveRoute = localStore.get(localStore.key.ROUTE.SAVE, false)
+        this.sizeHistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
+        this.homepageFavorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
+        this.graphFinish = localStore.get(localStore.key.HOMEPAGE.GRAPH_FINISH, false)
+        this.homepageNews = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
+        this.nbNews = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
+        this.special = localStore.get(localStore.key.EPISODES.SPECIAL, false)
+        this.calendarSave = localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)
         this.timeline = localStore.get(localStore.key.TIMELINE.NB, 30)
-        this.timeline_himself = localStore.get(localStore.key.TIMELINE.HIMSELF, false)
-        this.special = localStore.get(localStore.key.EPISODES.SPECIAL, true)
+        this.timelineHimself = localStore.get(localStore.key.TIMELINE.HIMSELF, false)
+        this.commentsNb = localStore.get(localStore.key.COMMENTS.NB, 30)
+        this.commentsOrder = localStore.get(localStore.key.COMMENTS.ORDER, 'desc')
         this.srtVF = localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)
-        this.homepage_favorite = localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)
-        this.homepage_news = localStore.get(localStore.key.HOMEPAGE.NEWS, true)
-        this.nb_news = localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)
-        this.sizehistory = localStore.get(localStore.key.HISTORY_SIZE, 5)
-        this.dl_dir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
-        this.dl_ask = localStore.get(localStore.key.DOWNLOAD.ASK, true)
-        this.update_alpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
-        this.update_interval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
-        this.comments_nb = localStore.get(localStore.key.COMMENTS.NB, 30)
-        this.comments_order = localStore.get(localStore.key.COMMENTS.ORDER, 'desc')
-        this.recommendation_interval = localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)
-      },
-      /**
-       * Save the configuration
-       */
-      save () {
-        localStore.set(localStore.key.SYSTRAY, this.systray)
-        localStore.set(localStore.key.ROUTE.SAVE, this.route_save)
-        localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, this.srtVF)
-        localStore.set(localStore.key.HOMEPAGE.FAVORITE, this.homepage_favorite)
-        localStore.set(localStore.key.DOWNLOAD.ASK, this.dl_ask)
-        localStore.set(localStore.key.UPDATE.PRERELEASE, this.update_alpha)
-        localStore.set(localStore.key.COMMENTS.NB, this.between(this.comments_nb, 5, 50))
-        localStore.set(localStore.key.COMMENTS.ORDER, this.comments_order)
+        this.recommendationInterval = localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)
 
-        // Timeline
-        if (this.timeline !== localStore.get(localStore.key.TIMELINE.NB, 30) || this.timeline_himself !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
-          Cache.invalidate('timeline')
-        }
-        localStore.set(localStore.key.TIMELINE.NB, this.between(this.timeline, 5, 50))
-        localStore.set(localStore.key.TIMELINE.HIMSELF, this.timeline_himself)
-
-        // News
-        if (this.homepage_news !== localStore.get(localStore.key.HOMEPAGE.NEWS, true) || this.nb_news !== localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)) {
-          Cache.invalidate('news')
-        }
-        localStore.set(localStore.key.HOMEPAGE.NEWS, this.homepage_news)
-        localStore.set(localStore.key.HOMEPAGE.NB_NEWS, this.nb_news)
-
-        // History
-        if (this.sizehistory !== localStore.get(localStore.key.HISTORY_SIZE, 5)) {
-          this.$store.commit(types.MUTATIONS.CHANGE_HISTORY_SIZE, this.sizehistory)
-        }
-
-        // Update
-        localStore.set(localStore.key.UPDATE.INTERVAL, this.update_interval)
-        ipcRenderer.send('interval-update', this.update_interval)
-
-        // Special
-        if (this.special !== localStore.get(localStore.key.EPISODES.SPECIAL, true)) {
-          let intSpecial = (this.special) ? 1 : 0
-          api.members.setOption('specials', intSpecial).then((value) => {
-            value = (value === 1)
-            localStore.set(localStore.key.EPISODES.SPECIAL, value)
-            this.special = value
-          })
-        }
-
-        // Recommendation
-        if (this.recommendation_interval !== localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)) {
-          localStore.set(localStore.key.RECOMMENDATIONS.INTERVAL, this.recommendation_interval)
-          clearInterval(window.recommendation)
-          window.recommendation = setInterval(() => {
-            this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS)
-          }, localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 3600000)
-        }
-
-        // Autoload
+        // System
+        this.systray = localStore.get(localStore.key.SYSTRAY, true)
+        this.whiteicon = localStore.get(localStore.key.WHITE_ICON, false)
+        this.dlDir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
+        this.dlAsk = localStore.get(localStore.key.DOWNLOAD.ASK, true)
+        this.updateInterval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
+        this.updateAlpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
         launcher.isEnabled().then((enabled) => {
-          if (this.autoload !== enabled) {
-            if (this.autoload) {
-              launcher.enable()
-            } else {
-              launcher.disable()
-            }
-          }
+          this.autoload = enabled
         })
-
-        // Notification
-        this.addNotification('Options sauvegardées avec succès !')
-
-        this.load()
       },
       /**
        * Change download directory
        */
       changeDlDir () {
         remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-          title: 'Dossier de téléchargement des sous-titres',
-          defaultPath: this.dl_dir,
+          title: 'Dossier de téléchargement',
+          defaultPath: this.dlDir,
           properties: ['openDirectory', 'createDirectory'],
         }, (dirpath) => {
           if (typeof dirpath !== 'undefined') {
-            this.dl_dir = dirpath[0]
-            localStore.set(localStore.key.DOWNLOAD.DIR, this.dl_dir)
+            this.dlDir = dirpath[0]
+            localStore.set(localStore.key.DOWNLOAD.DIR, this.dlDir)
           }
+        })
+      },
+      /**
+       * Open config in editor
+       */
+      openConf () {
+        localStore.openInEditor()
+      },
+      /**
+       * Refresh (async) the cache data size
+       */
+      refreshDataCacheSize () {
+        Cache.getCacheDataSize().then((size) => {
+          this.$set(this.fileSize, 'data', size)
         })
       },
       /**
@@ -318,23 +328,25 @@
         this.load()
       },
       /**
-       * Clear the local cache
-       */
-      clearCache () {
-        Cache.reset()
-        this.addNotification('Cache vidé avec succès !')
-        this.fileSize.cache = Cache.getSize()
-      },
-      /**
        * Clear a DB
        * @param {String} name The DB name
        */
       clearDb (name) {
         db.clearDb(name).then(() => {
           console.log(`[DB] Delete "${name}.db"`)
-          this.addNotification('Purge de la base de donnée avec succès !')
+          this.addNotification(`Purge de la base de donnée "${name}"`)
           this.fileSize[name] = db.getSize(name)
         })
+      },
+      checkUpdate () {
+        ipcRenderer.send('check-update', true)
+      },
+      /**
+       * Clear the local cache
+       */
+      clearCache () {
+        Cache.reset()
+        this.fileSize.cache = Cache.getSize()
       },
       /**
        * Delete all files in Cache data
@@ -354,44 +366,147 @@
        * @param text
        */
       addNotification (text) {
+        let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
         /* eslint-disable no-new */
         new window.Notification(remote.app.getName(), {
           body: text,
-          icon: 'static/icons/icon.png',
+          icon: 'static/icons/icon' + whiteIcon + '.png',
         })
       },
-      /**
-       * Open config in editor
-       */
-      openConf () {
-        localStore.openInEditor()
+    },
+    watch: {
+      systray (value) {
+        if (this.systray !== value) {
+          localStore.set(localStore.key.SYSTRAY, value)
+        }
       },
-      /**
-       * Get value with limit
-       * @param {Integer} value
-       * @param {Integer} min
-       * @param {Integer} max
-       * @private
-       * @return {Integer}
-       */
-      between (value, min, max) {
-        return Math.min(max, Math.max(min, value))
+      whiteicon (value) {
+        if (this.whiteicon !== value) {
+          localStore.set(localStore.key.WHITE_ICON, this.whiteicon)
+          ipcRenderer.send('update-tray')
+        }
       },
-      /**
-       * Refresh (async) the cache data size
-       */
-      refreshDataCacheSize () {
-        Cache.getCacheDataSize().then((size) => {
-          this.$set(this.fileSize, 'data', size)
+      autoload (value) {
+        launcher.isEnabled().then((enabled) => {
+          if (value !== enabled) {
+            if (value) {
+              launcher.enable()
+            } else {
+              launcher.disable()
+            }
+          }
         })
+      },
+      hideMenu (value) {
+        if (value !== localStore.get(localStore.key.HIDE_MENU, true)) {
+          let win = remote.getCurrentWindow()
+          win.setAutoHideMenuBar(value)
+          win.setMenuBarVisibility(!value)
+          localStore.set(localStore.key.HIDE_MENU, value)
+        }
+      },
+      saveRoute (value) {
+        if (value !== localStore.get(localStore.key.ROUTE.SAVE, false)) {
+          localStore.set(localStore.key.ROUTE.SAVE, value)
+        }
+      },
+      sizeHistory (value) {
+        value = Math.min(15, Math.max(0, value))
+        if (value !== localStore.get(localStore.key.HISTORY_SIZE, 5)) {
+          this.$store.commit(types.MUTATIONS.CHANGE_HISTORY_SIZE, value)
+        }
+      },
+      homepageFavorite (value) {
+        if (value !== localStore.get(localStore.key.HOMEPAGE.FAVORITE, true)) {
+          localStore.set(localStore.key.HOMEPAGE.FAVORITE, value)
+        }
+      },
+      homepageNews (value) {
+        if (value !== localStore.get(localStore.key.HOMEPAGE.NEWS, true)) {
+          localStore.set(localStore.key.HOMEPAGE.NEWS, value)
+          Cache.invalidate('news')
+        }
+      },
+      nbNews (value) {
+        value = Math.min(20, Math.max(2, value))
+        if (value !== localStore.get(localStore.key.HOMEPAGE.NB_NEWS, 10)) {
+          localStore.set(localStore.key.HOMEPAGE.NB_NEWS, value)
+          Cache.invalidate('news')
+        }
+      },
+      graphFinish (value) {
+        if (value !== localStore.get(localStore.key.HOMEPAGE.GRAPH_FINISH, false)) {
+          localStore.set(localStore.key.HOMEPAGE.GRAPH_FINISH, value)
+        }
+      },
+      special (value) {
+        if (value !== localStore.get(localStore.key.EPISODES.SPECIAL, true)) {
+          let intSpecial = (value) ? 1 : 0
+          api.members.setOption('specials', intSpecial).then((value) => {
+            localStore.set(localStore.key.EPISODES.SPECIAL, (value === 1))
+          })
+        }
+      },
+      calendarSave (value) {
+        if (value !== localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)) {
+          localStore.set(localStore.key.CALENDAR.SAVE_DATE, value)
+        }
+      },
+      timeline (value) {
+        value = Math.min(50, Math.max(5, value))
+        if (value !== localStore.get(localStore.key.TIMELINE.NB, 30)) {
+          Cache.invalidate('timeline')
+          localStore.set(localStore.key.TIMELINE.NB, value)
+        }
+      },
+      timelineHimself (value) {
+        if (value !== localStore.get(localStore.key.TIMELINE.HIMSELF, false)) {
+          Cache.invalidate('timeline')
+          localStore.set(localStore.key.TIMELINE.HIMSELF, value)
+        }
+      },
+      commentsNb (value) {
+        value = Math.min(50, Math.max(5, value))
+        if (value !== localStore.get(localStore.key.COMMENTS.NB, 30)) {
+          localStore.set(localStore.key.COMMENTS.NB, value)
+        }
+      },
+      commentsOrder (value) {
+        if (value !== localStore.get(localStore.key.COMMENTS.ORDER, 'desc')) {
+          localStore.set(localStore.key.COMMENTS.ORDER, value)
+        }
+      },
+      srtVF (value) {
+        if (value !== localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, true)) {
+          localStore.set(localStore.key.EPISODES.SRT_VF_ONLY, value)
+        }
+      },
+      recommendationInterval (value) {
+        if (value !== localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2)) {
+          localStore.set(localStore.key.RECOMMENDATIONS.INTERVAL, value)
+          this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
+        }
+      },
+      dlAsk (value) {
+        if (value !== localStore.get(localStore.key.DOWNLOAD.ASK, true)) {
+          localStore.set(localStore.key.DOWNLOAD.ASK, value)
+        }
+      },
+      updateInterval (value) {
+        if (value !== localStore.get(localStore.key.UPDATE.INTERVAL, value)) {
+          localStore.set(localStore.key.UPDATE.INTERVAL, value)
+          ipcRenderer.send('interval-update', value)
+        }
+      },
+      updateAlpha (value) {
+        if (value !== localStore.get(localStore.key.UPDATE.PRERELEASE, false)) {
+          localStore.set(localStore.key.UPDATE.PRERELEASE, value)
+        }
       },
     },
     mounted () {
       console.log('[VUE] Mount Options.vue')
       this.load()
-      launcher.isEnabled().then((enabled) => {
-        this.autoload = enabled
-      })
 
       // Get size of cache/DB
       this.fileSize = {
@@ -420,16 +535,57 @@
 </script>
 
 <style lang="scss">
-  .btn-list .btn {
-    margin-bottom: 15px;
+  @import "../assets/scss/vars";
+
+  .block-btns {
+    margin: 15px 15%;
   }
-  .dl_dir {
+  .block-btn {
+    display: inline-block;
+    vertical-align: top;
+    max-width: 30%;
+    margin-left: 1%;
+    border: 1px solid $sidebarBorder;
+    background-color: $sidebarbgc;
+    padding-bottom: 5px;
+    .title {
+      font-size: 1.2em;
+      border-bottom: 1px solid $sidebarBorder;
+    }
+    p {
+      padding: 0 5px;
+    }
+    .btns {
+      text-align: center;
+      .btn {
+        margin: 0 auto 5px auto;
+        display: block;
+      }
+    }
+    &:first-of-type {
+      margin-left: 0;
+    }
+  }
+  .dl-dir {
+    display: inline-block;
+    min-width: 300px;
     background-color: #FFFFFF;
     padding: 3px 5px;
     color: #000;
     cursor: pointer;
   }
-  .strike {
+  .strikealpha {
     text-decoration: line-through;
+    cursor: not-allowed;
+  }
+  #options {
+    .field-col {
+      width: 48%;
+      float: left;
+      margin: 0 1% 10px 1%;
+    }
+    fieldset {
+      margin: 10px 1%;
+    }
   }
 </style>

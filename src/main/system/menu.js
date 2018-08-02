@@ -94,6 +94,7 @@ export default {
     // Create menu
     const menu = Menu.buildFromTemplate(template)
     Menu.setApplicationMenu(menu)
+    win.setAutoHideMenuBar(localStore.get(localStore.key.HIDE_MENU, true))
 
     // Fullscreen
     let fullscreenItem = menu.getMenuItemById('fullscreen')

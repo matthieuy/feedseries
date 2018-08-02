@@ -43,7 +43,7 @@
               <i class="fa fa-archive"></i> Sortir des archives
             </button>
           </div>
-          <div class="nav-group-item" v-show="show && !show.isFavorited">
+          <div class="nav-group-item" v-show="show && show.in_account && !show.isFavorited">
             <button class="btn btn-nav btn-action cursor" @click="favorite(true)">
               <i class="fa fa-heart"></i> Ajouter aux favoris
             </button>

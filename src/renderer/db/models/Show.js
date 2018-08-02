@@ -31,6 +31,7 @@ class Show extends Document {
       last: String,
       image: String,
       note: Number,
+      friends: Array,
     })
   }
 
@@ -76,7 +77,7 @@ class Show extends Document {
    * @returns {Object}
    */
   static cleanProperties (show) {
-    return {
+    let properties = {
       _id: String(show.id),
       title: show.title,
       creation: show.creation,
@@ -103,6 +104,19 @@ class Show extends Document {
       image: (show.images.show) ? show.images.show.replace('https://www.betaseries.com/images/fonds/show/', '') : null,
       note: Math.round(show.notes.mean * 10) / 10,
     }
+
+    // Friends
+    if (show.user.hasOwnProperty('friends_watching') && show.user.friends_watching.length) {
+      properties.friends = []
+      show.user.friends_watching.forEach((friend) => {
+        properties.friends.push({
+          id: friend.id,
+          login: friend.login,
+        })
+      })
+    }
+
+    return properties
   }
 
   /**

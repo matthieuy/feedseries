@@ -1,10 +1,19 @@
 <template>
   <div v-show="show">
     <div>
-      <div class="binfo description" v-show="show.description">{{ show.description }}</div>
+      <div class="binfo description" v-show="show.description">
+        {{ show.description }}
+      </div>
       <div class="binfo">
         <span class="fa fa-star"></span>
         {{ show.note }}
+      </div>
+      <div class="binfo" v-show="show.friends">
+        Suivi par :
+        <div v-for="friend in show.friends" class="friends-list">
+          <img class="avatars" :src="avatarURL(friend.id)" width="20" height="20">
+          {{ friend.login }}
+        </div>
       </div>
       <div class="binfo">
         <i class="fa fa-users"></i>
@@ -62,6 +71,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
 
+  import api from '../../api'
   import { types } from '../../store'
   import ShowTr from '../ShowTr'
   import EpisodeCtx from '../context/EpisodeCtx'
@@ -97,10 +107,12 @@
           this.isLoading = false
         })
       },
+      avatarURL (userId) {
+        return api.members.getAvatarURL(userId, 20)
+      },
     },
     watch: {
       show (show) {
-        console.log('Update', show)
         this.loadEpisodes()
       },
     },
@@ -121,5 +133,15 @@
     .fa-circle {
       font-size: 8px;
     }
+  }
+  .binfo.description {
+    float: initial;
+    margin-bottom: 5px;
+  }
+  .binfo .friends-content {
+    display: block;
+  }
+  .friends-list {
+    padding-top: 3px;
   }
 </style>

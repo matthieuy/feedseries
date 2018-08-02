@@ -7,11 +7,14 @@ export default {
    * @return {Promise}
    */
   getMember (start) {
+    let params = {
+      unseen: 1,
+      month: start.add(15, 'days').format('YYYY-MM'),
+    }
+    console.log('[API] Planning::getMember', params)
+
     return Vue.http.get('/planning/member', {
-      params: {
-        unseen: 1,
-        month: start.add(15, 'days').format('YYYY-MM'),
-      },
+      params,
     }).then((response) => {
       let events = []
       if (response.status === 200 && response.data.hasOwnProperty('episodes')) {
@@ -30,18 +33,59 @@ export default {
     })
   },
   /**
+   * Get events between date
+   * @param {Moment} start
+   * @param {Moment} end
+   * @returns {Promise}
+   */
+  getMemberBetween (start, end) {
+    let params = {
+      type: 'show',
+      start: start.format('YYYY-MM-DD'),
+      end: end.format('YYYY-MM-DD'),
+    }
+    console.log('[API] Planning::getMemberBetween', params)
+
+    return Vue.http.get('/planning/calendar', {
+      params,
+    }).then((response) => {
+      let events = []
+      if (response.status === 200 && response.data.hasOwnProperty('days')) {
+        let month = start.add(15, 'days').format('YYYY-MM')
+
+        response.data.days.forEach((day) => {
+          day.events.filter((e) => {
+            return !e.payload.seen && e.type === 'episode_release' && (e.payload.episode !== '1' || day.date.indexOf(month) === -1)
+          }).forEach((e) => {
+            events.push({
+              start: day.date,
+              title: `${e.payload.show_title} - ${e.payload.code}`,
+              episode: e.payload,
+            })
+          })
+        })
+      }
+      return Promise.resolve(events)
+    }).catch(() => {
+      return Promise.reject(new Error('Impossible de récupérer le planning'))
+    })
+  },
+  /**
    * Get firsts episodes
    * @param {Moment} day
    * @return {Promise}
    */
   getPremieres (day) {
+    let params = {
+      date: day.format('Y-MM') + '-01',
+      before: 0,
+      after: day.daysInMonth(),
+      type: 'premieres',
+    }
+    console.log('[API] Planning::getPremieres', params)
+
     return Vue.http.get('/planning/general', {
-      params: {
-        date: day.format('Y-MM') + '-01',
-        before: 0,
-        after: day.daysInMonth(),
-        type: 'premieres',
-      },
+      params,
     }).then((response) => {
       let events = []
       if (response.status === 200 && response.data.hasOwnProperty('episodes')) {
