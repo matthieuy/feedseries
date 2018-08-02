@@ -172,7 +172,7 @@
             iconsEl.innerHTML += `<i class="fa fa-heart"></i>`
           }
           if (episode.show.status === 'Ended') {
-            iconsEl.innerHTML += '<i class="fa fa-circle" style="color: #fc605b"></i>'
+            iconsEl.innerHTML += '<i class="fa fa-circle" style="' + this.$options.filter.statusColor(episode.show.status) + '"></i>'
           }
         }
       },
