@@ -12,7 +12,7 @@
       @event-view-render="eventViewRender"
       @event-loading="eventLoading"
     ></full-calendar>
-    <episode-ctx ref="EpisodeCtx" @ctx-episode-close="ctxClose" :hide-show="true">&nbsp;</episode-ctx>
+    <episode-ctx ref="EpisodeCtx" @ctx-episode-close="ctxClose">&nbsp;</episode-ctx>
   </div>
 </template>
 
