@@ -1,13 +1,5 @@
 This is a temporary TODO file need to be reorganize
 
-- [ ] My shows :
-  - [ ] Rewrite page
-  - [ ] Search always seen
-  - [ ] Seen by friend
-- [ ] Show detail :
-  - [ ] seen by friend
-  - [ ] spoiler date
-  - [ ] Fix "add btn"
 - [ ] isLogged => isVerified
 - [ ] Options :
   - [ ] Resync
@@ -19,9 +11,6 @@ This is a temporary TODO file need to be reorganize
 - [ ] Connexion with modal
 - [ ] Show page :
   - [ ] Comments :
-    - [ ] BBCode :
-      - [ ] URL
-      - [ ] Spoiler
     - [ ] Post a comment
     - [ ] Post a reply
 - [ ] Episode page :
@@ -35,4 +24,3 @@ This is a temporary TODO file need to be reorganize
   - [ ] Create and detect where is systray
   - [ ] Catch drop file
   - [ ] display result in main window
-- [ ] CrashReporter

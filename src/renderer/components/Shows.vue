@@ -158,7 +158,8 @@
     margin-top: 50px;
     #li-search {
       position: fixed;
-      width: 100%;
+      right: 12px;
+      left: 150px;
       top: 35px;
     }
   }

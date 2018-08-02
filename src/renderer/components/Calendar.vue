@@ -1,7 +1,6 @@
 <template>
-  <div @contextmenu="rightClick">
+  <div id="calendar" @contextmenu="rightClick">
     <full-calendar
-      id="calendar"
       :class="{loading: isLoading}"
       class="fc fc-unthemed fc-ltr"
       :config="config"
@@ -12,7 +11,7 @@
       @event-view-render="eventViewRender"
       @event-loading="eventLoading"
     ></full-calendar>
-    <episode-ctx ref="EpisodeCtx" @ctx-episode-close="ctxClose" :hide-show="true">&nbsp;</episode-ctx>
+    <episode-ctx ref="EpisodeCtx" @ctx-episode-close="ctxClose">&nbsp;</episode-ctx>
   </div>
 </template>
 
@@ -33,11 +32,11 @@
 
       return {
         isLoading: true,
-        dlOnly: false,
+        dlOnly: localStore.get(localStore.key.CALENDAR.DL_ONLY, false),
         eventSelected: null,
         config: {
           defaultDate: (localStore.get(localStore.key.CALENDAR.SAVE_DATE, false)) ? localStore.get(localStore.key.CALENDAR.LAST_DATE, null) : null,
-          defaultView: localStore.get(localStore.key.PLANNING.VIEW, 'month'),
+          defaultView: localStore.get(localStore.key.CALENDAR.VIEW, 'month'),
           header: {
             left: 'prev,next today dlonly',
             center: 'title',
@@ -48,20 +47,15 @@
               text: 'Récupérés',
               click () {
                 self.dlOnly = !self.dlOnly
-                let btn = document.getElementsByClassName('fc-dlonly-button')[0]
-                if (self.dlOnly) {
-                  btn.classList.add('fc-state-active')
-                  document.getElementById('calendar').classList.add('hide-not-dl')
-                } else {
-                  btn.classList.remove('fc-state-active')
-                  document.getElementById('calendar').classList.remove('hide-not-dl')
-                }
+                localStore.set(localStore.key.CALENDAR.DL_ONLY, self.dlOnly)
+                self.updateBtnDL(self.dlOnly)
               },
             },
           },
           eventAfterAllRender (view) {
-            if (self.dlOnly) {
-              document.getElementById('calendar').classList.add('hide-not-dl')
+            self.updateBtnDL(self.dlOnly)
+            if (view.name === 'listMonth' && self.dlOnly) {
+              self.hideHeader()
             }
           },
           eventOrder (a, b) {
@@ -176,15 +170,44 @@
           if (episode.show.isFavorited) {
             iconsEl.innerHTML += `<i class="fa fa-heart"></i>`
           }
+          if (episode.show.status === 'Ended') {
+            iconsEl.innerHTML += '<i class="fa fa-circle" style="' + this.$options.filters.statusColor(episode.show.status) + '"></i>'
+          }
         }
       },
       eventViewRender (view, el) {
         if (view.name !== this.config.defaultView) {
           this.config.defaultView = view.name
-          localStore.set(localStore.key.PLANNING.VIEW, view.name)
+          localStore.set(localStore.key.CALENDAR.VIEW, view.name)
         }
         localStore.set(localStore.key.CALENDAR.LAST_DATE, view.calendar.currentDate.format('YYYY-MM') + '-01')
       },
+      updateBtnDL (dlOnly) {
+        let btn = document.getElementsByClassName('fc-dlonly-button')[0]
+        if (dlOnly) {
+          btn.classList.add('fc-state-active')
+          document.getElementById('calendar').classList.add('hide-not-dl')
+        } else {
+          btn.classList.remove('fc-state-active')
+          document.getElementById('calendar').classList.remove('hide-not-dl')
+        }
+      },
+      hideHeader () {
+        document.querySelectorAll('.fc-list-heading').forEach((header) => {
+          let next = header
+          do {
+            next = next.nextSibling
+            if (!next || next.classList.contains('fc-list-heading') || next.classList.contains('dl')) {
+              break
+            }
+
+            header.classList.add('not-dl')
+          } while (true)
+        })
+      },
+    },
+    mounted () {
+      console.info('[VUE] Mount Calendar.vue')
     },
   }
 
@@ -199,20 +222,20 @@
       let p = new Promise((resolve, reject) => {
         Episode.findOne({ _id: events[i].episode.id + '' }).then((ep) => {
           let className = []
-          let isDL = true
+          let isDL = false
 
           if (ep) {
             events[i].episode = ep
             className.push('db')
-            if (!ep.isDownloaded) {
-              isDL = false
+            if (ep.isDownloaded) {
+              isDL = true
             }
           } else {
             events[i].episode.notDB = true
             className.push('not-db')
             ep = events[i].episode
-            if (ep.user && ep.user.hasOwnProperty('downloaded') && !ep.user.downloaded) {
-              isDL = false
+            if (ep.user && ep.user.hasOwnProperty('downloaded') && ep.user.downloaded) {
+              isDL = true
             }
           }
 

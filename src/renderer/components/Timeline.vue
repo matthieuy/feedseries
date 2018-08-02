@@ -44,6 +44,7 @@
           return types.indexOf(event.type) !== -1 && event.ref
         },
         clickLink (event, e) {
+          console.log('Event :', event)
           e.preventDefault()
           if (this.isLinkEnabled(event)) {
             this.$router.push({name: 'show', params: { id: event.ref }})
@@ -66,8 +67,7 @@
           })
         },
         userAvatar (event) {
-          let url = api.members.getAvatarURL(event.userId, 24)
-          return url
+          return api.members.getAvatarURL(event.userId, 24)
         },
         iconType (type) {
           switch (type) {

@@ -205,7 +205,7 @@ const getters = {
 
     // Filter
     episodes = episodes.filter((episode) => {
-      if (episode.show.isArchived || episode.isSeen || (episode.date && moment(String(episode.date)).isAfter(moment.now()))) {
+      if (!episode.show || episode.show.isArchived || episode.isSeen || (episode.date && moment(String(episode.date)).isAfter(moment.now()))) {
         return false
       }
 

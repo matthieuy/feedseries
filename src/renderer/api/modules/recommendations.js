@@ -1,10 +1,10 @@
 import Vue from 'vue'
 
+import { localStore } from '../../store'
 import { Cache } from '../../db'
 
 export default {
   cacheId: 'recommendation',
-  cacheTtl: 7000,
 
   /**
    * Get recommandation promise
@@ -21,7 +21,10 @@ export default {
     return Vue.http.get('/shows/recommendations').then((response) => {
       if (response.status === 200 && response.data.hasOwnProperty('recommendations')) {
         let recommendations = response.data.recommendations
-        Cache.set(this.cacheId, recommendations, this.cacheTtl)
+
+        let cacheTtl = Math.round(localStore.get(localStore.key.RECOMMENDATIONS.INTERVAL, 2) * 60) - 1
+        Cache.set(this.cacheId, recommendations, cacheTtl)
+
         return Promise.resolve(recommendations)
       }
     })

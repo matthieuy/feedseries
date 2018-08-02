@@ -1,0 +1,54 @@
+// Tabs
+
+.tab-group {
+  margin-top: 0;
+  display: flex;
+  border-top: 1px solid $ctxDivider;
+  //border-bottom: 1px solid $ctxDivider;
+  color: $navActiveColor;
+  background-color: darken($sidebarBorder, 5%);
+}
+
+.tab-item {
+  position: relative;
+  flex: 1;
+  padding: 3px;
+  font-size: 12px;
+  text-align: center;
+  border-left: 1px solid $ctxDivider;
+  background-color: $sidebarBorder;
+  cursor: pointer;
+  border-radius: 15px 15px 0 0;
+
+  &:first-child {
+    border-left: 0;
+  }
+
+  &.active {
+    //background-color: #6d6c6d;
+    background-color: $backgroundColor;
+  }
+
+
+  &:after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: "";
+    background-color: rgba(0,0,0,.08);
+    opacity: 0;
+    transition: opacity .1s linear;
+    z-index: 1;
+  }
+}
+
+.tab-item-fixed {
+  flex: none;
+  padding: 3px 10px;
+}
+
+.tab-content {
+  margin: 20px 5px 5px 20px;
+}

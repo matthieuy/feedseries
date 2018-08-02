@@ -53,7 +53,9 @@ const mutations = {
   },
   // Change the history size
   [types.CHANGE_HISTORY_SIZE] (state, size) {
-    if (size < state.history.length) {
+    if (!size) {
+      state.history = []
+    } else if (size < state.history.length) {
       state.history = state.history.splice(0, size)
     }
     localStore.set(localStore.key.HISTORY_SIZE, size)

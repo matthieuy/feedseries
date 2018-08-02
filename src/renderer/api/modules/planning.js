@@ -76,13 +76,16 @@ export default {
    * @return {Promise}
    */
   getPremieres (day) {
+    let params = {
+      date: day.format('Y-MM') + '-01',
+      before: 0,
+      after: day.daysInMonth(),
+      type: 'premieres',
+    }
+    console.log('[API] Planning::getPremieres', params)
+
     return Vue.http.get('/planning/general', {
-      params: {
-        date: day.format('Y-MM') + '-01',
-        before: 0,
-        after: day.daysInMonth(),
-        type: 'premieres',
-      },
+      params,
     }).then((response) => {
       let events = []
       if (response.status === 200 && response.data.hasOwnProperty('episodes')) {

@@ -41,16 +41,19 @@ export default {
    */
   init (mainWindow) {
     if (this.tray === null) {
-      let localStore = require('../../renderer/store/local').default
-      let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
       this.mainWindow = mainWindow
-      this.tray = new Tray(`${__static}/icons/128x128${whiteIcon}.png`)
+      this.tray = new Tray(this.getIconPath())
       this.contextMenu = Menu.buildFromTemplate(template)
       this.tray.setToolTip(app.getName())
 
       // Left click : show mainWindow
       this.tray.on('click', () => {
         this.mainWindow.show()
+      })
+
+      ipcMain.on('update-tray', () => {
+        this.tray.setImage(this.getIconPath())
+        this.update()
       })
     }
 
@@ -70,5 +73,14 @@ export default {
    */
   update () {
     this.tray.setContextMenu(this.contextMenu)
+  },
+  /**
+   * Get the systray icon path
+   * @returns {string}
+   */
+  getIconPath () {
+    let localStore = require('../../renderer/store/local').default
+    let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
+    return `${__static}/icons/128x128${whiteIcon}.png`
   },
 }
