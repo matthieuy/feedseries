@@ -139,6 +139,7 @@
             Intervalle entre 2 vérifications de nouvelles recommandations :
             <select v-model="recommendationInterval">
               <option value="0.083" v-if="env === 'development'">5 minutes</option>
+              <option value="0.5">30 minutes</option>
               <option value="1">1 heure</option>
               <option value="2">2 heures</option>
               <option value="6">6 heures</option>
@@ -381,8 +382,8 @@
         }
       },
       whiteicon (value) {
-        if (this.whiteicon !== value) {
-          localStore.set(localStore.key.WHITE_ICON, this.whiteicon)
+        if (value !== localStore.get(localStore.key.WHITE_ICON, true)) {
+          localStore.set(localStore.key.WHITE_ICON, value)
           ipcRenderer.send('update-tray')
         }
       },
