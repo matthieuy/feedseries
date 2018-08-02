@@ -113,7 +113,6 @@
     },
     watch: {
       show (show) {
-        console.log('Update', show)
         this.loadEpisodes()
       },
     },
