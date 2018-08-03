@@ -117,11 +117,10 @@
         this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
         this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS).then((recommendations) => {
           if (!this.nbRecommendations) {
-            remote.dialog.showMessageBox(remote.getCurrentWindow(), {
-              title: 'Recommandation',
+            /* eslint-disable no-new */
+            new window.Notification(remote.app.getName(), {
+              body: 'Aucune nouvelle notification',
               icon: localStore.getIconPath(true),
-              message: 'Pas de nouvelle recommandation',
-              buttons: ['Ok'],
             })
           }
           this.isChecking = false

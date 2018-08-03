@@ -52,8 +52,9 @@ export default {
         this.mainWindow.show()
       })
 
-      ipcMain.on('update-tray', () => {
-        this.tray.setImage(this.getIconPath())
+      ipcMain.on('update-icon', () => {
+        console.log('Update tray', localStore.getIconPath())
+        this.tray.setImage(localStore.getIconPath())
         this.update()
       })
     }

@@ -5,9 +5,8 @@ import {app, BrowserWindow, globalShortcut, ipcMain} from 'electron'
 import log from 'electron-log'
 import Updater from './system/update'
 
-app.setAppUserModelId(process.execPath)
-// app.setAppUserModelId('org.matthieuy.feedseries')
-// app.setAsDefaultProtocolClient('feedseries')
+app.setAppUserModelId('com.matthieuy.feedseries')
+app.setAsDefaultProtocolClient('feedseries')
 
 let mainWindow, systray
 
@@ -123,6 +122,10 @@ function createWindow () {
       mainWindow.hide()
     }
     return false
+  })
+
+  ipcMain.on('update-icon', () => {
+    mainWindow.setIcon(localStore.getIconPath())
   })
 
   // App full loaded

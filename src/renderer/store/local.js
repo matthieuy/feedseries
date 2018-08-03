@@ -2,6 +2,7 @@
  * Local storage
  */
 import ElectronStore from 'electron-store'
+let isRenderer = require('is-electron-renderer')
 
 // List of keys
 const key = {
@@ -44,6 +45,7 @@ const key = {
     PRERELEASE: 'update.alpha', // {Boolean} Can use pre-release update
     NOTE: 'update.note', // {Array} Release notes from autoUpdater
     INTERVAL: 'update.interval', // {Integer} Interval between 2 check (in hour)
+    FIRST_RUN: 'update.firstrun', // {Boolean} True after do a update
   },
   DOWNLOAD: {
     DIR: 'dl.dir', // {String} Last download dir
@@ -92,6 +94,7 @@ let store = new ElectronStore({
     },
     update: {
       alpha: false,
+      firstrun: false,
     },
     devtools: false,
     history: [],
@@ -125,10 +128,12 @@ store.purge = () => {
  */
 store.getIconPath = (png) => {
   let whiteIcon = (store.get(key.WHITE_ICON, true)) ? '-w' : '-b'
+  let staticPath = (isRenderer) ? 'static' : __static
+
   if (png || process.platform !== 'win32') {
-    return `${__static}/icons/icon${whiteIcon}.png`
+    return `${staticPath}/icons/icon${whiteIcon}.png`
   } else {
-    return `${__static}/icons/icon${whiteIcon}.ico`
+    return `${staticPath}/icons/icon${whiteIcon}.ico`
   }
 }
 

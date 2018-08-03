@@ -17,6 +17,9 @@ export default {
     if (this.windows[name]) {
       return this.windows[name].show()
     }
+    if (!url) {
+      return false
+    }
 
     // Default options
     options = Object.assign({

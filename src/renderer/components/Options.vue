@@ -383,7 +383,8 @@
       whiteicon (value) {
         if (value !== localStore.get(localStore.key.WHITE_ICON, true)) {
           localStore.set(localStore.key.WHITE_ICON, value)
-          ipcRenderer.send('update-tray')
+          ipcRenderer.send('update-icon')
+          console.log('Changement d\'icone', localStore.getIconPath())
         }
       },
       autoload (value) {

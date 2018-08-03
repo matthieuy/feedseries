@@ -122,7 +122,9 @@
     watch: {
       nbRecommendations (nbRecommendations) {
         console.log('New recommandations : ', nbRecommendations)
-        if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
+        if (nbRecommendations) {
+          console.log('notif')
+          // if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
           let notif = new window.Notification(remote.app.getName(), {
             body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
             icon: localStore.getIconPath(true),
