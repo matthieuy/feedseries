@@ -40,7 +40,7 @@
             <span v-show="stats.episodes">({{ stats.episodes|plurialize('épisode vu', 'épisodes vus') }})</span>
           </div>
           <div class="fleft binfo">
-            <i class="fa fa-hourglass"></i>
+            <i class="fa fa-hourglass" :class="{'fa-spin': !stats.id}"></i>
             <span v-show="stats.time_to_spend">
             Encore {{ stats.time_to_spend|duration_tv }} ({{ stats.episodes_to_watch|plurialize('épisode', 'épisodes') }})
             </span>
