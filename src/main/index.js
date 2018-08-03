@@ -33,8 +33,8 @@ log.debug('Environment : prod', global.userAgent)
 /******************
  * CLI Parameters *
  ******************/
-if (process.argv.length && process.env.NODE_ENV !== 'development') {
-  log.debug('Start with params : ', process.argv)
+if (process.argv.length > 1 && process.env.NODE_ENV !== 'development') {
+  log.info('Start with params : ', process.argv)
 }
 global.silentStart = (process.argv.indexOf('--hidden') > -1) // Start without display windows
 

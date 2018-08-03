@@ -4,11 +4,13 @@
 import {app, BrowserWindow, globalShortcut, ipcMain} from 'electron'
 import log from 'electron-log'
 import Updater from './system/update'
-
-app.setAppUserModelId('com.matthieuy.feedseries')
-app.setAsDefaultProtocolClient('feedseries')
+import localStore from '../renderer/store/local'
 
 let mainWindow, systray
+let protocolName = 'feedseries'
+
+app.setAppUserModelId('com.matthieuy.feedseries')
+app.setAsDefaultProtocolClient(protocolName)
 
 /*************
  * Listeners *
@@ -51,19 +53,22 @@ app.on('will-quit', () => {
  * Single instance *
  *******************/
 // Singleton instance
-const isNotSingleInstance = app.makeSingleInstance(() => {
+const isNotSingleInstance = app.makeSingleInstance((argv) => {
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore()
     }
     mainWindow.show()
     mainWindow.focus()
+    mainWindow.loadURL(getUrl(argv), {
+      userAgent: global.userAgent,
+    })
   }
 })
 
 // Quit double instance
 if (isNotSingleInstance) {
-  log.error('Multi instance : close app')
+  log.info('Multi instance : close app', process.argv)
   app.isQuiting = true
   if (systray) {
     systray.destroy()
@@ -75,7 +80,6 @@ if (isNotSingleInstance) {
  * Create main window *
  **********************/
 function createWindow () {
-  let localStore = require('../renderer/store/local').default
   mainWindow = new BrowserWindow({
     height: 600,
     minWidth: 850,
@@ -94,10 +98,7 @@ function createWindow () {
   })
 
   // Load main window
-  console.log('Main : ', global.winURL)
-  let mainWindowURL = localStore.get(localStore.key.ROUTE.SAVE, false) ? global.winURL + '/index.html#' + localStore.get(localStore.key.ROUTE.LAST) : global.winURL + '/index.html'
-  log.info('Load URL', mainWindowURL)
-  mainWindow.loadURL(mainWindowURL, {
+  mainWindow.loadURL(getUrl(process.argv), {
     userAgent: global.userAgent,
   })
 
@@ -152,3 +153,15 @@ function createWindow () {
 process.on('uncaughtException', function (e) {
   log.error('[EXCEPTION]', e)
 })
+
+function getUrl (argv) {
+  let url = global.winURL + '/index.html'
+  if (argv && argv.length > 1 && process.env.NODE_ENV !== 'development' && argv[1].indexOf(protocolName + '://') === 0) {
+    url += '#/' + argv[1].replace(protocolName + '://', '')
+  } else if (localStore.get(localStore.key.ROUTE.SAVE, false)) {
+    url += '#' + localStore.get(localStore.key.ROUTE.LAST)
+  }
+
+  log.info('Load URL :', url)
+  return url
+}
