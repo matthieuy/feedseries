@@ -28,7 +28,7 @@ export default {
       minimizable: false,
       maximizable: false,
       fullscreenable: false,
-      icon: getIconPath(),
+      icon: localStore.getIconPath(),
       skipTaskbar: true,
       show: false,
       frame: true,
@@ -65,10 +65,4 @@ export default {
       win.openDevTools()
     }
   },
-}
-
-function getIconPath () {
-  return process.platform === 'win32'
-    ? __static + '/icons/icon.ico'
-    : __static + '/icons/icon.png'
 }

@@ -117,10 +117,9 @@
         this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
         this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS).then((recommendations) => {
           if (!this.nbRecommendations) {
-            let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
             remote.dialog.showMessageBox(remote.getCurrentWindow(), {
               title: 'Recommandation',
-              icon: 'static/icons/icon' + whiteIcon + '.png',
+              icon: localStore.getIconPath(true),
               message: 'Pas de nouvelle recommandation',
               buttons: ['Ok'],
             })

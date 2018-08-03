@@ -75,13 +75,12 @@ if (isNotSingleInstance) {
  **********************/
 function createWindow () {
   let localStore = require('../renderer/store/local').default
-  let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
   mainWindow = new BrowserWindow({
     height: 600,
     minWidth: 850,
     minHeight: 500,
     useContentSize: true,
-    icon: (process.platform === 'win32') ? __static + '/icons/icon' + whiteIcon + '.ico' : __static + '/icons/icon' + whiteIcon + '.png',
+    icon: localStore.getIconPath(),
     center: true,
     title: app.getName(),
     backgroundColor: '#36393E',

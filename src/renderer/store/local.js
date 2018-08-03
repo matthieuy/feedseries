@@ -120,4 +120,16 @@ store.purge = () => {
   })
 }
 
+/**
+ * Get icon
+ */
+store.getIconPath = (png) => {
+  let whiteIcon = (store.get(key.WHITE_ICON, true)) ? '-w' : '-b'
+  if (png || process.platform !== 'win32') {
+    return `${__static}/icons/icon${whiteIcon}.png`
+  } else {
+    return `${__static}/icons/icon${whiteIcon}.ico`
+  }
+}
+
 export default store
