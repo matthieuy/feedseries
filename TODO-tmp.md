@@ -1,13 +1,9 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
-- [ ] Options :
-  - [ ] Resync
-  - [ ] Save on exit page
 - [ ] Notifications :
   - [ ] Fix problem with W10 1709
 - [ ] Subscribe
-- [ ] Planning
 - [ ] Connexion with modal
 - [ ] Show page :
   - [ ] Comments :
