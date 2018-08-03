@@ -3,7 +3,10 @@
   "desktopName": "FeedSeries",
   "productName": "FeedSeries",
   "version": "0.8.2",
-  "author": "Matthieu YK <matthieuy+git@riseup.net>",
+  "author": {
+    "name": "Matthieu YK",
+    "email": "matthieuy+git@riseup.net"
+  },
   "description": "Suivez votre actualité sériephile",
   "license": "MIT",
   "homepage": "https://github.com/matthieuy/feedseries",
@@ -28,6 +31,7 @@
   "build": {
     "productName": "FeedSeries",
     "appId": "org.matthieuy.feedseries",
+    "copyright": "2018 - Matthieu YK",
     "directories": {
       "output": "build"
     },

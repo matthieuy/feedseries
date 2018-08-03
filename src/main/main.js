@@ -5,7 +5,9 @@ import {app, BrowserWindow, globalShortcut, ipcMain} from 'electron'
 import log from 'electron-log'
 import Updater from './system/update'
 
-app.setAppUserModelId('org.matthieuy.feedseries')
+app.setAppUserModelId(process.execPath)
+// app.setAppUserModelId('org.matthieuy.feedseries')
+// app.setAsDefaultProtocolClient('feedseries')
 
 let mainWindow, systray
 
