@@ -92,7 +92,6 @@
     computed: {
       shows () {
         let shows = this.$store.getters[types.shows.GETTERS.SHOWS](this.status, this.order, this.orderReverse)
-        console.log(shows)
         if (!this.filterQuery.length) {
           return shows
         }

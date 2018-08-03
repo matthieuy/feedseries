@@ -55,9 +55,6 @@
           eventAfterAllRender (view) {
             self.updateBtnDL(self.dlOnly)
             self.hideHeader()
-            // if (view.name === 'listMonth' && self.dlOnly) {
-            //   self.hideHeader()
-            // }
           },
           eventOrder (a, b) {
             // DL first
