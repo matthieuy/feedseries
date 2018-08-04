@@ -21,7 +21,7 @@
             </router-link>
           </div>
 
-          <div class="btn-group">
+          <div class="btn-group" style="z-index: 250;">
             <button class="btn btn-default btn-dropdown dropdown" :class="{disabled: !history.length}">
               <div class="dropdown-content" v-if="history.length">
                 <router-link :to="link.path" class="dropdown-item" v-for="link in history" :key="link.path">{{ link.label }}</router-link>
