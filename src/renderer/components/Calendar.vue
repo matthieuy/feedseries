@@ -54,9 +54,7 @@
           },
           eventAfterAllRender (view) {
             self.updateBtnDL(self.dlOnly)
-            if (view.name === 'listMonth' && self.dlOnly) {
-              self.hideHeader()
-            }
+            self.hideHeader()
           },
           eventOrder (a, b) {
             // DL first
@@ -158,6 +156,9 @@
         // Icons
         if ((episode.user && episode.user.downloaded) || (!episode.notDB && episode.isDownloaded)) {
           iconsEl.innerHTML += `<i class="fa fa-download"></i>`
+        } else {
+          el[0].classList.remove('dl')
+          el[0].classList.add('not-dl')
         }
         if (!episode.notDB) {
           if (episode.show.isArchived) {
@@ -190,6 +191,10 @@
         }
       },
       hideHeader () {
+        if (this.config.defaultView !== 'listMonth') {
+          return false
+        }
+
         document.querySelectorAll('.fc-list-heading').forEach((header) => {
           let next = header
           do {

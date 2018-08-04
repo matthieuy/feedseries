@@ -1,40 +1,50 @@
 <template>
     <div class="profil">
-      <div v-show="stats.id">
+      <div>
         <div class="fleft">
-          <img :src="stats.avatar" alt="" class="avatar">
+          <img :src="stats.avatar" alt="" class="avatar" v-show="stats.id">
+          <img src="static/empty.png" class="avatar" v-show="!stats.id">
         </div>
         <div class="fleft cols">
           <div class="fleft col20">
-            <div class="binfo" v-if="stats.friends"><i class="fa fa-users"></i> {{ stats.friends|plurialize('ami', 'amis') }}</div>
-            <div class="binfo"><i class="fa fa-certificate"></i> {{ stats.xp }} XP</div>
-            <div class="binfo" v-if="stats.comments"><i class="fa fa-comments"></i> {{ stats.comments|plurialize('commentaire', 'commentaires') }}</div>
-            <div class="binfo" v-if="stats.badges"><i class="fa fa-trophy"></i> {{ stats.badges|plurialize('badge', 'badges') }}</div>
-            <div class="binfo" v-if="stats.written_words"><i class="fa fa-pencil-alt"></i> {{ stats.written_words|plurialize('mot écrit', 'mots écrits') }}</div>
+            <div class="binfo"><i class="fa fa-users"></i> {{ stats.friends|defaut(0)|plurialize('ami', 'amis') }}</div>
+            <div class="binfo"><i class="fa fa-certificate"></i> {{ stats.xp|defaut(0) }} XP</div>
+            <div class="binfo"><i class="fa fa-comments"></i> {{ stats.comments|defaut(0)|plurialize('commentaire', 'commentaires') }}</div>
+            <div class="binfo"><i class="fa fa-trophy"></i> {{ stats.badges|defaut(0)|plurialize('badge', 'badges') }}</div>
+            <div class="binfo"><i class="fa fa-pencil-alt"></i> {{ stats.written_words|defaut(0)|plurialize('mot écrit', 'mots écrits') }}</div>
             <div class="clearfix"></div>
           </div>
           <div class="fleft col60">
             <div class="binfo">
-              <div id="showChart"></div>
+              <div id="showChart">
+                <div v-if="!stats.id && isVerified" class="loading-stats">Chargement du profil en cours...</div>
+                <div v-if="!isVerified" class="loading-stats">Veuillez vous connecter</div>
+              </div>
               <div class="clearfix"></div>
             </div>
           </div>
           <div class="fleft col20">
-            <div class="binfo"><i class="fa fa-chart-line"></i> {{ stats.episodes_per_month|plurialize('épisode', 'épisodes') }} / mois</div>
-            <div class="binfo"><i class="fa fa-calendar-check"></i> {{ stats.streak_days|plurialize('jour consécutif', 'jours consécutifs') }}</div>
-            <div class="binfo"><i class="fa fa-birthday-cake"></i> Inscrit depuis {{ stats.member_since_days|plurialize('jour', 'jours') }}</div>
-            <div class="binfo"><i class="fa fa-star"></i> "{{ stats.favorite_genre }}" à mater le {{ stats.favorite_day }}</div>
+            <div class="binfo"><i class="fa fa-chart-line"></i> {{ stats.episodes_per_month|defaut(0)|plurialize('épisode', 'épisodes') }} / mois</div>
+            <div class="binfo"><i class="fa fa-calendar-check"></i> {{ stats.streak_days|defaut(0)|plurialize('jour consécutif', 'jours consécutifs') }}</div>
+            <div class="binfo"><i class="fa fa-birthday-cake"></i> Inscrit depuis {{ stats.member_since_days|defaut(0)|plurialize('jour', 'jours') }}</div>
+            <div class="binfo">
+              <i class="fa fa-star"></i>
+              <span v-show="stats.id"> "{{ stats.favorite_genre }}" à mater le {{ stats.favorite_day }}</span>
+              <span v-show="!stats.id">Rien à mater</span>
+            </div>
           </div>
         </div>
         <div class="clearfix"></div>
         <div class="linear-stats">
           <div class="fleft binfo">
-            <i class="fa fa-clock"></i> {{ stats.time_on_tv|duration_tv }}
-            <span v-if="stats.episodes">({{ stats.episodes|plurialize('épisode vu', 'épisodes vus') }})</span>
+            <i class="fa fa-clock"></i> {{ stats.time_on_tv|defaut(0)|duration_tv }}
+            <span v-show="stats.episodes">({{ stats.episodes|plurialize('épisode vu', 'épisodes vus') }})</span>
           </div>
-          <div class="fleft binfo" v-if="stats.time_to_spend">
-            <i class="fa fa-hourglass"></i>
+          <div class="fleft binfo">
+            <i class="fa fa-hourglass" :class="{'fa-spin': !stats.id}"></i>
+            <span v-show="stats.time_to_spend">
             Encore {{ stats.time_to_spend|duration_tv }} ({{ stats.episodes_to_watch|plurialize('épisode', 'épisodes') }})
+            </span>
           </div>
           <div class="clearfix"></div>
         </div>
@@ -69,7 +79,7 @@
 
   import api from '../api'
   import { localStore, types } from '../store'
-  import { Cache, Show } from '../db'
+  import { Show } from '../db'
 
   export default {
     data () {
@@ -80,31 +90,18 @@
       }
     },
     computed: {
-      ...mapState(['isLogged']),
+      ...mapState(['isVerified']),
     },
     methods: {
       // Load member stats
       loadStats () {
-        // Response
-        let response = (infos) => {
-          this.stats = Object.assign(infos.stats, {
-            id: infos.id,
-            avatar: infos.avatar,
-            xp: infos.xp,
+        api.members.getInfos(true).then((response) => {
+          this.stats = Object.assign(response.stats, {
+            id: response.id,
+            avatar: response.avatar,
+            xp: response.xp,
           })
-        }
-
-        // Load from cache
-        let cacheId = 'summary'
-        if (Cache.has(cacheId)) {
-          let infos = Cache.get(cacheId, false)
-          if (infos) {
-            response(infos)
-          }
-        }
-
-        // Load from API
-        api.members.getInfos(true).then(response)
+        })
       },
       // Load favorites shows from DB
       loadFavorites () {
@@ -170,16 +167,18 @@
         chart.render()
       },
       // On logon => refresh stats and favorites
-      isLogged (logged) {
+      isVerified (logged) {
         if (logged) {
           this.loadStats()
           this.loadFavorites()
+        } else {
+          this.stats = {}
         }
       },
     },
     mounted () {
       console.info('[VUE] Mount Homepage.vue')
-      if (this.isLogged) {
+      if (this.isVerified) {
         this.loadStats()
         this.loadFavorites()
       }
@@ -198,6 +197,11 @@
 <style lang="scss">
   @import "../assets/scss/vars";
   .profil {
+    .loading-stats {
+      text-align: center;
+      font-size: 1.2em;
+      color: $navTitle;
+    }
     h1.text-center {
       color: $txtColor;
     }

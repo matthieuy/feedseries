@@ -367,11 +367,10 @@
        * @param text
        */
       addNotification (text) {
-        let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
         /* eslint-disable no-new */
         new window.Notification(remote.app.getName(), {
           body: text,
-          icon: 'static/icons/icon' + whiteIcon + '.png',
+          icon: localStore.getIconPath(true),
         })
       },
     },
@@ -384,7 +383,8 @@
       whiteicon (value) {
         if (value !== localStore.get(localStore.key.WHITE_ICON, true)) {
           localStore.set(localStore.key.WHITE_ICON, value)
-          ipcRenderer.send('update-tray')
+          ipcRenderer.send('update-icon')
+          console.log('Changement d\'icone', localStore.getIconPath())
         }
       },
       autoload (value) {

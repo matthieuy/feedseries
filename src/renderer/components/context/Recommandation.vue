@@ -1,10 +1,10 @@
 <template>
   <context-menu ref="ctx" @ctx-open="onOpen" @ctx-close="onCtxClose" @ctx-cancel="onCtxClose">
     <li class="ctx-header">Recommandation</li>
-    <li class="ctx-item" v-if="recommendation.to_id === userId" @click="changeStatus('accept')">
+    <li class="ctx-item" v-if="recommendation.to_id === userId && recommendation.status !== 'accept'" @click="changeStatus('accept')">
       <i class="fa fa-thumbs-up"></i> Accepter
     </li>
-    <li class="ctx-item" v-if="recommendation.to_id === userId" @click="changeStatus('decline')">
+    <li class="ctx-item" v-if="recommendation.to_id === userId && recommendation.status === 'wait'" @click="changeStatus('decline')">
       <i class="fa fa-thumbs-down"></i> Refuser
     </li>
     <li class="ctx-item" @click="deleteOne()">

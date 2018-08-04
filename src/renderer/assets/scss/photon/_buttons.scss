@@ -71,6 +71,23 @@
   background-image: linear-gradient(to bottom, #3e9bf4 0%, #0469de 100%);
 }
 
+.btn-warning {
+  border-color: darken($warning-color, 10%);
+  border-bottom-color: darken($warning-color, 15%);
+  background-image: linear-gradient(lighten($warning-color, 10%), darken($warning-color, 10%));
+  &:active {
+    background-image: linear-gradient($warning-color, darken($warning-color, 15%));
+  }
+}
+.btn-positive {
+  border-color: darken($positive-color, 10%);
+  border-bottom-color: darken($positive-color, 15%);
+  background-image: linear-gradient(lighten($positive-color, 10%), darken($positive-color, 10%));
+  &:active {
+    background-image: linear-gradient($positive-color, darken($positive-color, 15%));
+  }
+}
+
 .btn-dropdown:after {
   font-family: "Font Awesome 5 Free";
   font-style: normal;
@@ -137,13 +154,9 @@
   padding: 6px 12px;
 }
 
-
 .btn-nav {
   color: $navActiveColor;
-  border-top-color: $sidebarBorder;
-  border-right-color: $sidebarBorder;
-  border-bottom-color: $sidebarBorder;
-  border-left-color: $sidebarBorder;
+  border-color: $sidebarBorder;
   background-color: $navBtn;
   cursor: pointer;
   //background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fcfcfc), color-stop(100%, #f1f1f1));

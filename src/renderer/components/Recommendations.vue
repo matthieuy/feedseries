@@ -117,12 +117,10 @@
         this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
         this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS).then((recommendations) => {
           if (!this.nbRecommendations) {
-            let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
-            remote.dialog.showMessageBox(remote.getCurrentWindow(), {
-              title: 'Recommandation',
-              icon: 'static/icons/icon' + whiteIcon + '.png',
-              message: 'Pas de nouvelle recommandation',
-              buttons: ['Ok'],
+            /* eslint-disable no-new */
+            new window.Notification(remote.app.getName(), {
+              body: 'Aucune nouvelle notification',
+              icon: localStore.getIconPath(true),
             })
           }
           this.isChecking = false

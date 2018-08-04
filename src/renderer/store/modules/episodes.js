@@ -18,6 +18,7 @@ const types = {
   MUTATIONS: {
     SET_EPISODES: 'episodes.list',
     UPDATE_EPISODE: 'episode.update',
+    SET_FINISH_SHOW: 'episode.finish',
   },
   GETTERS: {
     EPISODES_UNSEEN: 'episodes.unseen',
@@ -27,6 +28,7 @@ const types = {
 
 const state = {
   episodes: [], // Episodes
+  finishShow: false,
 }
 
 const mutations = {
@@ -43,6 +45,9 @@ const mutations = {
     // Not found : add
     state.episodes.push(episode)
     return false
+  },
+  [types.MUTATIONS.SET_FINISH_SHOW] (state, show) {
+    state.finishShow = show
   },
 }
 
@@ -159,7 +164,14 @@ const actions = {
 
     // API
     if (isView) {
-      promises.addPromise(api.episodes.markView(episode))
+      let p = api.episodes.markView(episode).then((ep) => {
+        if (ep.show.status === 'Ended' && ep.show.remaining === 0) {
+          console.log('Série terminée :', ep.show.title)
+          context.commit(types.MUTATIONS.SET_FINISH_SHOW, ep.show)
+        }
+        return Promise.resolve(ep)
+      })
+      promises.addPromise(p)
     } else {
       promises.addPromise(api.episodes.unmarkView(episode))
     }

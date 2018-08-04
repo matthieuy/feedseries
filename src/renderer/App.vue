@@ -21,7 +21,7 @@
             </router-link>
           </div>
 
-          <div class="btn-group">
+          <div class="btn-group" style="z-index: 250;">
             <button class="btn btn-default btn-dropdown dropdown" :class="{disabled: !history.length}">
               <div class="dropdown-content" v-if="history.length">
                 <router-link :to="link.path" class="dropdown-item" v-for="link in history" :key="link.path">{{ link.label }}</router-link>
@@ -91,7 +91,10 @@
       }
     },
     computed: {
-      ...mapState(['history']),
+      ...mapState({
+        history: 'history',
+        finishShow: state => state.episodes.finishShow,
+      }),
       ...mapGetters({
         nbRecommendations: types.recommendations.GETTERS.NB_WAIT,
       }),
@@ -119,17 +122,43 @@
     watch: {
       nbRecommendations (nbRecommendations) {
         console.log('New recommandations : ', nbRecommendations)
-        if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
-          let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
+        if (nbRecommendations) {
+          console.log('notif')
+          // if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
           let notif = new window.Notification(remote.app.getName(), {
             body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
-            icon: 'static/icons/icon' + whiteIcon + '.png',
+            icon: localStore.getIconPath(true),
           })
           notif.onclick = () => {
             this.$router.push({name: 'recommendations'})
           }
         }
         this.recommendationNotif = nbRecommendations
+      },
+      /**
+       * When a show is done
+       * @param {Show} show
+       * @returns {boolean}
+       */
+      finishShow (show) {
+        if (!show) {
+          return false
+        }
+        this.$store.commit(types.episodes.MUTATIONS.SET_FINISH_SHOW, false)
+
+        // Confirm archive
+        remote.dialog.showMessageBox(remote.getCurrentWindow(), {
+          title: 'Archiver une série',
+          buttons: ['Oui', 'Non'],
+          defaultId: 0,
+          message: `C'était le dernier épisode de "${show.title}" !\nVoulez-vous archiver la série maintenant ?`,
+          icon: localStore.getIconPath(true),
+          cancelId: 1,
+        }, (response) => {
+          if (response === 0) {
+            this.$store.dispatch(types.shows.ACTIONS.ARCHIVE, show)
+          }
+        })
       },
     },
     mounted () {

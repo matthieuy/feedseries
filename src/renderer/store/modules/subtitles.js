@@ -123,9 +123,9 @@ let downloadSubtitleFile = (filepath, subtitle) => {
   req.pipe(out)
 
   req.on('end', () => {
-    let notif = new Notification('Sous-titre téléchargé', {
+    let notif = new window.Notification('Sous-titre téléchargé', {
       body: filepath,
-      icon: 'static/icons/icon.png',
+      icon: localStore.getIconPath(true),
     })
     notif.onclick = (event) => {
       event.preventDefault()

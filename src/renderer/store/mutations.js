@@ -12,11 +12,13 @@ const mutations = {
   // Set logged
   [types.LOGIN] (state, token) {
     state.isLogged = true
+    state.isVerified = true
     localStore.set(localStore.key.TOKEN, token)
   },
   // Set not logged
   [types.LOGOUT] (state) {
     state.isLogged = false
+    state.isVerified = false
     localStore.delete(localStore.key.TOKEN)
     localStore.purge()
   },

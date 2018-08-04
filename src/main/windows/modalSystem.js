@@ -17,6 +17,9 @@ export default {
     if (this.windows[name]) {
       return this.windows[name].show()
     }
+    if (!url) {
+      return false
+    }
 
     // Default options
     options = Object.assign({
@@ -28,7 +31,7 @@ export default {
       minimizable: false,
       maximizable: false,
       fullscreenable: false,
-      icon: getIconPath(),
+      icon: localStore.getIconPath(),
       skipTaskbar: true,
       show: false,
       frame: true,
@@ -55,6 +58,7 @@ export default {
     }
 
     win.once('close', () => {
+      console.log('[MODAL] Close ', name)
       this.parent.webContents.send('modal-close', name)
       if (globalShortcut.isRegistered('Escape')) {
         globalShortcut.unregister('Escape')
@@ -65,10 +69,4 @@ export default {
       win.openDevTools()
     }
   },
-}
-
-function getIconPath () {
-  return process.platform === 'win32'
-    ? __static + '/icons/icon.ico'
-    : __static + '/icons/icon.png'
 }

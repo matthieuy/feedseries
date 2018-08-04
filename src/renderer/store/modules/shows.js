@@ -4,6 +4,7 @@ import api from '../../api'
 import ConcurentPromise from '../../tools/ConcurentPromise'
 import { Cache, Show } from '../../db'
 import { types as typesRootAction } from '../actions'
+import localStore from '../local'
 
 const types = {
   MUTATIONS: {
@@ -141,6 +142,13 @@ const actions = {
       context.commit(types.MUTATIONS.ADD, showAdded)
       Cache.invalidateByTags({show: showAdded.id})
       Cache.invalidate('summary')
+
+      /* eslint-disable no-new */
+      new window.Notification('FeedSeries', {
+        body: 'Série ajouté avec succès',
+        icon: localStore.getIconPath(true),
+      })
+
       return Promise.resolve(showAdded)
     })
   },
@@ -156,6 +164,13 @@ const actions = {
       context.commit(types.MUTATIONS.DELETE, showDeleted)
       Cache.invalidateByTags({show: showDeleted.id})
       Cache.invalidate('summary')
+
+      /* eslint-disable no-new */
+      new window.Notification('FeedSeries', {
+        body: 'Série supprimé avec succès',
+        icon: localStore.getIconPath(true),
+      })
+
       return Promise.resolve(showDeleted)
     }).catch((response) => {
       // Already delete

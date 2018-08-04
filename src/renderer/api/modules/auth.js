@@ -80,4 +80,74 @@ export default {
       token: token,
     })
   },
+  /**
+   * Get password by email
+   * @param {String} email login or email
+   * @return {Promise}
+   */
+  lost (email) {
+    console.info('[API] Auth::lost')
+    return Vue.http.post('/members/lost', {
+      find: email,
+    }, {
+      isWithBearer: true,
+      isWithToken: false,
+    }).then((response) => {
+      if (response.status === 200 && response.data.email) {
+        return Promise.resolve()
+      }
+    }).catch((error) => {
+      return Promise.reject(error.data.errors[0].text)
+    })
+  },
+  /**
+   * Signup
+   * @param {String} login
+   * @param {String} email
+   * @param {String} password Clear password
+   * @return {Promise}
+   */
+  signup (login, email, password) {
+    console.info('[API] Auth::signup')
+    return Vue.http.post('/members/signup', {
+      login: login,
+      password: md5(password),
+      email: email,
+    }, {
+      isWithBearer: true,
+      isWithToken: false,
+    }).then((response) => {
+      if (response.status === 200 && response.data.token.length) {
+        return Promise.resolve({
+          id: response.data.user.id,
+          login: response.data.user.login,
+          token: response.data.token,
+        })
+      } else {
+        return Promise.reject(response.data.errors[0])
+      }
+    }).catch((error) => {
+      return Promise.reject(error.data.errors[0])
+    })
+  },
+  /**
+   * Suggest alternative username
+   * @param {String} username
+   * @return {Promise}
+   */
+  suggestUsername (username) {
+    console.info('[API] Auth::suggestUsername')
+    return Vue.http.get('/members/username', {
+      params: {
+        username,
+      },
+    }, {
+      isWithBearer: true,
+      isWithToken: false,
+    }).then((response) => {
+      return Promise.resolve(response.data.usernames)
+    }).catch(() => {
+      return Promise.resolve([])
+    })
+  },
 }

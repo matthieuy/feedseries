@@ -17,6 +17,12 @@
                     <button class="btn btn-large btn-primary" @click="connect()" :class="{ disabled: !isFormValid }" :disabled="!isFormValid">
                         <i :class="{'fa fa-spin fa-spinner fa-pull-left': isLoading}"></i> Se connecter
                     </button>
+                    <button class="btn btn-large btn-positive" @click="signup()">
+                        Inscription
+                    </button>
+                    <button class="btn btn-large btn-warning" @click="forgot()">
+                        Mot de passe oublié
+                    </button>
                 </div>
             </form>
         </div>
@@ -28,6 +34,10 @@
     import { remote } from 'electron'
 
     import { types, localStore } from '../store'
+    import ModalRenderer from '../tools/ModalRenderer'
+
+    let modalForgot
+    let modalSignup
 
     export default {
       data () {
@@ -46,6 +56,10 @@
         },
       },
       methods: {
+        /**
+         * Connect
+         * @returns {boolean}
+         */
         connect () {
           if (!this.isFormValid) {
             return false
@@ -64,10 +78,76 @@
           }).catch((error) => { // NOK
             this.isLoading = false
             console.log(error)
-            remote.diaconsole.showErrorBox(remote.app.getName(), error.text)
+            remote.dialog.showErrorBox(remote.app.getName(), error.text)
             this.password = ''
             document.getElementById('password').focus()
           })
+        },
+        /**
+         * Forgot password
+         */
+        forgot () {
+          // Create modal IPC
+          if (!modalForgot) {
+            modalForgot = new ModalRenderer('forgot')
+            modalForgot
+              .on('notif', (txt) => {
+                this.addNotification(txt)
+              })
+              .on('login', (login) => {
+                this.login = login
+                document.getElementById('password').focus()
+                this.addNotification('E-mail envoyé avec succès !')
+              })
+          }
+
+          // Open modal
+          modalForgot.openModal('/forgot', {
+            title: 'FeedSeries',
+            width: 450,
+            height: 230,
+          })
+        },
+        /**
+         * Signup
+         */
+        signup () {
+          // Create modal
+          if (!modalSignup) {
+            modalSignup = new ModalRenderer('signup')
+            modalSignup.on('signup', (payload) => {
+              localStore.set(localStore.key.LOGIN, payload.login)
+              localStore.set(localStore.key.ID_USER, payload.id)
+              this.$store.commit(types.MUTATIONS.LOGIN, payload.token)
+              this.$store.dispatch(types.ACTIONS.ON_LOGIN).then(() => {})
+              this.addNotification(`Vous êtes maintenant inscrit avec l'identifiant "${payload.login}"`)
+            })
+          }
+
+          // Open modal
+          modalSignup.openModal('/signup', {
+            title: 'FeedSeries',
+            width: 450,
+            height: 380,
+          })
+        },
+        /**
+         * Add a notification
+         * @param {String} txt
+         */
+        addNotification (txt) {
+          /* eslint-disable no-new */
+          new window.Notification('FeedSeries', {
+            body: txt,
+            icon: localStore.getIconPath(true),
+          })
+        },
+      },
+      watch: {
+        isLogged (value) {
+          if (!value && this.$route.name !== 'homepage') {
+            this.$router.push({name: 'homepage'})
+          }
         },
       },
       mounted () {

@@ -3,7 +3,7 @@
     <div class="drag"></div>
     <div class="close" @click="close()">&times;</div>
     <div class="header">
-      <img src="static/icons/icon-b.png" width="128" height="128">
+      <img :src="iconSrc" width="128" height="128">
       <div>FeedSeries v{{ version }}</div>
     </div>
     <div class="credits">
@@ -28,12 +28,19 @@
 
 <script>
   import { shell, remote } from 'electron'
+  import localStore from '../../store/local'
 
   export default {
     data () {
       return {
         version: remote.app.getVersion(),
+        whiteIcon: localStore.get(localStore.key.WHITE_ICON, true),
       }
+    },
+    computed: {
+      iconSrc () {
+        return (localStore.get(localStore.key.WHITE_ICON, true)) ? 'static/icons/icon-w.png' : 'static/icons/icon-b.png'
+      },
     },
     methods: {
       openLink (url) {

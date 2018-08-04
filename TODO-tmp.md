@@ -1,25 +1,18 @@
 This is a temporary TODO file need to be reorganize
 
-- [ ] isLogged => isVerified
-- [ ] Options :
-  - [ ] Resync
-  - [ ] Save on exit page
-- [ ] Notifications :
-  - [ ] Fix problem with W10 1709
-- [ ] Subscribe
-- [ ] Planning
-- [ ] Connexion with modal
+- [ ] Archive old youtube show
+- [ ] Account :
+  - [ ] Change password
+  - [ ] Change email
+  - [ ] Delete account
+- [ ] Membre notification
+- [ ] Mark season as watched
+- [ ] Tags
 - [ ] Show page :
+  - [ ] Videos
   - [ ] Comments :
     - [ ] Post a comment
     - [ ] Post a reply
-- [ ] Episode page :
-  - [ ] Display
-  - [ ] Spoiler
-  - [ ] Comments
-  - [ ] Mark DL / view
-  - [ ] Subtitles
-  - [ ] Seen by...
 - [ ] DropWindow :
   - [ ] Create and detect where is systray
   - [ ] Catch drop file

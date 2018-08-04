@@ -1,4 +1,4 @@
-import { app, dialog, ipcMain } from 'electron'
+import { app, dialog, ipcMain, Notification } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 
@@ -61,6 +61,18 @@ class Updater {
       })
     }
 
+    // First check after update
+    if (localStore.get(localStore.key.UPDATE.FIRST_RUN, false)) {
+      /* eslint-disable no-new */
+      let notif = new Notification({
+        title: app.getName(),
+        body: 'Vous utilisez maintenant la version v' + app.getVersion(),
+        icon: localStore.getIconPath(true),
+      })
+      notif.show()
+      localStore.set(localStore.key.UPDATE.FIRST_RUN, false)
+    }
+
     this._init = true
     return this
   }
@@ -92,8 +104,15 @@ class Updater {
    * @param {Object} infos
    */
   available = (infos) => {
-    log.info('[UPDATE] Available :', infos)
+    log.info('[UPDATE] Available :', infos.version)
     localStore.set(localStore.key.UPDATE.NOTE, infos.releaseNotes)
+
+    let notif = new Notification({
+      title: app.getName(),
+      body: 'Mise à jour disponible : v' + infos.version,
+      icon: localStore.getIconPath(true),
+    })
+    notif.show()
 
     modalSystem.open('update', '/update', {
       title: 'Mises à jour',
@@ -115,7 +134,7 @@ class Updater {
         type: 'info',
         buttons: ['OK'],
         title: 'Mise à jour',
-        message: 'FeedSeries est à jour',
+        message: 'FeedSeries est à jour : ' + infos.releaseName,
       })
     }
   }
@@ -134,6 +153,7 @@ class Updater {
     }
 
     if (process.env.NODE_ENV !== 'development') {
+      localStore.set(localStore.key.UPDATE.FIRST_RUN, true)
       app.isQuiting = true
       autoUpdater.quitAndInstall()
     }

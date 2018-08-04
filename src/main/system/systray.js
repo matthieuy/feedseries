@@ -41,8 +41,9 @@ export default {
    */
   init (mainWindow) {
     if (this.tray === null) {
+      let localStore = require('../../renderer/store/local').default
       this.mainWindow = mainWindow
-      this.tray = new Tray(this.getIconPath())
+      this.tray = new Tray(localStore.getIconPath())
       this.contextMenu = Menu.buildFromTemplate(template)
       this.tray.setToolTip(app.getName())
 
@@ -51,8 +52,9 @@ export default {
         this.mainWindow.show()
       })
 
-      ipcMain.on('update-tray', () => {
-        this.tray.setImage(this.getIconPath())
+      ipcMain.on('update-icon', () => {
+        console.log('Update tray', localStore.getIconPath())
+        this.tray.setImage(localStore.getIconPath())
         this.update()
       })
     }
@@ -73,14 +75,5 @@ export default {
    */
   update () {
     this.tray.setContextMenu(this.contextMenu)
-  },
-  /**
-   * Get the systray icon path
-   * @returns {string}
-   */
-  getIconPath () {
-    let localStore = require('../../renderer/store/local').default
-    let whiteIcon = (localStore.get(localStore.key.WHITE_ICON, true)) ? '-w' : '-b'
-    return `${__static}/icons/128x128${whiteIcon}.png`
   },
 }

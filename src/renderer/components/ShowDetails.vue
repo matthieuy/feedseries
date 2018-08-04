@@ -101,7 +101,8 @@
 
 <script>
   import { mapState } from 'vuex'
-  import { remote, ipcRenderer } from 'electron'
+  import { remote } from 'electron'
+  import ModalRenderer from '../tools/ModalRenderer'
 
   import { types } from '../store'
   import { Link } from '../db'
@@ -128,45 +129,32 @@
     },
     methods: {
       openLinkManager () {
-        // Open modal
-        ipcRenderer.send('open-modal', 'links', `/show/${this.show._id}/links`, {
+        let modal = new ModalRenderer('links')
+        modal.openModal(`/show/${this.show._id}/links`, {
           title: this.show.title + ' - Liens',
           width: 450,
           height: 550,
         })
 
-        // When close modal => remove IPC listener
-        ipcRenderer.once('modal-close', (event, modalName) => {
-          if (modalName === 'links') {
-            ipcRenderer.removeAllListeners('links-modal')
-          }
-        })
+        // Response : send links list to modal
+        let responseIPC = () => {
+          Link.getLinks(this.show._id).then((links) => {
+            modal.sendToModal('complete-list', links)
+            this.links = links
+          })
+        }
 
-        // Receive data from modal
-        ipcRenderer.on('links-modal', (event, payload) => {
-          console.log('[IPC Parent] Receive', payload)
-
-          // Response : send links list to modal
-          let responseIPC = () => {
-            Link.getLinks(this.show._id).then((links) => {
-              console.log('[IPC Parent] Send', links)
-              let modalContent = remote.getCurrentWindow().getChildWindows()[0].webContents
-              modalContent.send('links-parent', links)
-              this.links = links
-            })
-          }
-
-          switch (payload.action) {
-            case 'add':
-              return Link.create(payload.link).save().then(responseIPC)
-            case 'edit':
-              return Link.updateOrCreate(payload.link).then(responseIPC)
-            case 'delete':
-              return Link.deleteOne({ _id: payload.link._id }).then(responseIPC)
-            case 'list':
-              return responseIPC()
-          }
-        })
+        modal
+          .on('ask-list', responseIPC)
+          .on('add', (links) => {
+            Link.create(links).save().then(responseIPC)
+          })
+          .on('edit', (link) => {
+            Link.updateOrCreate(link).then(responseIPC)
+          })
+          .on('delete', (link) => {
+            Link.deleteOne({ _id: link._id }).then(responseIPC)
+          })
       },
       /**
        * (un)archive a show

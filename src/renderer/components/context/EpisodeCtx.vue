@@ -128,8 +128,6 @@
        */
       onCtxClose (episode) {
         window.removeEventListener('keydown', this.escapeListener)
-        // let self = this
-        // self.$emit('ctx-episode-close', self.episode)
       },
       /**
        * When press Escape key

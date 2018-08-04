@@ -7,7 +7,7 @@
         Amis ({{ selected.length|plurialize('sélectionné', 'sélectionnés') }})
       </legend>
       <div class="friendslist">
-        <span class="friend" v-for="friend in friends" @click="clickFriend(friend.id)" :class="{selected: isSelected(friend.id)}">{{ friend.login }}</span>
+        <span class="friend" v-for="friend in friends" @click="clickFriend(friend)" :class="{selected: isSelected(friend)}">{{ friend.login }}</span>
       </div>
     </fieldset>
 
@@ -30,7 +30,7 @@
   import { mapState } from 'vuex'
 
   import api from '../../api'
-  import { types } from '../../store'
+  import { types, localStore } from '../../store'
 
   export default {
     data () {
@@ -50,31 +50,38 @@
        * Send suggests
        */
       send () {
-        this.selected.forEach((friendId, i) => {
-          api.recommendations.create(this.show, friendId, this.comment)
+        this.selected.forEach((friend, i) => {
+          api.recommendations.create(this.show, friend.id, this.comment)
+            .then(() => {
+              /* eslint-disable no-new */
+              new window.Notification('FeedSeries', {
+                body: `Recommandation envoyée à ${friend.login}`,
+                icon: localStore.getIconPath(true),
+              })
+            })
             .catch((e) => {
               alert(e.message)
-              this.selected.push(friendId)
+              this.selected.push(friend)
             })
         })
         this.selected = []
         this.comment = ''
-        this.$store.dispatch(types.recommendation.ACTIONS.LOAD_RECOMMENDATIONS)
+        this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS)
       },
       /**
        * Clic on a friend name
-       * @param {Int} id
+       * @param {Object} friend
        */
-      clickFriend (id) {
-        let index = this.selected.findIndex((a) => a === id)
+      clickFriend (friend) {
+        let index = this.selected.findIndex((a) => a.id === friend.id)
         if (index < 0) {
-          this.selected.push(id)
+          this.selected.push(friend)
         } else {
           this.selected.splice(index, 1)
         }
       },
-      isSelected (id) {
-        return this.selected.findIndex((a) => a === id) >= 0
+      isSelected (friend) {
+        return this.selected.findIndex((a) => a.id === friend.id) >= 0
       },
       /**
        * Get friend list
