@@ -58,6 +58,7 @@ export default {
     }
 
     win.once('close', () => {
+      console.log('[MODAL] Close ', name)
       this.parent.webContents.send('modal-close', name)
       if (globalShortcut.isRegistered('Escape')) {
         globalShortcut.unregister('Escape')

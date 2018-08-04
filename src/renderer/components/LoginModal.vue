@@ -17,6 +17,9 @@
                     <button class="btn btn-large btn-primary" @click="connect()" :class="{ disabled: !isFormValid }" :disabled="!isFormValid">
                         <i :class="{'fa fa-spin fa-spinner fa-pull-left': isLoading}"></i> Se connecter
                     </button>
+                    <button class="btn btn-large btn-warning" @click="forgot()">
+                        Mot de passe oublié
+                    </button>
                 </div>
             </form>
         </div>
@@ -25,7 +28,7 @@
 
 <script>
     import { mapState } from 'vuex'
-    import { remote } from 'electron'
+    import { remote, ipcRenderer } from 'electron'
 
     import { types, localStore } from '../store'
 
@@ -46,6 +49,10 @@
         },
       },
       methods: {
+        /**
+         * Connect
+         * @returns {boolean}
+         */
         connect () {
           if (!this.isFormValid) {
             return false
@@ -67,6 +74,46 @@
             remote.diaconsole.showErrorBox(remote.app.getName(), error.text)
             this.password = ''
             document.getElementById('password').focus()
+          })
+        },
+        forgot () {
+          // Open modal
+          ipcRenderer.send('open-modal', 'forgot', `/forgot`, {
+            title: 'FeedSeries',
+            width: 450,
+            height: 230,
+            resizable: true,
+          })
+
+          // When close modal => remove IPC listener
+          ipcRenderer.once('modal-close', (event, modalName) => {
+            if (modalName === 'forgot') {
+              ipcRenderer.removeAllListeners('forgot-modal')
+            }
+          })
+
+          // Receive data from modal
+          ipcRenderer.on('forgot-modal', (event, payload) => {
+            console.log('[IPC Parent] Receive', payload)
+            let txtNotif
+            switch (payload.action) {
+              case 'notif':
+                txtNotif = payload.error
+                break
+              case 'login':
+                this.login = payload.login
+                document.getElementById('password').focus()
+                txtNotif = 'E-mail envoyé avec succès !'
+                break
+              default:
+                return false
+            }
+
+            /* eslint-disable no-new */
+            new window.Notification('FeedSeries', {
+              body: txtNotif,
+              icon: localStore.getIconPath(true),
+            })
           })
         },
       },

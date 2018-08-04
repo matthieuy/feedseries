@@ -23,6 +23,12 @@ const router = new Router({
       path: '/update',
       component: require('@/components/modal/Update').default,
     },
+    // Forgot password
+    {
+      name: 'forgot',
+      path: '/forgot',
+      component: require('@/components/modal/Forgot').default,
+    },
     {
       path: '*',
       redirect: '/about',

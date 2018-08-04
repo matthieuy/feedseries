@@ -17,7 +17,8 @@
           <div class="fleft col60">
             <div class="binfo">
               <div id="showChart">
-                <div v-if="!stats.id" class="loading-stats">Chargement du profil en cours...</div>
+                <div v-if="!stats.id && isLogged" class="loading-stats">Chargement du profil en cours...</div>
+                <div v-if="!isLogged" class="loading-stats">Veuillez vous connecter</div>
               </div>
               <div class="clearfix"></div>
             </div>

@@ -80,4 +80,22 @@ export default {
       token: token,
     })
   },
+  /**
+   * Get password by email
+   * @param {String} email login or email
+   */
+  lost (email) {
+    return Vue.http.post('/members/lost', {
+      find: email,
+    }, {
+      isWithBearer: true,
+      isWithToken: false,
+    }).then((response) => {
+      if (response.status === 200 && response.data.email) {
+        return Promise.resolve()
+      }
+    }).catch((error) => {
+      return Promise.reject(error.data.errors[0].text)
+    })
+  },
 }

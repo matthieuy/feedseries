@@ -1,4 +1,4 @@
-.login-modal {
+.login-modal,.forgot {
   position: absolute;
   width: 90%;
   right: 5%;
@@ -14,7 +14,14 @@
   form {
     padding: 0 20px 20px 20px;
   }
+  label {
+    margin-bottom: 0;
+  }
+  .form-group {
+    margin-bottom: 15px;
+  }
   .buttons {
+    margin-top: 10px;
     text-align: center;
   }
   .btn {

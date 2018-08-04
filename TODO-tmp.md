@@ -2,7 +2,6 @@ This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
 - [ ] Subscribe
-- [ ] Connexion with modal
 - [ ] Show page :
   - [ ] Comments :
     - [ ] Post a comment
