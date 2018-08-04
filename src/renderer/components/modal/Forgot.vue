@@ -3,7 +3,7 @@
     <div class="forgot">
       <h1>Mot de passe oublié</h1>
       <form onsubmit="return false;">
-        <div class="form-group has-error">
+        <div class="form-group">
           <label for="email">Adresse mail :</label>
           <input id="email" class="form-control" placeholder="Adresse mail ou identifiant" v-model="email" autofocus>
         </div>
@@ -58,11 +58,6 @@
           document.getElementById('email').focus()
           this.isLoading = false
         })
-      },
-    },
-    watch: {
-      email (value) {
-        this.error = ''
       },
     },
     mounted () {

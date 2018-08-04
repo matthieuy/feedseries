@@ -29,6 +29,12 @@ const router = new Router({
       path: '/forgot',
       component: require('@/components/modal/Forgot').default,
     },
+    // Sign up
+    {
+      name: 'signup',
+      path: '/signup',
+      component: require('@/components/modal/SignUp').default,
+    },
     {
       path: '*',
       redirect: '/about',

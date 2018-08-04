@@ -171,6 +171,8 @@
         if (logged) {
           this.loadStats()
           this.loadFavorites()
+        } else {
+          this.stats = {}
         }
       },
     },

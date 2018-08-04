@@ -17,6 +17,9 @@
                     <button class="btn btn-large btn-primary" @click="connect()" :class="{ disabled: !isFormValid }" :disabled="!isFormValid">
                         <i :class="{'fa fa-spin fa-spinner fa-pull-left': isLoading}"></i> Se connecter
                     </button>
+                    <button class="btn btn-large btn-positive" @click="signup()">
+                        Inscription
+                    </button>
                     <button class="btn btn-large btn-warning" @click="forgot()">
                         Mot de passe oublié
                     </button>
@@ -76,6 +79,9 @@
             document.getElementById('password').focus()
           })
         },
+        /**
+         * Forgot password
+         */
         forgot () {
           // Open modal
           ipcRenderer.send('open-modal', 'forgot', `/forgot`, {
@@ -112,6 +118,38 @@
             /* eslint-disable no-new */
             new window.Notification('FeedSeries', {
               body: txtNotif,
+              icon: localStore.getIconPath(true),
+            })
+          })
+        },
+        /**
+         * Signup
+         */
+        signup () {
+          // Open modal
+          ipcRenderer.send('open-modal', 'signup', `/signup`, {
+            title: 'FeedSeries',
+            width: 450,
+            height: 380,
+            resizable: true,
+          })
+          // When close modal => remove IPC listener
+          ipcRenderer.once('modal-close', (event, modalName) => {
+            if (modalName === 'signup') {
+              ipcRenderer.removeAllListeners('signup-modal')
+            }
+          })
+
+          // Receive data from modal
+          ipcRenderer.on('signup-modal', (event, payload) => {
+            console.log('[IPC Parent] Receive', payload)
+            localStore.set(localStore.key.LOGIN, payload.login)
+            localStore.set(localStore.key.ID_USER, payload.id)
+            this.$store.commit(types.MUTATIONS.LOGIN, payload.token)
+            this.$store.dispatch(types.ACTIONS.ON_LOGIN).then(() => {})
+            /* eslint-disable no-new */
+            new window.Notification('FeedSeries', {
+              body: `Vous êtes maintenant inscrit avec l'identifiant "${payload.login}"`,
               icon: localStore.getIconPath(true),
             })
           })
