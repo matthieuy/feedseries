@@ -1,8 +1,6 @@
 This is a temporary TODO file need to be reorganize
 
 - [ ] isLogged => isVerified
-- [ ] Notifications :
-  - [ ] Fix problem with W10 1709
 - [ ] Subscribe
 - [ ] Connexion with modal
 - [ ] Show page :

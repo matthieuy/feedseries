@@ -26,15 +26,18 @@
             color: #919191;
         }
     </style>
-    <script>
-    window.ondragstart = () => { return false }
-    </script>
 </head>
 <body>
 <div>
-    <img src="icons/icon-b.png">
+    <img id="logo" src="icons/icon-w.png">
     <div class="title">FeedSeries</div>
     <div class="loading">Chargement en cours...</div>
 </div>
+<script>
+  window.ondragstart = () => { return false }
+  if (location.hash.indexOf('white') === -1) {
+    document.getElementById('logo').src = 'icons/icon-b.png'
+  }
+</script>
 </body>
 </html>

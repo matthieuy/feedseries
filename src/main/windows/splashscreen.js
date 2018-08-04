@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
+import localStore from '../../renderer/store/local'
 
 export default {
   win: null,
@@ -12,6 +13,9 @@ export default {
       this.url = 'http://localhost:9080/static/splash.html'
     } else {
       this.url = `file://${global.__static}/splash.html`
+    }
+    if (localStore.get(localStore.key.WHITE_ICON, true)) {
+      this.url += '#white'
     }
 
     // Create
@@ -41,7 +45,7 @@ export default {
       backgroundColor: '#36393E',
       movable: false,
       skipTaskbar: true,
-      icon: getIconPath(),
+      icon: localStore.getIconPath(),
       alwaysOnTop: true,
       show: false,
       minimizable: false,
@@ -58,10 +62,4 @@ export default {
 
     return this
   },
-}
-
-function getIconPath () {
-  return process.platform === 'win32'
-    ? __static + '/icons/icon.ico'
-    : __static + '/icons/icon.png'
 }
