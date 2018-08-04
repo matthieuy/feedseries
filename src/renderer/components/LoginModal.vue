@@ -117,6 +117,13 @@
           })
         },
       },
+      watch: {
+        isLogged (value) {
+          if (!value && this.$route.name !== 'homepage') {
+            this.$router.push({name: 'homepage'})
+          }
+        },
+      },
       mounted () {
         console.info('[VUE] Mount LoginModal.vue')
       },

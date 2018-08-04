@@ -17,8 +17,8 @@
           <div class="fleft col60">
             <div class="binfo">
               <div id="showChart">
-                <div v-if="!stats.id && isLogged" class="loading-stats">Chargement du profil en cours...</div>
-                <div v-if="!isLogged" class="loading-stats">Veuillez vous connecter</div>
+                <div v-if="!stats.id && isVerified" class="loading-stats">Chargement du profil en cours...</div>
+                <div v-if="!isVerified" class="loading-stats">Veuillez vous connecter</div>
               </div>
               <div class="clearfix"></div>
             </div>
@@ -90,7 +90,7 @@
       }
     },
     computed: {
-      ...mapState(['isLogged']),
+      ...mapState(['isVerified']),
     },
     methods: {
       // Load member stats
@@ -167,7 +167,7 @@
         chart.render()
       },
       // On logon => refresh stats and favorites
-      isLogged (logged) {
+      isVerified (logged) {
         if (logged) {
           this.loadStats()
           this.loadFavorites()
@@ -176,7 +176,7 @@
     },
     mounted () {
       console.info('[VUE] Mount Homepage.vue')
-      if (this.isLogged) {
+      if (this.isVerified) {
         this.loadStats()
         this.loadFavorites()
       }

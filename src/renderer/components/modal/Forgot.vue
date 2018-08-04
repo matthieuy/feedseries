@@ -43,13 +43,12 @@
         let webContents = remote.getCurrentWindow().getParentWindow().webContents
 
         api.auth.lost(this.email).then((response) => {
-          console.log('response', response)
           this.isLoading = false
           webContents.send('forgot-modal', {
             action: 'login',
             login: this.email,
           })
-          // remote.getCurrentWindow().close()
+          remote.getCurrentWindow().close()
         }).catch((error) => {
           webContents.send('forgot-modal', {
             action: 'notif',
