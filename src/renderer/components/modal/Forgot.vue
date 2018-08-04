@@ -21,6 +21,9 @@
 <script>
   import { remote } from 'electron'
   import api from '../../api'
+  import ModalRenderer from '../../tools/ModalRenderer'
+
+  let modal = new ModalRenderer('forgot')
 
   export default {
     data () {
@@ -40,20 +43,13 @@
           return false
         }
         this.isLoading = true
-        let webContents = remote.getCurrentWindow().getParentWindow().webContents
 
-        api.auth.lost(this.email).then((response) => {
+        api.auth.lost(this.email).then(() => {
           this.isLoading = false
-          webContents.send('forgot-modal', {
-            action: 'login',
-            login: this.email,
-          })
+          modal.sendToParent('login', this.email)
           remote.getCurrentWindow().close()
         }).catch((error) => {
-          webContents.send('forgot-modal', {
-            action: 'notif',
-            error,
-          })
+          modal.sendToParent('notif', error)
           this.email = ''
           document.getElementById('email').focus()
           this.isLoading = false

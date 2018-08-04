@@ -37,8 +37,10 @@
 </template>
 
 <script>
-  import { remote, ipcRenderer } from 'electron'
   import { Show, Link } from '../../db'
+  import ModalRenderer from '../../tools/ModalRenderer'
+
+  let modal
 
   export default {
     data () {
@@ -139,13 +141,8 @@
        * @param {Link} link
        */
       sendLinkActionToParent (action, link) {
-        let webContents = remote.getCurrentWindow().getParentWindow().webContents
-        let payload = {
-          action: action,
-          link: (link) ? link.toJSON() : null,
-        }
-        console.log('[IPC Modal] Send', payload)
-        webContents.send('links-modal', payload)
+        link = (link) ? link.toJSON() : null
+        modal.sendToParent(action, link)
       },
     },
     mounted () {
@@ -156,19 +153,16 @@
         this.show = show
       })
 
-      // Get links list
-      this.sendLinkActionToParent('list')
-
       // Receive links list from parent window
-      ipcRenderer.on('links-parent', (event, links) => {
-        console.log('[IPC Modal] Receive', links)
+      modal = new ModalRenderer('links')
+      modal.on('complete-list', (links) => {
         this.links = []
         links.forEach((a) => {
           delete a._schema
           this.links.push(Link.create(a))
         })
         this.reset()
-      })
+      }).sendToParent('ask-list')
     },
   }
 </script>

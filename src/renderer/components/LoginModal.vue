@@ -31,9 +31,13 @@
 
 <script>
     import { mapState } from 'vuex'
-    import { remote, ipcRenderer } from 'electron'
+    import { remote } from 'electron'
 
     import { types, localStore } from '../store'
+    import ModalRenderer from '../tools/ModalRenderer'
+
+    let modalForgot
+    let modalSignup
 
     export default {
       data () {
@@ -74,7 +78,7 @@
           }).catch((error) => { // NOK
             this.isLoading = false
             console.log(error)
-            remote.diaconsole.showErrorBox(remote.app.getName(), error.text)
+            remote.dialog.showErrorBox(remote.app.getName(), error.text)
             this.password = ''
             document.getElementById('password').focus()
           })
@@ -83,75 +87,59 @@
          * Forgot password
          */
         forgot () {
+          // Create modal IPC
+          if (!modalForgot) {
+            modalForgot = new ModalRenderer('forgot')
+            modalForgot
+              .on('notif', (txt) => {
+                this.addNotification(txt)
+              })
+              .on('login', (login) => {
+                this.login = login
+                document.getElementById('password').focus()
+                this.addNotification('E-mail envoyé avec succès !')
+              })
+          }
+
           // Open modal
-          ipcRenderer.send('open-modal', 'forgot', `/forgot`, {
+          modalForgot.openModal('/forgot', {
             title: 'FeedSeries',
             width: 450,
             height: 230,
-            resizable: true,
-          })
-
-          // When close modal => remove IPC listener
-          ipcRenderer.once('modal-close', (event, modalName) => {
-            if (modalName === 'forgot') {
-              ipcRenderer.removeAllListeners('forgot-modal')
-            }
-          })
-
-          // Receive data from modal
-          ipcRenderer.on('forgot-modal', (event, payload) => {
-            console.log('[IPC Parent] Receive', payload)
-            let txtNotif
-            switch (payload.action) {
-              case 'notif':
-                txtNotif = payload.error
-                break
-              case 'login':
-                this.login = payload.login
-                document.getElementById('password').focus()
-                txtNotif = 'E-mail envoyé avec succès !'
-                break
-              default:
-                return false
-            }
-
-            /* eslint-disable no-new */
-            new window.Notification('FeedSeries', {
-              body: txtNotif,
-              icon: localStore.getIconPath(true),
-            })
           })
         },
         /**
          * Signup
          */
         signup () {
+          // Create modal
+          if (!modalSignup) {
+            modalSignup = new ModalRenderer('signup')
+            modalSignup.on('signup', (payload) => {
+              localStore.set(localStore.key.LOGIN, payload.login)
+              localStore.set(localStore.key.ID_USER, payload.id)
+              this.$store.commit(types.MUTATIONS.LOGIN, payload.token)
+              this.$store.dispatch(types.ACTIONS.ON_LOGIN).then(() => {})
+              this.addNotification(`Vous êtes maintenant inscrit avec l'identifiant "${payload.login}"`)
+            })
+          }
+
           // Open modal
-          ipcRenderer.send('open-modal', 'signup', `/signup`, {
+          modalSignup.openModal('/signup', {
             title: 'FeedSeries',
             width: 450,
             height: 380,
-            resizable: true,
           })
-          // When close modal => remove IPC listener
-          ipcRenderer.once('modal-close', (event, modalName) => {
-            if (modalName === 'signup') {
-              ipcRenderer.removeAllListeners('signup-modal')
-            }
-          })
-
-          // Receive data from modal
-          ipcRenderer.on('signup-modal', (event, payload) => {
-            console.log('[IPC Parent] Receive', payload)
-            localStore.set(localStore.key.LOGIN, payload.login)
-            localStore.set(localStore.key.ID_USER, payload.id)
-            this.$store.commit(types.MUTATIONS.LOGIN, payload.token)
-            this.$store.dispatch(types.ACTIONS.ON_LOGIN).then(() => {})
-            /* eslint-disable no-new */
-            new window.Notification('FeedSeries', {
-              body: `Vous êtes maintenant inscrit avec l'identifiant "${payload.login}"`,
-              icon: localStore.getIconPath(true),
-            })
+        },
+        /**
+         * Add a notification
+         * @param {String} txt
+         */
+        addNotification (txt) {
+          /* eslint-disable no-new */
+          new window.Notification('FeedSeries', {
+            body: txt,
+            icon: localStore.getIconPath(true),
           })
         },
       },

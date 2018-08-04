@@ -1,6 +1,5 @@
 This is a temporary TODO file need to be reorganize
 
-- [ ] Rewrite IPC modal windows
 - [ ] Archive old youtube show
 - [ ] Account :
   - [ ] Change password

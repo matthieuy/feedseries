@@ -31,13 +31,16 @@
   import { remote } from 'electron'
   import api from '../../api'
   import { localStore } from '../../store'
+  import ModalRenderer from '../../tools/ModalRenderer'
+
+  let modal
 
   export default {
     data () {
       return {
-        password: 'azerty',
-        login: 'obi_one',
-        email: 'obi_one@yopmail.com',
+        password: '',
+        login: '',
+        email: '',
         suggestLogin: [],
         isLoading: false,
       }
@@ -56,8 +59,7 @@
         this.isLoading = true
         api.auth.signup(this.login, this.email, this.password).then((response) => {
           this.isLoading = false
-          let webContents = remote.getCurrentWindow().getParentWindow().webContents
-          webContents.send('signup-modal', response)
+          modal.sendToParent('signup', response)
           remote.getCurrentWindow().close()
         }).catch((error) => {
           if (error.code === 4004) {
@@ -82,6 +84,7 @@
     },
     mounted () {
       console.info('[VUE] Mount Modal/Signup.vue')
+      modal = new ModalRenderer('signup')
     },
   }
 </script>
