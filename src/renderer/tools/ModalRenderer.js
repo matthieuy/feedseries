@@ -6,6 +6,7 @@ class ModalRenderer {
     this.closeListener = []
     this.onData = {}
 
+    ipcRenderer.removeAllListeners(this.name + '-modal')
     ipcRenderer.on(this.name + '-modal', (event, payload) => {
       console.log('[IPC] Receive', payload)
 
