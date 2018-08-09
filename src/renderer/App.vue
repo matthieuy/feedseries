@@ -153,7 +153,7 @@
           buttons: ['Oui', 'Non'],
           defaultId: 0,
           message: txt + `\nVoulez-vous archiver la série maintenant ?`,
-          icon: localStore.getIconPath(true),
+          type: 'question',
           cancelId: 1,
         }, (response) => {
           if (response === 0) {
