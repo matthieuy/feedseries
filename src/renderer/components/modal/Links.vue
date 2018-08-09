@@ -19,12 +19,12 @@
 
     <fieldset>
       <div class="form-group">
-        <label for="name">Nom :</label>
-        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" v-on:keyup.enter="enterKey()" required maxlength="20" autofocus />
+        <label>Adresse :</label>
+        <input id="url" type="url" class="form-control" placeholder="https://..." v-model="url" v-on:keyup.enter="enterKey()" autofocus required/>
       </div>
       <div class="form-group">
-        <label>Adresse :</label>
-        <input id="url" type="url" class="form-control" placeholder="https://..." v-model="url" v-on:keyup.enter="enterKey()" required/>
+        <label for="name">Nom :</label>
+        <input id="name" type="text" class="form-control" placeholder="Titre" v-model="name" v-on:keyup.enter="enterKey()" required maxlength="20" />
       </div>
 
       <div class="form-actions text-center">
@@ -143,6 +143,17 @@
       sendLinkActionToParent (action, link) {
         link = (link) ? link.toJSON() : null
         modal.sendToParent(action, link)
+      },
+    },
+    watch: {
+      url (value) {
+        if (value.length && !this.name.length) {
+          let regex = new RegExp(/https?:\/\/(\D*)\//i)
+          let match = regex.exec(value)
+          if (match.length === 2) {
+            this.name = match[1]
+          }
+        }
       },
     },
     mounted () {

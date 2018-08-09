@@ -23,7 +23,7 @@
   import api from '../../api'
   import ModalRenderer from '../../tools/ModalRenderer'
 
-  let modal = new ModalRenderer('forgot')
+  let modal
 
   export default {
     data () {
@@ -58,6 +58,7 @@
     },
     mounted () {
       console.info('[VUE] Mount Modal/Forgot.vue')
+      modal = new ModalRenderer('forgot')
     },
   }
 </script>

@@ -147,11 +147,12 @@
         this.$store.commit(types.episodes.MUTATIONS.SET_FINISH_SHOW, false)
 
         // Confirm archive
+        let txt = (show.status === 'Ended') ? `C'était le dernier épisode de la saison de "${show.title}" !` : `C'était l'épisode final de "${show.title}" !`
         remote.dialog.showMessageBox(remote.getCurrentWindow(), {
           title: 'Archiver une série',
           buttons: ['Oui', 'Non'],
           defaultId: 0,
-          message: `C'était le dernier épisode de "${show.title}" !\nVoulez-vous archiver la série maintenant ?`,
+          message: txt + `\nVoulez-vous archiver la série maintenant ?`,
           icon: localStore.getIconPath(true),
           cancelId: 1,
         }, (response) => {

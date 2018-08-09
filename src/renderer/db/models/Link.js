@@ -40,7 +40,7 @@ class Link extends Document {
    * @return {String}
    */
   get icon () {
-    return this.base + '/favicon.ico'
+    return 'https://favicons.githubusercontent.com/' + this.base.replace(/^https?:\/\//gi, '')
   }
 
   /**
