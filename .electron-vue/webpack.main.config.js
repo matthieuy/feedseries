@@ -6,7 +6,7 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
-const BabiliWebpackPlugin = require('babili-webpack-plugin')
+const BabelMinifyPlugin = require('babel-preset-minify')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 let mainConfig = {
@@ -76,7 +76,7 @@ if (process.env.NODE_ENV !== 'production') {
  */
 if (process.env.NODE_ENV === 'production') {
   mainConfig.plugins.push(
-    new BabiliWebpackPlugin(),
+    new BabelMinifyPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
       'winURL': `"file://${global.__static}"`,
