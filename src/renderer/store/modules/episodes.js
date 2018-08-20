@@ -23,6 +23,7 @@ const types = {
   GETTERS: {
     EPISODES_UNSEEN: 'episodes.unseen',
     SEASON_LIST: 'episodes.season_list',
+    NB_DL: 'episodes.dl',
   },
 }
 
@@ -195,6 +196,15 @@ const actions = {
 
 const getters = {
   /**
+   * Get number of (not)downloaded episodes
+   * @param dl {Boolean}
+   * @return {Integer}
+   */
+  [types.GETTERS.NB_DL]: (state, getters) => (dl) => {
+    let filterName = (dl) ? 'view' : 'get'
+    return getters[types.GETTERS.EPISODES_UNSEEN](filterName).length
+  },
+  /**
    * Get unseen episodes
    * @return {[Episode]}
    */
@@ -230,24 +240,26 @@ const getters = {
     })
 
     // Order
-    episodes.sort((a, b) => {
-      if (order === 'alpha') {
-        return a.show.title.localeCompare(b.show.title)
-      } else {
-        // No date
-        if (!a.date) { return -1 }
-        if (!b.date) { return 1 }
-        let dateDiff = new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00')
-        if (dateDiff !== 0) {
-          return dateDiff
-        }
+    if (typeof order !== 'undefined') {
+      episodes.sort((a, b) => {
+        if (order === 'alpha') {
+          return a.show.title.localeCompare(b.show.title)
+        } else {
+          // No date
+          if (!a.date) { return -1 }
+          if (!b.date) { return 1 }
+          let dateDiff = new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00')
+          if (dateDiff !== 0) {
+            return dateDiff
+          }
 
-        if (a.global !== b.global) {
-          return a.global - b.global
+          if (a.global !== b.global) {
+            return a.global - b.global
+          }
+          return a.episode - b.episode
         }
-        return a.episode - b.episode
-      }
-    })
+      })
+    }
 
     // Limit
     if (limit) {

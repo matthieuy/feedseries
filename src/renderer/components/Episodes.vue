@@ -5,13 +5,13 @@
         <nav class="nav-group">
           <h5 class="nav-group-title">Filtre</h5>
           <a class="nav-group-item" :class="{active: filter === 'view'}" @click="filter = 'view'">
-            <i class="fa fa-eye"></i> À voir
+            <i class="fa fa-eye"></i> À voir <span v-show="nbEpisodeDl">({{ nbEpisodeDl }})</span>
           </a>
           <a class="nav-group-item" :class="{active: filter === 'get'}" @click="filter = 'get'">
-            <i class="fa fa-download"></i> À récupérer
+            <i class="fa fa-download"></i> À récupérer <span v-show="nbEpisodeDl">({{ nbEpisodeNotDl }})</span>
           </a>
           <a class="nav-group-item" :class="{active: filter === 'all'}" @click="filter = 'all'">
-            <i class="fa fa-list"></i> Tous
+            <i class="fa fa-list"></i> Tous ({{ nbEpisodeDl + nbEpisodeNotDl }})
           </a>
         </nav>
 
@@ -98,6 +98,12 @@
     computed: {
       episodes () {
         return this.$store.getters[types.episodes.GETTERS.EPISODES_UNSEEN](this.filter, this.limit, this.order, this.orderReverse)
+      },
+      nbEpisodeDl () {
+        return this.$store.getters[types.episodes.GETTERS.NB_DL](true)
+      },
+      nbEpisodeNotDl () {
+        return this.$store.getters[types.episodes.GETTERS.NB_DL](false)
       },
     },
     methods: {
