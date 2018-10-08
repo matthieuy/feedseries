@@ -22,6 +22,7 @@ const key = {
     REVERSE: 'episodes.reverse', // {Boolean} Reverse order
     SPECIAL: 'episodes.special', // {Boolean} Show special episode
     SRT_VF_ONLY: 'vf', // {Boolean} Show only VF subtitle
+    DAY_BEFORE_ARCHIVE: 'episodes.archive_day', // {Integer} Number of day before archive
   },
   CALENDAR: {
     SAVE_DATE: 'calendar.save_date', // {Boolean} Save the last date display
@@ -74,6 +75,7 @@ let store = new ElectronStore({
       order: 'date',
       special: true,
       vf: true,
+      archive_day: 16,
     },
     homepage: {
       favorite: true,

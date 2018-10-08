@@ -122,7 +122,7 @@
       // Get CSS background header url
       backgroundImg () {
         if (this.show && this.show.image) {
-          return `url('https://www.betaseries.com/images/fonds/show/${this.show.image}')`
+          return `url('https://pictures.betaseries.com/fonds/show/${this.show.image}')`
         }
         return 'none'
       },

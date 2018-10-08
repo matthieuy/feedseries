@@ -5,6 +5,7 @@ import {app, BrowserWindow, globalShortcut, ipcMain} from 'electron'
 import log from 'electron-log'
 import Updater from './system/update'
 import localStore from '../renderer/store/local'
+import db, { Cache } from '../renderer/db'
 
 let mainWindow, systray
 let protocolName = 'feedseries'
@@ -26,6 +27,21 @@ app.on('ready', () => {
   } else {
     createWindow()
   }
+
+  // Ctrl+F5 => clear cache & reload
+  globalShortcut.register('CommandOrControl+F5', () => {
+    Cache.reset()
+    let promises = [
+      db.clearDb('shows'),
+      db.clearDb('episodes'),
+      db.clearDb('subtitles'),
+    ]
+    Promise.race(promises).then(() => {
+      mainWindow.reload()
+    }).catch(() => {
+      mainWindow.reload()
+    })
+  })
 })
 
 // All windows closed => exit (except macOS)

@@ -8,7 +8,7 @@
         <div class="fleft cols">
           <div class="fleft col20">
             <div class="binfo"><i class="fa fa-users"></i> {{ stats.friends|defaut(0)|plurialize('ami', 'amis') }}</div>
-            <div class="binfo"><i class="fa fa-certificate"></i> {{ stats.xp|defaut(0) }} XP</div>
+            <div class="binfo"><i class="fa fa-certificate"></i> {{ stats.xp|defaut(0)|plurialize('XP', 'XP') }}</div>
             <div class="binfo"><i class="fa fa-comments"></i> {{ stats.comments|defaut(0)|plurialize('commentaire', 'commentaires') }}</div>
             <div class="binfo"><i class="fa fa-trophy"></i> {{ stats.badges|defaut(0)|plurialize('badge', 'badges') }}</div>
             <div class="binfo"><i class="fa fa-pencil-alt"></i> {{ stats.written_words|defaut(0)|plurialize('mot écrit', 'mots écrits') }}</div>
