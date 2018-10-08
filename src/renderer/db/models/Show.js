@@ -101,7 +101,7 @@ class Show extends Document {
       progress: show.user.status,
       last: show.user.last,
       description: show.description,
-      image: (show.images.show) ? show.images.show.replace('https://www.betaseries.com/images/fonds/show/', '') : null,
+      image: (show.images.show) ? show.images.show.replace('https://pictures.betaseries.com/fonds/show/', '') : null,
       note: Math.round(show.notes.mean * 10) / 10,
     }
 
