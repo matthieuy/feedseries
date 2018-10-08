@@ -4,6 +4,7 @@ import log from 'electron-log'
 
 import modalSystem from '../windows/modalSystem'
 import { localStore } from '../../renderer/store'
+import db, { Cache } from '../../renderer/db'
 
 class Updater {
   /**
@@ -155,6 +156,15 @@ class Updater {
     if (process.env.NODE_ENV !== 'development') {
       localStore.set(localStore.key.UPDATE.FIRST_RUN, true)
       app.isQuiting = true
+
+      // Vidage cache + db
+      Cache.reset()
+      Cache.rmCacheData()
+      db.clearDb('shows')
+      db.clearDb('episodes')
+      db.clearDb('subtitles')
+
+      // Installation
       autoUpdater.quitAndInstall()
     }
   }
