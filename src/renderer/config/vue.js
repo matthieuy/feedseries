@@ -39,7 +39,7 @@ function plurialize (value, singular, plurial) {
   if (typeof value === 'undefined') {
     return plurial
   }
-  return (value <= 1) ? `${value} ${singular}` : `${value} ${plurial}`
+  return (value <= 1) ? `${value} ${singular}` : `${new Intl.NumberFormat().format(value)} ${plurial}`
 }
 Vue.filter('plurialize', (value, singular, plurial) => {
   return plurialize(value, singular, plurial)
