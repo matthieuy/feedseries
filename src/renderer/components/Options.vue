@@ -502,7 +502,7 @@
         }
       },
       updateInterval (value) {
-        if (value !== localStore.get(localStore.key.UPDATE.INTERVAL, value)) {
+        if (value !== localStore.get(localStore.key.UPDATE.INTERVAL, 1)) {
           localStore.set(localStore.key.UPDATE.INTERVAL, value)
           ipcRenderer.send('interval-update', value)
         }
