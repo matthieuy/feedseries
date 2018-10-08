@@ -150,6 +150,12 @@
             </select>
           </label>
         </div>
+        <div class="form-group">
+          <label>
+            Nombre de jour avant de considérer une série comme terminée :
+            <input type="number" v-model="beforeArchive" max="45" min="8" />
+          </label>
+        </div>
       </fieldset>
 
       <div class="text-center">
@@ -257,6 +263,7 @@
         dlAsk: true,
         updateInterval: 1,
         updateAlpha: false,
+        beforeArchive: 16,
       }
     },
     methods: {
@@ -288,6 +295,7 @@
         this.dlAsk = localStore.get(localStore.key.DOWNLOAD.ASK, true)
         this.updateInterval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
         this.updateAlpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
+        this.beforeArchive = localStore.get(localStore.key.EPISODES.DAY_BEFORE_ARCHIVE, 16)
         launcher.isEnabled().then((enabled) => {
           this.autoload = enabled
         })
@@ -502,6 +510,11 @@
       updateAlpha (value) {
         if (value !== localStore.get(localStore.key.UPDATE.PRERELEASE, false)) {
           localStore.set(localStore.key.UPDATE.PRERELEASE, value)
+        }
+      },
+      beforeArchive (value) {
+        if (value !== localStore.get(localStore.key.EPISODES.DAY_BEFORE_ARCHIVE, 16)) {
+          localStore.set(localStore.key.EPISODES.DAY_BEFORE_ARCHIVE, value)
         }
       },
     },

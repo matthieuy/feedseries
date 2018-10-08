@@ -166,7 +166,8 @@ const actions = {
     // API
     if (isView) {
       let p = api.episodes.markView(episode).then((ep) => {
-        if ((ep.show.remaining === 0) && (ep.show.status === 'Ended' || moment(String(episode.date)).diff(moment().subtract(1, 'months')) < 0)) {
+        let archiveDay = localStore.get(localStore.key.EPISODES.DAY_BEFORE_ARCHIVE, 16)
+        if ((ep.show.remaining === 0) && (ep.show.status === 'Ended' || moment(String(episode.date)).diff(moment().subtract(archiveDay, 'days')) < 0)) {
           console.log('Série terminée :', ep.show.title)
           context.commit(types.MUTATIONS.SET_FINISH_SHOW, ep.show)
         }
