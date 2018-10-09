@@ -152,7 +152,7 @@ function createWindow () {
 
     // Check update
     Updater.init(mainWindow)
-    if (process.env.NODE_ENV !== 'development' && localStore.get(localStore.key.UPDATE.INTERVAL, 1)) {
+    if (process.env.NODE_ENV !== 'development' && parseInt(localStore.get(localStore.key.UPDATE.INTERVAL, 1))) {
       Updater.check(false)
     }
   })
