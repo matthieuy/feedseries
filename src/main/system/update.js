@@ -92,6 +92,7 @@ class Updater {
    * @param {Integer} intervalCheck
    */
   setUpdateInterval = (intervalCheck) => {
+    intervalCheck = parseInt(intervalCheck)
     clearInterval(this._interval)
     if (intervalCheck) {
       setInterval(() => {

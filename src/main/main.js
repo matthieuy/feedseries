@@ -27,21 +27,6 @@ app.on('ready', () => {
   } else {
     createWindow()
   }
-
-  // Ctrl+F5 => clear cache & reload
-  globalShortcut.register('CommandOrControl+F5', () => {
-    Cache.reset()
-    let promises = [
-      db.clearDb('shows'),
-      db.clearDb('episodes'),
-      db.clearDb('subtitles'),
-    ]
-    Promise.race(promises).then(() => {
-      mainWindow.reload()
-    }).catch(() => {
-      mainWindow.reload()
-    })
-  })
 })
 
 // All windows closed => exit (except macOS)
@@ -145,6 +130,14 @@ function createWindow () {
     mainWindow.setIcon(localStore.getIconPath())
   })
 
+  // Shortcut clear cache
+  mainWindow.on('blur', (event) => {
+    registerShortcutClearCache(false)
+  })
+  mainWindow.on('focus', (event) => {
+    registerShortcutClearCache(true)
+  })
+
   // App full loaded
   ipcMain.on('app-ready', () => {
     log.debug('App is ready')
@@ -159,7 +152,7 @@ function createWindow () {
 
     // Check update
     Updater.init(mainWindow)
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV !== 'development' && parseInt(localStore.get(localStore.key.UPDATE.INTERVAL, 1))) {
       Updater.check(false)
     }
   })
@@ -180,4 +173,29 @@ function getUrl (argv) {
 
   log.info('Load URL :', url)
   return url
+}
+
+/**
+ * Register or unregister the shortcut for clear cache
+ * @param {Boolean} active
+ */
+function registerShortcutClearCache (active) {
+  let shortcut = 'CommandOrControl+F5'
+  if (active) {
+    globalShortcut.register(shortcut, () => {
+      Cache.reset()
+      let promises = [
+        db.clearDb('shows'),
+        db.clearDb('episodes'),
+        db.clearDb('subtitles'),
+      ]
+      Promise.race(promises).then(() => {
+        mainWindow.reload()
+      }).catch(() => {
+        mainWindow.reload()
+      })
+    })
+  } else {
+    globalShortcut.unregister(shortcut)
+  }
 }
