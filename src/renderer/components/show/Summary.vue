@@ -51,7 +51,17 @@
 
     <div class="season-list">
       <div v-for="season in seasons">
-        <h3>Saison {{ season.number }} <i class="fa fa-circle" :style="season.progress | statusColor"></i></h3>
+        <h3>
+          Saison {{ season.number }}
+          <i class="fa fa-circle" :style="season.progress | statusColor"></i>
+          <div class="pull-right season-action">
+            <i v-show="season.progress !== 100" class="fa fa-download cursor" title="Marquer la saison récupérée" @click="markSeasonDL(season.number, true)"></i>
+            <span v-show="season.progress !== 100" class="fa-stack cursor" title="Marquer la saison non-récupérée" @click="markSeasonDL(season.number, false)">
+              <i class="fa fa-download fa-stack-1x"></i>
+              <i class="fa fa-ban fa-stack-2x"></i>
+            </span>
+          </div>
+        </h3>
 
         <div class="season">
           <table class="table-striped">
@@ -100,6 +110,29 @@
       },
     },
     methods: {
+      /**
+       * Mark all episode of a season as DL
+       * @param {Integer} seasonNumber
+       * @param {Boolean} isDL
+       */
+      markSeasonDL (seasonNumber, isDL) {
+        let episodes = this.seasons.find((a) => { return a.number === seasonNumber }).episodes
+        episodes = episodes.filter((a) => { return !a.isSeen && a.isDownloaded !== isDL })
+        if (episodes.length) {
+          let promises = []
+          episodes.forEach((episode) => {
+            let p = this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
+              episode: episode,
+              isDL: isDL,
+            })
+            promises.push(p)
+          })
+          Promise.all(promises)
+        }
+      },
+      /**
+       * Load episodes
+       */
       loadEpisodes () {
         this.isLoading = true
         this.$store.commit(types.episodes.MUTATIONS.SET_EPISODES, [])
@@ -107,12 +140,17 @@
           this.isLoading = false
         })
       },
+      /**
+       * Get avatar URL
+       * @param {Integer} userId
+       * @return {string}
+       */
       avatarURL (userId) {
         return api.members.getAvatarURL(userId, 20)
       },
     },
     watch: {
-      show (show) {
+      show () {
         this.loadEpisodes()
       },
     },
@@ -143,5 +181,22 @@
   }
   .friends-list {
     padding-top: 3px;
+  }
+  .season-action {
+    font-size: 12px;
+    margin-top: 12px;
+    margin-right: 5px;
+    .fa {
+      margin-left: 3px;
+    }
+    .fa-stack {
+      font-size: 9px;
+    }
+    .fa-stack-1x {
+      font-size: 12px;
+    }
+    .fa-stack-2x {
+      opacity: 0.7;
+    }
   }
 </style>
