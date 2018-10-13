@@ -345,11 +345,13 @@
        * @param {String} name The DB name
        */
       clearDb (name) {
-        db.clearDb(name).then(() => {
-          console.log(`[DB] Delete "${name}.db"`)
-          this.addNotification(`Purge de la base de donnée "${name}"`)
-          this.fileSize[name] = db.getSize(name)
-        })
+        if (confirm(`Êtes-vous sûr de vouloir purger la base de donnée "${name}" ?`)) {
+          db.clearDb(name).then(() => {
+            console.log(`[DB] Delete "${name}.db"`)
+            this.addNotification(`Purge de la base de donnée "${name}"`)
+            this.fileSize[name] = db.getSize(name)
+          })
+        }
       },
       checkUpdate () {
         ipcRenderer.send('check-update', true)
