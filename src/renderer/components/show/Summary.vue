@@ -60,6 +60,8 @@
               <i class="fa fa-download fa-stack-1x"></i>
               <i class="fa fa-ban fa-stack-2x"></i>
             </span>
+            <i v-show="season.progress !== 100" class="fa fa-eye cursor" title="Marquer la saison comme vu" @click="markSeasonView(season.number, true)"></i>
+            <i v-show="season.progress !== 0" class="fa fa-eye-slash cursor" title="Marquer la saison comme non-vu" @click="markSeasonView(season.number, false)"></i>
           </div>
         </h3>
 
@@ -126,6 +128,23 @@
               isDL: isDL,
             })
             promises.push(p)
+          })
+          Promise.all(promises)
+        }
+      },
+      /**
+       * Mark season as view
+       * @param {Integer} seasonNumber
+       * @param {Boolean} isView
+       */
+      markSeasonView (seasonNumber, isView) {
+        let episodes = this.seasons.find((a) => { return a.number === seasonNumber }).episodes
+        episodes = episodes.filter((a) => { return a.isSeen !== isView })
+        if (episodes.length) {
+          let promises = []
+          episodes.forEach((episode) => {
+            let action = (isView) ? types.episodes.ACTIONS.MARK_VIEW : types.episodes.ACTIONS.UNMARK_VIEW
+            promises.push(this.$store.dispatch(action, episode))
           })
           Promise.all(promises)
         }
