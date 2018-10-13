@@ -12,7 +12,10 @@ class Stat extends Document {
   constructor () {
     super()
     this.schema({
-      ts: Number,
+      ts: {
+        type: Number,
+        default: Stat._getCurrentTs,
+      },
       type: String,
       value: {
         type: Number,
@@ -59,16 +62,13 @@ class Stat extends Document {
    * @param {Boolean} increment
    */
   static incrementValue (type, increment) {
-    let currentDate = new Date()
-    currentDate.setHours(0, 0, 0, 0)
     this.findOne({
-      ts: currentDate.getTime(),
+      ts: this._getCurrentTs(),
       type: type,
     }).then((stat) => {
       // Create if don't exist
       if (!stat) {
         stat = Stat.create({
-          ts: currentDate.getTime(),
           type: type,
         })
       }
@@ -83,6 +83,18 @@ class Stat extends Document {
       // Save
       stat.save()
     })
+  }
+
+  /**
+   * Get the current Timestamp
+   * @return {number}
+   * @private
+   */
+  static _getCurrentTs () {
+    let currentDate = new Date()
+    currentDate.setHours(0, 0, 0, 0)
+
+    return currentDate.getTime() / 1000
   }
 
   /**
