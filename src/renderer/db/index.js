@@ -7,6 +7,7 @@ import Episode from './models/Episode'
 import Show from './models/Show'
 import Subtitle from './models/Subtitle'
 import Link from './models/Link'
+import Stat from './models/Stat'
 
 import Cache from './cache'
 
@@ -84,5 +85,5 @@ let Database = function () {
   }
 }
 
-export { Cache, Episode, Show, Subtitle, Link }
+export { Cache, Episode, Show, Subtitle, Link, Stat }
 export default new Database()
