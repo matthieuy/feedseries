@@ -48,8 +48,8 @@
                   {{ show.title }}
                 </router-link>
                 <i class="fa fa-circle" :style="show.status | statusColor"></i>
-                <i class="fa fa-archive" v-show="show.isArchived" title="Archivé"></i>
-                <i class="fa fa-heart" v-show="show.isFavorited" title="Favoris"></i>
+                <i class="fa fa-archive" v-show="show.isArchived" v-tooltip="'Archivé'"></i>
+                <i class="fa fa-heart" v-show="show.isFavorited" v-tooltip="'Favoris'"></i>
                 <friend-bubble :friends="show.friends" :show="true"></friend-bubble>
                 <div>
                   {{ show.nb_seasons|plurialize('saison', 'saisons') }}, {{ show.nb_episodes|plurialize('épisode', 'épisodes') }}

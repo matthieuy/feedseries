@@ -119,6 +119,7 @@
     "moment": "^2.20.1",
     "nedb": "^1.8.0",
     "request": "^2.83.0",
+    "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.5.7",
     "vue-context-menu": "^2.0.6",
     "vue-electron": "^1.0.6",

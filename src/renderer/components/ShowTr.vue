@@ -9,17 +9,17 @@
           <span v-show="episode.date">{{ episode.date|formatDate('ddd DD MMM YYYY') }}</span>
           <span v-show="!episode.date">Pas de date</span>
         </span>
-        <i class="fa fa-download" v-show="episode.isDownloaded && !episode.isSeen" title="Épisode récupéré"></i>
+        <i class="fa fa-download" v-show="episode.isDownloaded && !episode.isSeen" v-tooltip="'Épisode récupéré'"></i>
         <i
           class="fa fa-file-alt cursor"
-          :title="getSubtitles(episode).length|plurialize('sous-titre', 'sous-titres')"
+          v-tooltip="$options.filters.plurialize(getSubtitles(episode).length, 'sous-titre', 'sous-titres')"
           @click="$parent.$refs.SubtitleCtx.$refs.ctx.open($event, episode)"></i>
         <friend-bubble :friends="episode.friends"></friend-bubble>
       </div>
     </td>
     <td class="pull-right icon-mark-view">
-      <i class="fa fa-eye cursor" @click="markView(episode)" v-show="!episode.isSeen && !show.isArchived" title="Marquer vu"></i>
-      <i class="fa fa-eye-slash cursor" @click="unmarkView(episode)" v-show="episode.isSeen && !show.isArchived" title="Marquer non-vu"></i>
+      <i class="fa fa-eye cursor" @click="markView(episode)" v-show="!episode.isSeen && !show.isArchived" v-tooltip="'Marquer vu'"></i>
+      <i class="fa fa-eye-slash cursor" @click="unmarkView(episode)" v-show="episode.isSeen && !show.isArchived" v-tooltip="'Marquer non-vu'"></i>
     </td>
   </tr>
 </template>

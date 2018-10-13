@@ -67,7 +67,7 @@
           <div class="new" v-for="article in news">
             <div class="img" @click="openNews(article.url)" :style="bgNews(article)"></div>
               <div class="new-title" @click="openNews(article.url)">{{ article.title }}</div>
-              <div class="date" :title="article.date | formatDate('ddd DD à HH[h]mm')">{{ article.date|fromNow }}</div>
+              <div class="date" v-tooltip="$options.filters.formatDate(article.date, 'ddd DD à HH[h]mm')">{{ article.date|fromNow }}</div>
           </div>
         </div>
       </div>

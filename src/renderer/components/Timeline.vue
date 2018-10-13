@@ -6,7 +6,7 @@
         <li v-for="event in timeline.events" class="event">
           <img :class="'event-avatar-' + event.id" :src="userAvatar(event)" alt="" width="24" height="24" />
           <i class="type-icon fa" :class="iconType(event.type)"></i>
-          <span :title="event.date | formatDate('ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
+          <span v-tooltip="$options.filters.formatDate(event.date, 'ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
           {{ event.user }} <span v-html="event.html" :class="{link: isLinkEnabled(event)}" @click="clickLink(event, $event)"></span>
           <span class="fa fa-star" v-show="event.note" v-for="star in event.note"></span>
         </li>
