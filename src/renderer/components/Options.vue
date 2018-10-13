@@ -212,6 +212,10 @@
             <button class="btn btn-nav" v-show="fileSize.links" @click="clearDb('links')">
               Liens perso ({{ fileSize.links | size }})
             </button>
+            <button class="btn btn-nav" v-show="fileSize.stats" @click="clearDb('stats')">
+              Statistiques ({{ fileSize.stats | size }})
+            </button>
+
           </div>
         </div>
       </div>
@@ -529,6 +533,7 @@
         shows: db.getSize('shows'),
         subtitles: db.getSize('subtitles'),
         links: db.getSize('links'),
+        stats: db.getSize('stats'),
       }
       this.refreshDataCacheSize()
     },
