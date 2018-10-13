@@ -3,7 +3,7 @@ import moment from 'moment'
 
 import api from '../../api'
 import ConcurentPromise from '../../tools/ConcurentPromise'
-import { Episode } from '../../db'
+import { Episode, Stat } from '../../db'
 import { types as typesShows } from './shows'
 import { localStore } from '../../store'
 
@@ -113,11 +113,13 @@ const actions = {
       .addPromise(promiseAPI)
       .reverse(() => {
         Episode.markDL(episode, !isDL)
+        Stat.markDl(!isDL)
         promises.callThen(episode)
       })
 
     // DB
     promises.addPromise(Episode.markDL(episode, isDL))
+    Stat.markDl(isDL)
 
     // Update episode in state
     promises.then((episode) => {
@@ -177,13 +179,16 @@ const actions = {
     } else {
       promises.addPromise(api.episodes.unmarkView(episode))
     }
+
     promises.reverse(() => {
       Episode.markView(episode, !isView)
+      Stat.markView(!isView)
       promises.callThen()
     })
 
     // DB
     promises.addPromise(Episode.markView(episode, isView))
+    Stat.markView(isView)
 
     // Update episode in state
     promises.then((episode) => {

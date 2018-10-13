@@ -212,6 +212,10 @@
             <button class="btn btn-nav" v-show="fileSize.links" @click="clearDb('links')">
               Liens perso ({{ fileSize.links | size }})
             </button>
+            <button class="btn btn-nav" v-show="fileSize.stats" @click="clearDb('stats')">
+              Statistiques ({{ fileSize.stats | size }})
+            </button>
+
           </div>
         </div>
       </div>
@@ -341,10 +345,22 @@
        * @param {String} name The DB name
        */
       clearDb (name) {
-        db.clearDb(name).then(() => {
-          console.log(`[DB] Delete "${name}.db"`)
-          this.addNotification(`Purge de la base de donnée "${name}"`)
-          this.fileSize[name] = db.getSize(name)
+        remote.dialog.showMessageBox(remote.getCurrentWindow(), {
+          type: 'warning',
+          buttons: ['Oui', 'Non'],
+          defaultId: 1,
+          title: remote.app.getName(),
+          icon: localStore.getIconPath(),
+          message: `Êtes-vous sûr de vouloir purger la base de donnée "${name}" ?`,
+          cancelId: 1,
+        }, (btnId) => {
+          if (btnId === 0) {
+            db.clearDb(name).then(() => {
+              console.log(`[DB] Delete "${name}.db"`)
+              this.addNotification(`Purge de la base de donnée "${name}"`)
+              this.fileSize[name] = db.getSize(name)
+            })
+          }
         })
       },
       checkUpdate () {
@@ -529,6 +545,7 @@
         shows: db.getSize('shows'),
         subtitles: db.getSize('subtitles'),
         links: db.getSize('links'),
+        stats: db.getSize('stats'),
       }
       this.refreshDataCacheSize()
     },

@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import api from '../../api'
 import ConcurentPromise from '../../tools/ConcurentPromise'
-import { Cache, Show } from '../../db'
+import { Cache, Show, Stat } from '../../db'
 import { types as typesRootAction } from '../actions'
 import localStore from '../local'
 
@@ -142,6 +142,7 @@ const actions = {
       context.commit(types.MUTATIONS.ADD, showAdded)
       Cache.invalidateByTags({show: showAdded.id})
       Cache.invalidate('summary')
+      Stat.addShow(true)
 
       /* eslint-disable no-new */
       new window.Notification('FeedSeries', {
@@ -164,6 +165,7 @@ const actions = {
       context.commit(types.MUTATIONS.DELETE, showDeleted)
       Cache.invalidateByTags({show: showDeleted.id})
       Cache.invalidate('summary')
+      Stat.addShow(false)
 
       /* eslint-disable no-new */
       new window.Notification('FeedSeries', {
@@ -251,11 +253,13 @@ const actions = {
     }
     promises.reverse(() => {
       Show.archive(show, !archive)
+      Stat.archive(!archive)
       promises.callThen(show)
     })
 
     // DB
     promises.addPromise(Show.archive(show, archive))
+    Stat.archive(archive)
 
     promises.then((showArchived) => {
       Cache.invalidate('summary')

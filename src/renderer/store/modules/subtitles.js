@@ -4,7 +4,7 @@ import request from 'request'
 import { remote } from 'electron'
 
 import localStore from '../local'
-import { Subtitle } from '../../db'
+import { Subtitle, Stat } from '../../db'
 
 const types = {
   MUTATIONS: {
@@ -123,6 +123,7 @@ let downloadSubtitleFile = (filepath, subtitle) => {
   req.pipe(out)
 
   req.on('end', () => {
+    Stat.incrementValue('s', true)
     let notif = new window.Notification('Sous-titre téléchargé', {
       body: filepath,
       icon: localStore.getIconPath(true),
