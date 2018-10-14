@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 import store, { localStore, types } from '../../store'
-import { Episode, Subtitle } from '../../db'
+import { Cache, Episode, Subtitle } from '../../db'
 
 export default {
   /**
@@ -9,48 +9,57 @@ export default {
    * @return {Promise}
    */
   getList () {
-    console.info('[API] Episodes::getList')
+    let cacheId = 'episodes_unseen'
 
-    // Params
-    let params = {
-      specials: localStore.get(localStore.key.EPISODES.SPECIAL, true),
-      subtitles: (localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)) ? 'vf' : 'all',
-    }
+    // Get from cache
+    if (Cache.isValid(cacheId)) {
+      console.info('[API Cache] Episodes::getList')
+      return Promise.resolve(Cache.get(cacheId, []))
+    } else {
+      console.info('[API] Episodes::getList')
 
-    return Vue.http.get('/episodes/list', {
-      params: params,
-    }).then((response) => {
-      let shows = response.data.shows
-      let nbSubtitles = 0
-      let episodes = []
+      // Params
+      let params = {
+        specials: localStore.get(localStore.key.EPISODES.SPECIAL, true),
+        subtitles: (localStore.get(localStore.key.EPISODES.SRT_VF_ONLY, true)) ? 'vf' : 'all',
+      }
 
-      let promiseList = []
-      shows.forEach((show) => {
-        show.unseen.forEach(async (episode) => {
-          // Update episode
-          let p = new Promise((resolve, reject) => {
-            Episode.findOneAndUpdate({ _id: episode.id + '' }, Episode.cleanProperties(episode), { upsert: true }).then((episodeSaved) => {
-              episodes.push(episodeSaved)
-              resolve()
+      return Vue.http.get('/episodes/list', {
+        params: params,
+      }).then((response) => {
+        let shows = response.data.shows
+        let nbSubtitles = 0
+        let episodes = []
+
+        let promiseList = []
+        shows.forEach((show) => {
+          show.unseen.forEach(async (episode) => {
+            // Update episode
+            let p = new Promise((resolve, reject) => {
+              Episode.findOneAndUpdate({_id: episode.id + ''}, Episode.cleanProperties(episode), {upsert: true}).then((episodeSaved) => {
+                episodes.push(episodeSaved)
+                resolve()
+              })
+            })
+            promiseList.push(p)
+
+            // Update subtitles
+            episode.subtitles.forEach((subtitle) => {
+              nbSubtitles++
+              Subtitle.findOneAndUpdate({_id: subtitle.id + ''}, Subtitle.cleanProperties(subtitle, episode), {upsert: true})
             })
           })
-          promiseList.push(p)
+        })
 
-          // Update subtitles
-          episode.subtitles.forEach((subtitle) => {
-            nbSubtitles++
-            Subtitle.findOneAndUpdate({ _id: subtitle.id + '' }, Subtitle.cleanProperties(subtitle, episode), { upsert: true })
-          })
+        return Promise.all(promiseList).then(() => {
+          console.info(`[DB] Update ${episodes.length} episodes`)
+          console.info(`[DB] Update ${nbSubtitles} subtitles`)
+          store.dispatch(types.subtitles.ACTIONS.LOAD_SUBTITLES)
+          Cache.set(cacheId, episodes, 3600)
+          return Promise.resolve(episodes)
         })
       })
-
-      return Promise.all(promiseList).then(() => {
-        console.info(`[DB] Update ${episodes.length} episodes`)
-        console.info(`[DB] Update ${nbSubtitles} subtitles`)
-        store.dispatch(types.subtitles.ACTIONS.LOAD_SUBTITLES)
-        return Promise.resolve(episodes)
-      })
-    })
+    }
   },
 
   /**
@@ -65,6 +74,7 @@ export default {
     })
       .then((response) => {
         let episode = response.data.episode
+        Cache.invalidate('episodes_unseen')
         return Episode.findOne({ _id: episode.id + '' })
       })
       .catch(() => {
@@ -86,6 +96,7 @@ export default {
     })
       .then((response) => {
         let episode = response.data.episode
+        Cache.invalidate('episodes_unseen')
         return Episode.findOne({ _id: episode.id + '' })
       })
       .catch(() => {
@@ -106,6 +117,7 @@ export default {
     })
       .then((response) => {
         let episode = response.data.episode
+        Cache.invalidate('episodes_unseen')
         return Episode.findOne({ _id: episode.id + '' })
       })
       .catch(() => {
@@ -127,6 +139,7 @@ export default {
     })
       .then((response) => {
         let episode = response.data.episode
+        Cache.invalidate('episodes_unseen')
         return Episode.findOne({ _id: episode.id + '' })
       })
       .catch(() => {

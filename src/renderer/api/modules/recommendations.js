@@ -43,6 +43,7 @@ export default {
       if (response.status === 200 && response.data.hasOwnProperty('recommendation')) {
         let recommendation = response.data.recommendation
         Cache.invalidate(this.cacheId)
+        Cache.invalidate('episodes_unseen')
         return Promise.resolve(recommendation)
       }
     }).catch((e) => {
