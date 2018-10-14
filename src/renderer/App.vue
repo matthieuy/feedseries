@@ -144,7 +144,6 @@
         if (!show) {
           return false
         }
-        this.$store.commit(types.episodes.MUTATIONS.SET_FINISH_SHOW, false)
 
         // Confirm archive
         let txt = (show.status === 'Ended') ? `C'était le dernier épisode de la saison de "${show.title}" !` : `C'était l'épisode final de "${show.title}" !`
@@ -159,6 +158,7 @@
           if (response === 0) {
             this.$store.dispatch(types.shows.ACTIONS.ARCHIVE, show)
           }
+          this.$store.commit(types.episodes.MUTATIONS.SET_FINISH_SHOW, false)
         })
       },
     },
