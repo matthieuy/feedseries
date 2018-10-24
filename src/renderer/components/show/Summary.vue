@@ -54,7 +54,7 @@
         <h3>
           Saison {{ season.number }}
           <i class="fa fa-circle" :style="season.progress | statusColor"></i>
-          <div class="pull-right season-action">
+          <div class="pull-right season-action" v-show="show.in_account">
             <i v-show="season.progress !== 100" class="fa fa-download cursor" v-tooltip="'Marquer la saison récupérée'" @click="markSeasonDL(season.number, true)"></i>
             <span v-show="season.progress !== 100" class="fa-stack cursor" v-tooltip="'Marquer la saison non-récupérée'" @click="markSeasonDL(season.number, false)">
               <i class="fa fa-download fa-stack-1x"></i>
