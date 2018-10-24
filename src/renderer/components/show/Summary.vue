@@ -84,6 +84,7 @@
   import { mapState, mapGetters } from 'vuex'
 
   import api from '../../api'
+  import { Stat } from '../../db'
   import { types } from '../../store'
   import ShowTr from '../ShowTr'
   import EpisodeCtx from '../context/EpisodeCtx'
@@ -129,7 +130,9 @@
             })
             promises.push(p)
           })
-          Promise.all(promises)
+          Promise.all(promises).then(() => {
+            Stat.incrementValue('d', isDL, promises.length - 1)
+          })
         }
       },
       /**
@@ -146,7 +149,9 @@
             let action = (isView) ? types.episodes.ACTIONS.MARK_VIEW : types.episodes.ACTIONS.UNMARK_VIEW
             promises.push(this.$store.dispatch(action, episode))
           })
-          Promise.all(promises)
+          Promise.all(promises).then(() => {
+            Stat.incrementValue('v', isView, promises.length - 1)
+          })
         }
       },
       /**
