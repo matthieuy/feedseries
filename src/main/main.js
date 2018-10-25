@@ -54,21 +54,22 @@ app.on('will-quit', () => {
  * Single instance *
  *******************/
 // Singleton instance
-const isNotSingleInstance = app.makeSingleInstance((argv) => {
-  if (mainWindow) {
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore()
+const isSingleInstance = app.requestSingleInstanceLock()
+if (isSingleInstance) {
+  app.on('second-instance', (event, argv, workingDirectory) => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+      mainWindow.show()
+      mainWindow.focus()
+      mainWindow.loadURL(getUrl(argv), {
+        userAgent: global.userAgent,
+      })
     }
-    mainWindow.show()
-    mainWindow.focus()
-    mainWindow.loadURL(getUrl(argv), {
-      userAgent: global.userAgent,
-    })
-  }
-})
-
-// Quit double instance
-if (isNotSingleInstance) {
+  })
+} else {
+  // Quit double instance
   log.info('Multi instance : close app', process.argv)
   app.isQuiting = true
   if (systray) {
