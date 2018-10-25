@@ -52,14 +52,10 @@ const actions = {
 }
 
 const getters = {
-  // Get stats (with period
+  // Get stats (with period)
   [types.GETTERS.ALL]: (state) => (period) => {
-    let limitDate = new Date()
-    limitDate.setTime(limitDate.getTime() - period * 1000)
-    limitDate.setHours(0, 0, 0, 0)
-
     return state.stats.filter((a) => {
-      return a.date > limitDate
+      return a.date >= period
     })
   },
 }

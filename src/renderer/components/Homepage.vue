@@ -274,8 +274,7 @@
         float: left;
         height: 100px;
         background-size: cover;
-        background-position: top center;
-        background-color: #000000;
+        background: #000000 top center;
         cursor: pointer;
       }
       .new-title {
