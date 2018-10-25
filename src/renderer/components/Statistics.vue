@@ -5,9 +5,9 @@
         <nav class="nav-group">
           <h5 class="nav-group-title">Période</h5>
           <a class="nav-group-item" :class="{active: periodStr === '7d'}" @click="periodStr='7d'">7 jours</a>
-          <a class="nav-group-item" :class="{active: periodStr === '1m'}" @click="periodStr='1m'">1 mois</a>
-          <!--<a class="nav-group-item" :class="{active: periodStr === '3m'}" @click="periodStr='3m'">3 mois</a>-->
-          <!--<a class="nav-group-item" :class="{active: periodStr === '1y'}" @click="periodStr='1y'">1 an</a>-->
+          <a class="nav-group-item" :class="{active: periodStr === '1m'}" @click="periodStr='1m'" v-show="firstStat > 7">1 mois</a>
+          <a class="nav-group-item" :class="{active: periodStr === '3m'}" @click="periodStr='3m'" v-show="firstStat > 21">3 mois</a>
+          <a class="nav-group-item" :class="{active: periodStr === '1y'}" @click="periodStr='1y'" v-show="firstStat > 31">1 an</a>
         </nav>
       </div>
       <div class="pane">
@@ -54,8 +54,15 @@
           <div class="clearfix"></div>
         </div>
 
-        <div>
-          <div style="width: 90%; margin: auto;" >
+        <div class="text-center binfo no-graph" v-show="firstStat > -1 && firstStat <= 1">
+          Pas assez de données pour afficher les graphiques !
+        </div>
+        <div class="text-center binfo no-graph" v-show="firstStat === -1" style="color: #FFFFFF;">
+          Chargement en cours...
+        </div>
+
+        <div v-show="firstStat > 1">
+          <div style="width: 90%; margin: auto;">
             <div id="graphepisodes" class="graph-stats"></div>
             <div class="clearfix"></div>
           </div>
@@ -85,6 +92,7 @@
         periodStr: '',
         period: moment().subtract(1, 'months'),
         labelFormat: 'ddd DD',
+        firstStat: -1,
       }
     },
     computed: {
@@ -118,6 +126,7 @@
        */
       updateGraph (stats) {
         graphs
+          .setStartDate(this.period)
           .setLabelFormat(this.labelFormat, 'episodes')
           .setLabelFormat(this.labelFormat, 'shows')
           .setStats(stats)
@@ -149,6 +158,11 @@
       stats (stats) {
         this.updateGraph(stats)
       },
+      firstStat () {
+        setTimeout(() => {
+          this.updateGraph(this.stats)
+        }, 50)
+      },
       /**
        * When update period : refresh moment, graph
        * @param {String} value
@@ -165,7 +179,7 @@
             break
           case '1m': // 1 month
             this.period = period.subtract(1, 'months')
-            this.labelFormat = 'ddd DD'
+            this.labelFormat = 'ddd DD MMM'
             break
           case '3m': // 3 month
             this.period = period.subtract(3, 'months').startOf('week')
@@ -244,7 +258,10 @@
 
       // Get stats
       this.$store.dispatch(types.stats.ACTIONS.LOAD_STATS).then((stats) => {
-        this.updateGraph(stats)
+        if (stats.length) {
+          this.firstStat = moment().diff(moment(stats[0].date), 'days')
+          console.log('First stat :', this.firstStat, 'days ago')
+        }
       })
     },
   }
@@ -268,5 +285,12 @@
       /*width: 600px;*/
       margin: auto;
     }
+    &.hide {
+      opacity: 0;
+    }
+  }
+  .no-graph {
+    float: none;
+    color: tomato;
   }
 </style>

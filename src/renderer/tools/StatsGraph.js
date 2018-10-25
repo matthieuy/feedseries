@@ -11,6 +11,7 @@ class StatsGraph {
     this._labelFormat = {}
     this._data = {}
     this._selectedGraph = null
+    this._startDate = moment.now()
   }
 
   /**
@@ -38,6 +39,16 @@ class StatsGraph {
   }
 
   /**
+   * Set Start date
+   * @param {Moment} date
+   * @return {StatsGraph}
+   */
+  setStartDate (date) {
+    this._startDate = date
+    return this
+  }
+
+  /**
    * Add a graph
    * @param {String} name The uniq name
    * @param {String} el CSS ID
@@ -59,11 +70,16 @@ class StatsGraph {
       },
       axisX: {
         margin: 0,
+        labelAutoFit: true,
+        labelWrap: true,
+        labelAngle: -45,
       },
       axisY: {
         includeZero: false,
         scaleBreaks: {
           autoCalculate: true,
+          type: 'zigzag',
+          collapsibleThreshold: '10%',
         },
       },
       toolTip: {
@@ -144,22 +160,25 @@ class StatsGraph {
             }
           }
         })
+        this._data[name] = this._data[name].filter((a) => a.dataPoints.length)
 
-        // if (name === 'shows') {
+        // if (this._graphs[name].options.hasOwnProperty('addNullPoint') && this._graphs[name].options.addNullPoint) {
         //   for (let i = 0; i < this._data[name].length; i++) {
-        //     let date = moment(this._data[name][i].dataPoints[0].date).startOf('day')
+        //     let dateCurrent = moment(this._startDate.toDate())
         //     do {
-        //       let label = date.format(this._labelFormat[name])
+        //       let label = dateCurrent.format(this._labelFormat[name])
+        //       console.log('Test', label)
         //       let index = this._data[name][i].dataPoints.findIndex((a) => a.label === label)
         //       if (index === -1) {
         //         this._data[name][i].dataPoints.push({
         //           label: label,
         //           y: 0,
-        //           date: date.toDate(),
+        //           date: dateCurrent.toDate(),
         //         })
+        //         console.log('Add', label)
         //       }
-        //       date = date.add(1, 'days')
-        //     } while (date.isBefore(moment.now()))
+        //       dateCurrent = dateCurrent.add(1, 'days')
+        //     } while (dateCurrent.isBefore(moment.now()))
         //     this._data[name][i].dataPoints = this._data[name][i].dataPoints.sort((a, b) => a.date - b.date)
         //     console.log(this._data[name][i].dataPoints)
         //   }
@@ -181,7 +200,7 @@ class StatsGraph {
     let graphListName = (graphName && this._graphs.hasOwnProperty(graphName)) ? [graphName] : Object.keys(this._graphs)
 
     graphListName.forEach((name) => {
-      this._graphs[name].options.data = this._data[name].filter((a) => a.dataPoints.length)
+      this._graphs[name].options.data = this._data[name]
       this._graphs[name].render()
     })
 
