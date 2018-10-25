@@ -1552,9 +1552,9 @@ caniuse-lite@^1.0.30000844:
   version "1.0.30000877"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000877.tgz#f189673b86ecc06436520e3e391de6a13ca923b4"
 
-"canvasjs@github:vasilrimar/canvasjs":
+"canvasjs@github:matthieuy/canvasjs":
   version "1.8.2-pre"
-  resolved "https://codeload.github.com/vasilrimar/canvasjs/tar.gz/7b94439ad8828eabdd5d20d7bee368b9a4fdfaf2"
+  resolved "https://codeload.github.com/matthieuy/canvasjs/tar.gz/3ad2fdc494005d3d47d24c580bd874f91f18c3c8"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"

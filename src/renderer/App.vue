@@ -42,6 +42,9 @@
             <router-link :to="{name: 'recommendations'}" class="btn btn-default" :class="{active: $route.name === 'recommendations'}">
               <i class="fa fa-thumbs-up" :class="{red: nbRecommendations > 0}"></i>
             </router-link>
+            <router-link :to="{name: 'statistics'}" class="btn btn-default" :class="{active: $route.name === 'statistics'}">
+              <i class="fa fa-chart-line"></i>
+            </router-link>
           </div>
 
           <div class="btn-group pull-right">

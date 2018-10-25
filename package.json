@@ -108,7 +108,7 @@
     "auto-launch": "^5.0.5",
     "axios": "^0.16.1",
     "camo": "^0.12.3",
-    "canvasjs": "github:vasilrimar/canvasjs",
+    "canvasjs": "github:matthieuy/canvasjs",
     "electron-log": "^2.2.14",
     "electron-store": "^1.3.0",
     "electron-updater": "^3.0.3",

@@ -17,7 +17,7 @@
         <friend-bubble :friends="episode.friends"></friend-bubble>
       </div>
     </td>
-    <td class="pull-right icon-mark-view">
+    <td class="pull-right icon-mark-view" v-show="show.in_account">
       <i class="fa fa-eye cursor" @click="markView(episode)" v-show="!episode.isSeen && !show.isArchived" v-tooltip="'Marquer vu'"></i>
       <i class="fa fa-eye-slash cursor" @click="unmarkView(episode)" v-show="episode.isSeen && !show.isArchived" v-tooltip="'Marquer non-vu'"></i>
     </td>

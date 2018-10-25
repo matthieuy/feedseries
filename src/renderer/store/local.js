@@ -59,6 +59,9 @@ const key = {
   RECOMMENDATIONS: {
     INTERVAL: 'recommendations.interval', // {Integer} Interval between 2 check (in hour)
   },
+  STATS: {
+    PERIOD: 'stats.period', // {Integer} Period of stats
+  },
   SYSTRAY: 'systray', // {Boolean} close to systray
   HISTORY: 'history', // {Array} The navigator history
   HISTORY_SIZE: 'sizehistory', // {Integer} The size of the navigator history

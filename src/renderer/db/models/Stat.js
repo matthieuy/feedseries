@@ -29,7 +29,7 @@ class Stat extends Document {
    * @param {Boolean} isArchived
    */
   static archive (isArchived) {
-    this.incrementValue('r', isArchived)
+    return this.incrementValue('r', isArchived, 1)
   }
 
   /**
@@ -37,7 +37,7 @@ class Stat extends Document {
    * @param {Boolean} isAdd
    */
   static addShow (isAdd) {
-    this.incrementValue('a', isAdd)
+    return this.incrementValue('a', isAdd, 1)
   }
 
   /**
@@ -45,7 +45,7 @@ class Stat extends Document {
    * @param {Boolean} isView
    */
   static markView (isView) {
-    this.incrementValue('v', isView)
+    return this.incrementValue('v', isView, 1)
   }
 
   /**
@@ -53,35 +53,40 @@ class Stat extends Document {
    * @param {Boolean} isDL
    */
   static markDl (isDL) {
-    this.incrementValue('d', isDL)
+    return this.incrementValue('d', isDL, 1)
   }
 
   /**
    * Increment a stat
    * @param {String} type
    * @param {Boolean} increment
+   * @param {Integer} value
    */
-  static incrementValue (type, increment) {
-    this.findOne({
-      ts: this._getCurrentTs(),
-      type: type,
-    }).then((stat) => {
-      // Create if don't exist
-      if (!stat) {
-        stat = Stat.create({
-          type: type,
+  static incrementValue (type, increment, value) {
+    return new Promise((resolve, reject) => {
+      this.findOne({
+        ts: this._getCurrentTs(),
+        type: type,
+      }).then((stat) => {
+        // Create if don't exist
+        if (!stat) {
+          stat = Stat.create({
+            type: type,
+          })
+        }
+
+        // Increment
+        if (increment) {
+          stat.value += value
+        } else {
+          stat.value -= value
+        }
+
+        // Save
+        stat.save().then(() => {
+          return resolve()
         })
-      }
-
-      // Increment
-      if (increment) {
-        stat.value++
-      } else {
-        stat.value--
-      }
-
-      // Save
-      stat.save()
+      })
     })
   }
 

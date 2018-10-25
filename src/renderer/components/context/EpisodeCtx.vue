@@ -2,16 +2,16 @@
   <context-menu ref="ctx" @ctx-open="onOpen" @ctx-close="onCtxClose" @ctx-cancel="onCtxClose">
     <li class="ctx-header">{{ episode.show.title }} - {{ episode.code }}</li>
     <li class="ctx-divider"></li>
-    <li class="ctx-item" v-show="!episode.isSeen && !episode.show.isArchived" @click="markView(episode)"><i class="fa fa-eye"></i> Marquer "vu"</li>
-    <li class="ctx-item" v-show="episode.isSeen && !episode.show.isArchived" @click="unmarkView(episode)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
-    <li class="ctx-item" v-show="!episode.isDownloaded && !episode.isSeen" @click="markDL(episode, true)"><i class="fa fa-download"></i> Marquer "récupéré"</li>
-    <li class="ctx-item" v-show="episode.isDownloaded && !episode.isSeen" @click="markDL(episode, false)">
+    <li class="ctx-item" v-show="episode.show.in_account && !episode.isSeen && !episode.show.isArchived" @click="markView(episode)"><i class="fa fa-eye"></i> Marquer "vu"</li>
+    <li class="ctx-item" v-show="episode.show.in_account && episode.isSeen && !episode.show.isArchived" @click="unmarkView(episode)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
+    <li class="ctx-item" v-show="episode.show.in_account && !episode.isDownloaded && !episode.isSeen" @click="markDL(episode, true)"><i class="fa fa-download"></i> Marquer "récupéré"</li>
+    <li class="ctx-item" v-show="episode.show.in_account && episode.isDownloaded && !episode.isSeen" @click="markDL(episode, false)">
       <span class="fa-stack" style="font-size: 9px;">
         <i class="fa fa-download fa-stack-1x" style="font-size: 12px;"></i>
         <i class="fa fa-ban fa-stack-2x" style="opacity: 0.7;"></i>
       </span> Marquer "non récupéré"
     </li>
-    <li class="ctx-divider"></li>
+    <li class="ctx-divider" v-show="episode.show.in_account"></li>
     <li class="ctx-item" v-show="!hideShow && !episode.show.isArchived" @click="archive(episode.show)"><i class="fa fa-archive"></i> Archiver la série</li>
     <li class="ctx-divider" v-show="!hideShow"></li>
     <li v-for="link in links" @click="openWeb(link.url)" class="ctx-item" v-show="!hideShow">

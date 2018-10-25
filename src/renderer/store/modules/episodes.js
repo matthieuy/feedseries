@@ -259,10 +259,12 @@ const getters = {
             return dateDiff
           }
 
+          if (a.episode !== b.episode) {
+            return a.episode - b.episode
+          }
           if (a.global !== b.global) {
             return a.global - b.global
           }
-          return a.episode - b.episode
         }
       })
     }
