@@ -20,7 +20,12 @@ app.setPath('userData', require('path').join(app.getPath('appData'), 'FeedSeries
 // Install `vue-devtools`
 app.on('ready', () => {
   let installExtension = require('electron-devtools-installer')
-  installExtension.default(installExtension.VUEJS_DEVTOOLS.id)
+  installExtension.default(installExtension.VUEJS_DEVTOOLS)
+    .then(() => {
+      // Install devtron
+      log.debug('Install devtron')
+      require('devtron').install()
+    })
     .catch(err => {
       log.error('Unable to install `vue-devtools`: \n', err)
     })
