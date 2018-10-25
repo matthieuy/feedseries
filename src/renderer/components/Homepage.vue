@@ -17,7 +17,7 @@
           <div class="fleft col60">
             <div class="binfo">
               <div id="showChart">
-                <div v-if="!stats.id && isVerified" class="loading-stats">Chargement du profil en cours...</div>
+                <div v-if="!stats.id && isVerified" class="loading-stats ellipse-loading">Chargement du profil en cours</div>
                 <div v-if="!isVerified" class="loading-stats">Veuillez vous connecter</div>
               </div>
               <div class="clearfix"></div>
@@ -67,7 +67,7 @@
           <div class="new" v-for="article in news">
             <div class="img" @click="openNews(article.url)" :style="bgNews(article)"></div>
               <div class="new-title" @click="openNews(article.url)">{{ article.title }}</div>
-              <div class="date" :title="article.date | formatDate('ddd DD à HH[h]mm')">{{ article.date|fromNow }}</div>
+              <div class="date" v-tooltip="$options.filters.formatDate(article.date, 'ddd DD à HH[h]mm')">{{ article.date|fromNow }}</div>
           </div>
         </div>
       </div>
@@ -274,8 +274,7 @@
         float: left;
         height: 100px;
         background-size: cover;
-        background-position: top center;
-        background-color: #000000;
+        background: #000000 top center;
         cursor: pointer;
       }
       .new-title {

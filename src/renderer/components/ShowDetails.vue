@@ -77,7 +77,7 @@
       </div>
       <div class="pane">
         <div class="text-center" v-show="isLoading">
-          <i class="fa fa-spinner fa-spin"></i> Chargement en cours...
+          <i class="fa fa-spinner fa-spin"></i> <span class="ellipse-loading">Chargement en cours</span>
         </div>
         <h1 class="text-center" v-show="notFound">
           Série introuvable

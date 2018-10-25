@@ -43,10 +43,10 @@
           <li class="list-group-header">
             <h1 class="text-center">Mes épisodes</h1>
           </li>
-          <li v-show="isLoading" class="text-center">Chargement en cours...</li>
+          <li v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</li>
           <li v-show="!isLoading" v-for="episode in episodes" class="list-group-item" @contextmenu.prevent="$refs.EpisodeCtx.$refs.ctx.open($event, episode)">
             <div class="pull-left media-body date">
-              <span v-show="episode.date" :title="episode.date | formatDate('ddd DD MMM YYYY')">{{ episode.date | formatDate('ddd DD MMM') }}</span>
+              <span v-show="episode.date" v-tooltip="$options.filters.formatDate(episode.date , 'ddd DD MMM YYYY')">{{ episode.date | formatDate('ddd DD MMM') }}</span>
               <span v-show="!episode.date">Pas de date</span>
             </div>
             <div class="pull-left media-body">
@@ -54,12 +54,12 @@
               <strong>
                 <router-link :to="{name: 'show', params: { id: episode.show._id }}">{{ episode.show.title }}</router-link>
               </strong> {{ episode.code }}
-              <i class="fa fa-heart" v-show="episode.show.isFavorited" title="Favoris"></i>
+              <i class="fa fa-heart" v-show="episode.show.isFavorited" v-tooltip="'Favoris'"></i>
               <i class="fa fa-circle" :style="episode.show.status | statusColor" v-show="episode.show.status == 'Ended'"></i>
-              <i class="fa fa-download" v-show="filter === 'all' && episode.isDownloaded" title="Épisode récupéré"></i>
+              <i class="fa fa-download" v-show="filter === 'all' && episode.isDownloaded" v-tooltip="'Épisode récupéré'"></i>
               <i
                   class="fa fa-file-alt cursor"
-                  :title="getSubtitles(episode).length|plurialize('sous-titre', 'sous-titres')"
+                  v-tooltip="$options.filters.plurialize(getSubtitles(episode).length, 'sous-titre', 'sous-titres')"
                   @click="$refs.SubtitleCtx.$refs.ctx.open($event, episode)"></i>
               <friend-bubble :friends="episode.friends"></friend-bubble>
               <p>{{ episode.title }}</p>

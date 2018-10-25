@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import moment from 'moment'
 import VueContextMenu from 'vue-context-menu'
+import VueTooltip from 'v-tooltip'
 
 // Config VueJS
 if (!process.env.IS_WEB) {
@@ -8,6 +9,7 @@ if (!process.env.IS_WEB) {
 }
 Vue.config.productionTip = false
 Vue.use(VueContextMenu)
+Vue.use(VueTooltip)
 
 /**
  * VueJS filters

@@ -9,8 +9,8 @@
       <div>
         <div class="link-title">
           {{ link.name }}
-          <i class="fa fa-pencil-alt cursor" @click="selectLink(link)" title="Modifier"></i>
-          <i class="fa fa-minus-circle cursor" @click="deleteLink(link)" title="Supprimer"></i>
+          <i class="fa fa-pencil-alt cursor" @click="selectLink(link)" v-tooltip="'Modifier'"></i>
+          <i class="fa fa-minus-circle cursor" @click="deleteLink(link)" v-tooltip="'Supprimer'"></i>
         </div>
         <div class="link-url">{{ link.url }}</div>
       </div>

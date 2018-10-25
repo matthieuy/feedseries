@@ -169,7 +169,7 @@ const actions = {
     if (isView) {
       let p = api.episodes.markView(episode).then((ep) => {
         let archiveDay = localStore.get(localStore.key.EPISODES.DAY_BEFORE_ARCHIVE, 16)
-        if ((ep.show.remaining === 0) && (ep.show.status === 'Ended' || moment(String(episode.date)).diff(moment().subtract(archiveDay, 'days')) < 0)) {
+        if (!context.state.finishShow && !ep.show.isArchived && (ep.show.remaining === 0) && (ep.show.status === 'Ended' || moment(String(episode.date)).diff(moment().subtract(archiveDay, 'days')) < 0)) {
           console.log('Série terminée :', ep.show.title)
           context.commit(types.MUTATIONS.SET_FINISH_SHOW, ep.show)
         }
@@ -259,10 +259,12 @@ const getters = {
             return dateDiff
           }
 
+          if (a.episode !== b.episode) {
+            return a.episode - b.episode
+          }
           if (a.global !== b.global) {
             return a.global - b.global
           }
-          return a.episode - b.episode
         }
       })
     }

@@ -86,6 +86,12 @@ const router = new Router({
       name: 'recommendations',
       component: require('@/components/Recommendations').default,
     },
+    // Statistics
+    {
+      path: '/stats',
+      name: 'statistics',
+      component: require('@/components/Statistics').default,
+    },
     // Options
     {
       name: 'options',

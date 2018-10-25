@@ -4,7 +4,7 @@
       <div id="dropzone" class="text">Déposez le fichier ici</div>
     </div>
     <div class="drop-content" v-show="isSearching">
-      <div class="text">Recherche en cours...</div>
+      <div class="text ellipse-loading">Recherche en cours</div>
     </div>
     <div class="result-file" v-show="episode.id">
       <h1>{{ episode.show_title }}</h1>

@@ -141,6 +141,7 @@ export default {
    */
   add (show) {
     console.info('[API] Shows::add', show)
+    Cache.invalidate('episodes_unseen')
     return Vue.http.post('/shows/show', {
       id: show._id,
     })
@@ -168,6 +169,7 @@ export default {
   delete (show) {
     console.info('[API] Shows::delete', show)
     Cache.invalidateByTags({show: show._id})
+    Cache.invalidate('episodes_unseen')
     return Vue.http.delete('/shows/show', {
       params: {
         id: show._id,
@@ -194,6 +196,7 @@ export default {
    */
   archive (show) {
     console.info('[API] Shows::archive', show)
+    Cache.invalidate('episodes_unseen')
     return Vue.http.post('/shows/archive', {
       id: show._id,
     })
@@ -213,6 +216,7 @@ export default {
    */
   unarchive (show) {
     console.info('[API] Shows::unarchive', show)
+    Cache.invalidate('episodes_unseen')
     return Vue.http.delete('/shows/archive', {
       params: {
         id: show._id,

@@ -12,7 +12,7 @@
             <router-link :to="{name: 'show', params: { id: show._id }}">{{ show.title }}</router-link>
             <span class="date">{{ show.creation }}</span>
             <span class="fa fa-circle" :style="show.status | statusColor"></span>
-            <i class="fa fa-heart" v-show="show.isFavorited" title="Favoris"></i>
+            <i class="fa fa-heart" v-show="show.isFavorited" v-tooltip="'Favoris'"></i>
           </h2>
         </div>
         <p class="description" v-html="nl2br(show.description)"></p>

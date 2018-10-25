@@ -6,7 +6,6 @@
     <style>
         body {
             background-color: #282C34;
-            text-align: center;
             -webkit-user-drag: text;
             -webkit-user-select: none;
             -webkit-box-sizing: border-box;
@@ -14,16 +13,38 @@
         }
         img {
             display: block;
+            text-align: center;
             width: 128px;
             margin: auto;
         }
         .title {
             font-size: 2em;
+            text-align: center;
             color: #21252B;
             -webkit-text-stroke: 1px #9DA5B4;
         }
         .loading {
+            margin-left: 90px;
             color: #919191;
+        }
+        .loading:after {
+             overflow: hidden;
+             display: inline-block;
+             vertical-align: bottom;
+             animation: ellipsis steps(4,end) 1500ms infinite;
+             content: "\2026";
+             width: 0;
+        }
+        @keyframes ellipsis {
+            to {
+                width: 20px;
+            }
+        }
+
+        @-webkit-keyframes ellipsis {
+            to {
+                width: 20px;
+            }
         }
     </style>
 </head>
@@ -31,7 +52,7 @@
 <div>
     <img id="logo" src="icons/icon-w.png">
     <div class="title">FeedSeries</div>
-    <div class="loading">Chargement en cours...</div>
+    <div class="loading">Chargement en cours</div>
 </div>
 <script>
   window.ondragstart = () => { return false }

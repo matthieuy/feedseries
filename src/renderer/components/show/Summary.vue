@@ -54,14 +54,14 @@
         <h3>
           Saison {{ season.number }}
           <i class="fa fa-circle" :style="season.progress | statusColor"></i>
-          <div class="pull-right season-action">
-            <i v-show="season.progress !== 100" class="fa fa-download cursor" title="Marquer la saison récupérée" @click="markSeasonDL(season.number, true)"></i>
-            <span v-show="season.progress !== 100" class="fa-stack cursor" title="Marquer la saison non-récupérée" @click="markSeasonDL(season.number, false)">
+          <div class="pull-right season-action" v-show="show.in_account">
+            <i v-show="season.progress !== 100" class="fa fa-download cursor" v-tooltip="'Marquer la saison récupérée'" @click="markSeasonDL(season.number, true)"></i>
+            <span v-show="season.progress !== 100" class="fa-stack cursor" v-tooltip="'Marquer la saison non-récupérée'" @click="markSeasonDL(season.number, false)">
               <i class="fa fa-download fa-stack-1x"></i>
               <i class="fa fa-ban fa-stack-2x"></i>
             </span>
-            <i v-show="season.progress !== 100" class="fa fa-eye cursor" title="Marquer la saison comme vu" @click="markSeasonView(season.number, true)"></i>
-            <i v-show="season.progress !== 0" class="fa fa-eye-slash cursor" title="Marquer la saison comme non-vu" @click="markSeasonView(season.number, false)"></i>
+            <i v-show="season.progress !== 100" class="fa fa-eye cursor" v-tooltip="'Marquer la saison comme vu'" @click="markSeasonView(season.number, true)"></i>
+            <i v-show="season.progress !== 0" class="fa fa-eye-slash cursor" v-tooltip="'Marquer la saison comme non-vu'" @click="markSeasonView(season.number, false)"></i>
           </div>
         </h3>
 
@@ -84,6 +84,7 @@
   import { mapState, mapGetters } from 'vuex'
 
   import api from '../../api'
+  import { Stat } from '../../db'
   import { types } from '../../store'
   import ShowTr from '../ShowTr'
   import EpisodeCtx from '../context/EpisodeCtx'
@@ -129,7 +130,9 @@
             })
             promises.push(p)
           })
-          Promise.all(promises)
+          Promise.all(promises).then(() => {
+            Stat.incrementValue('d', isDL, promises.length - 1)
+          })
         }
       },
       /**
@@ -146,7 +149,9 @@
             let action = (isView) ? types.episodes.ACTIONS.MARK_VIEW : types.episodes.ACTIONS.UNMARK_VIEW
             promises.push(this.$store.dispatch(action, episode))
           })
-          Promise.all(promises)
+          Promise.all(promises).then(() => {
+            Stat.incrementValue('v', isView, promises.length - 1)
+          })
         }
       },
       /**

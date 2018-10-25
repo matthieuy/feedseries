@@ -20,6 +20,8 @@
 @import "context-menu";
 @import "login";
 @import "search";
+@import "tooltip";
+@import "ellipsis";
 
 .fleft { float: left; }
 .clearfix { clear: both; }
@@ -38,6 +40,9 @@ a {
   &:hover {
     text-decoration: underline;
   }
+}
+hr {
+  border-color: $sidebarbgc;
 }
 
 .season {

@@ -40,7 +40,7 @@
           </li>
         </ul>
         <ul id="list-shows" class="list-group">
-          <li v-show="isLoading" class="text-center">Chargement en cours...</li>
+          <li v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</li>
           <li class="list-group-item show-item-view" v-for="show in shows" v-show="!isLoading">
             <div @contextmenu.prevent="$refs.ShowCtx.$refs.ctx.open($event, show)">
               <div class="pull-left">
@@ -48,8 +48,8 @@
                   {{ show.title }}
                 </router-link>
                 <i class="fa fa-circle" :style="show.status | statusColor"></i>
-                <i class="fa fa-archive" v-show="show.isArchived" title="Archivé"></i>
-                <i class="fa fa-heart" v-show="show.isFavorited" title="Favoris"></i>
+                <i class="fa fa-archive" v-show="show.isArchived" v-tooltip="'Archivé'"></i>
+                <i class="fa fa-heart" v-show="show.isFavorited" v-tooltip="'Favoris'"></i>
                 <friend-bubble :friends="show.friends" :show="true"></friend-bubble>
                 <div>
                   {{ show.nb_seasons|plurialize('saison', 'saisons') }}, {{ show.nb_episodes|plurialize('épisode', 'épisodes') }}
