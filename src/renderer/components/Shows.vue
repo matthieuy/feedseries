@@ -40,7 +40,7 @@
           </li>
         </ul>
         <ul id="list-shows" class="list-group">
-          <li v-show="isLoading" class="text-center">Chargement en cours...</li>
+          <li v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</li>
           <li class="list-group-item show-item-view" v-for="show in shows" v-show="!isLoading">
             <div @contextmenu.prevent="$refs.ShowCtx.$refs.ctx.open($event, show)">
               <div class="pull-left">

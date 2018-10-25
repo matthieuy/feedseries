@@ -59,8 +59,8 @@
         <div class="text-center binfo no-graph" v-show="firstStat > -1 && firstStat <= 1">
           Pas assez de données pour afficher les graphiques !
         </div>
-        <div class="text-center binfo no-graph" v-show="firstStat === -1" style="color: #FFFFFF;">
-          Chargement en cours...
+        <div class="text-center binfo no-graph ellipse-loading" v-show="firstStat === -1" style="color: #FFFFFF;">
+          Chargement en cours
         </div>
 
         <div v-show="firstStat > 1">

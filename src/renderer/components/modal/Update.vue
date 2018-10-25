@@ -13,7 +13,7 @@
             <div id="txt">{{ percent }}% <span v-show="speed">({{ speed|size }}/s)</span></div>
           </div>
         </div>
-        <div v-show="isInstalling">Installation de la v{{ lastVersion }} en cours...</div>
+        <div v-show="isInstalling" class="ellipse-loading">Installation de la v{{ lastVersion }} en cours</div>
       </div>
     </div>
     <div class="updates">
@@ -79,6 +79,7 @@
 
 <style lang="scss">
   @import "../../assets/scss/vars";
+  @import "../../assets/scss/ellipsis";
   @import "../../assets/scss/scrollbar";
   @import "../../assets/scss/photon/global";
   @import "../../assets/scss/photon/buttons";

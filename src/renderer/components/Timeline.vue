@@ -1,6 +1,6 @@
 <template>
   <div class="window timeline">
-    <div v-show="isLoading" class="text-center">Chargement en cours...</div>
+    <div v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</div>
     <div class="window-content">
       <ul>
         <li v-for="event in timeline.events" class="event">

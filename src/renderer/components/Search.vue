@@ -3,7 +3,7 @@
     <ul class="list-group">
       <li class="list-group-header"><input id="search" type="search" class="form-control" v-model="query" autofocus></li>
       <li class="list-group-item text-center" v-show="isSearching">
-        <i class="fa fa-spinner fa-spin fa-pull-left"></i> Recherche en cours...
+        <i class="fa fa-spinner fa-spin fa-pull-left"></i> <span class="ellipse-loading">Recherche en cours</span>
       </li>
       <li class="list-group-item text-center" v-show="noResult">Aucun résultats</li>
 

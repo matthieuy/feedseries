@@ -17,7 +17,7 @@
           <div class="fleft col60">
             <div class="binfo">
               <div id="showChart">
-                <div v-if="!stats.id && isVerified" class="loading-stats">Chargement du profil en cours...</div>
+                <div v-if="!stats.id && isVerified" class="loading-stats ellipse-loading">Chargement du profil en cours</div>
                 <div v-if="!isVerified" class="loading-stats">Veuillez vous connecter</div>
               </div>
               <div class="clearfix"></div>

@@ -43,7 +43,7 @@
           <li class="list-group-header">
             <h1 class="text-center">Mes épisodes</h1>
           </li>
-          <li v-show="isLoading" class="text-center">Chargement en cours...</li>
+          <li v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</li>
           <li v-show="!isLoading" v-for="episode in episodes" class="list-group-item" @contextmenu.prevent="$refs.EpisodeCtx.$refs.ctx.open($event, episode)">
             <div class="pull-left media-body date">
               <span v-show="episode.date" v-tooltip="$options.filters.formatDate(episode.date , 'ddd DD MMM YYYY')">{{ episode.date | formatDate('ddd DD MMM') }}</span>
