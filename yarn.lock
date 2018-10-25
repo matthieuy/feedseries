@@ -1554,7 +1554,7 @@ caniuse-lite@^1.0.30000844:
 
 "canvasjs@github:matthieuy/canvasjs":
   version "1.8.2-pre"
-  resolved "https://codeload.github.com/matthieuy/canvasjs/tar.gz/3ad2fdc494005d3d47d24c580bd874f91f18c3c8"
+  resolved "https://codeload.github.com/matthieuy/canvasjs/tar.gz/07f60ab0ec69b372fc0e1be35abab4762f4b5ce8"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
