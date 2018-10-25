@@ -54,6 +54,8 @@
           <div class="clearfix"></div>
         </div>
 
+        <hr/>
+
         <div class="text-center binfo no-graph" v-show="firstStat > -1 && firstStat <= 1">
           Pas assez de données pour afficher les graphiques !
         </div>
@@ -130,6 +132,7 @@
           .setLabelFormat(this.labelFormat, 'episodes')
           .setLabelFormat(this.labelFormat, 'shows')
           .setStats(stats)
+        console.log('[GRAPH] Update')
       },
       /**
        * Calculate sums for a period
@@ -148,6 +151,60 @@
         })
 
         return sums
+      },
+      drawGraph () {
+        // Episodes
+        graphs
+          .addGraph('episodes', 'graphepisodes', 'Épisodes', {
+            toolTip: {
+              contentFormatter: (e) => {
+                let str = `<span>${e.entries[0].dataPoint.label}</span><br>`
+                e.entries.forEach((a) => {
+                  if (a.dataSeries.visible) {
+                    if (a.dataSeries.name === 'sous-titres') {
+                      str += `<span style="color:${a.dataSeries.color}">${a.dataPoint.y} sous-titres téléchargés</span><br>`
+                    } else {
+                      str += `<span style="color:${a.dataSeries.color}">${a.dataPoint.y} épisodes ${a.dataSeries.name}</span><br>`
+                    }
+                  }
+                })
+                return str
+              },
+            },
+          })
+          .addSerie('vus', 'v', { color: '#0a67ac' })
+          .addSerie('récupérés', 'd', { color: '#885dbb' })
+          .addSerie('sous-titres', 's', { color: '#91bb2b' })
+
+        // Shows
+        graphs
+          .addGraph('shows', 'graphshow', 'Séries', {
+            axisY: {
+              stripLines: [{
+                value: 0,
+                color: '#FF0000',
+                lineDashType: 'dash',
+              }],
+            },
+          })
+          .addSerie('Ajouts', 'a', { color: '#4c8c75' })
+          .addSerie('Archives', 'r', { color: '#fdbc40' })
+
+        // Week
+        graphs
+          .addGraph('week', 'graphweek', 'Répartition', {
+            width: 350,
+            toolTip: {
+              content: `<span style='"'color: {color};'"'>{y} épisodes vus le {label}</span> (#percent%)`,
+            },
+          })
+          .addSerie('Vus', 'v', {
+            type: 'doughnut',
+            showInLegend: false,
+          })
+          .setLabelFormat('dddd')
+        console.log('[GRAPH] Create')
+        return Promise.resolve()
       },
     },
     watch: {
@@ -190,7 +247,7 @@
             this.labelFormat = 'MMM YYYY'
             break
         }
-        console.log('Stats after', this.period.format('DD/MM/YYYY'))
+        console.log('[Stats] >=', this.period.format('DD/MM/YYYY'))
 
         // Save and update graph
         if (value !== localStore.get(localStore.key.STATS.PERIOD, '7d')) {
@@ -205,62 +262,14 @@
       console.log('[VUE] Mount Statistics')
       this.periodStr = localStore.get(localStore.key.STATS.PERIOD, '7d')
 
-      // Episodes
-      graphs
-        .addGraph('episodes', 'graphepisodes', 'Épisodes', {
-          toolTip: {
-            contentFormatter: (e) => {
-              let str = `<span>${e.entries[0].dataPoint.label}</span><br>`
-              e.entries.forEach((a) => {
-                if (a.dataSeries.visible) {
-                  if (a.dataSeries.name === 'sous-titres') {
-                    str += `<span style="color:${a.dataSeries.color}">${a.dataPoint.y} sous-titres téléchargés</span><br>`
-                  } else {
-                    str += `<span style="color:${a.dataSeries.color}">${a.dataPoint.y} épisodes ${a.dataSeries.name}</span><br>`
-                  }
-                }
-              })
-              return str
-            },
-          },
-        })
-        .addSerie('vus', 'v', { color: '#0a67ac' })
-        .addSerie('récupérés', 'd', { color: '#885dbb' })
-        .addSerie('sous-titres', 's', { color: '#91bb2b' })
-
-      // Shows
-      graphs
-        .addGraph('shows', 'graphshow', 'Séries', {
-          axisY: {
-            stripLines: [{
-              value: 0,
-              color: '#FF0000',
-              lineDashType: 'dash',
-            }],
-          },
-        })
-        .addSerie('Ajouts', 'a', { color: '#4c8c75' })
-        .addSerie('Archives', 'r', { color: '#fdbc40' })
-
-      // Week
-      graphs
-        .addGraph('week', 'graphweek', 'Répartition', {
-          width: 350,
-          toolTip: {
-            content: `<span style='"'color: {color};'"'>{y} épisodes vus le {label}</span> (#percent%)`,
-          },
-        })
-        .addSerie('Vus', 'v', {
-          type: 'doughnut',
-          showInLegend: false,
-        })
-        .setLabelFormat('dddd')
-
       // Get stats
       this.$store.dispatch(types.stats.ACTIONS.LOAD_STATS).then((stats) => {
+        this.drawGraph().then(() => {
+          this.updateGraph(stats)
+        })
         if (stats.length) {
           this.firstStat = moment().diff(moment(stats[0].date), 'days')
-          console.log('First stat :', this.firstStat, 'days ago')
+          console.log('[STATS] First :', this.firstStat, 'days ago')
         }
       })
     },

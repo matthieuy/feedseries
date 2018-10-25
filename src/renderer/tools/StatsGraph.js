@@ -202,6 +202,7 @@ class StatsGraph {
     graphListName.forEach((name) => {
       this._graphs[name].options.data = this._data[name]
       this._graphs[name].render()
+      console.log('[GRAPH] Redraw', name)
     })
 
     return this
