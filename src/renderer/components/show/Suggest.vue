@@ -37,7 +37,7 @@
       return {
         selected: [],
         comment: '',
-        friends: this.getFriendsList(),
+        friends: [],
       }
     },
     computed: {
@@ -98,6 +98,7 @@
     },
     mounted () {
       this.comment = ''
+      this.getFriendsList()
     },
     beforeRouteUpdate (to, from, next) {
       this.comment = ''
