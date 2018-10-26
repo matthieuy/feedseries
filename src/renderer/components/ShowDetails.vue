@@ -280,6 +280,12 @@
       }
       next()
     },
+    destroyed () {
+      this.$store.commit(types.show.MUTATIONS.SET_SHOW, false)
+      this.$store.commit(types.show.MUTATIONS.SET_CHARACTERS, [])
+      this.$store.commit(types.show.MUTATIONS.SET_SIMILARS, [])
+      this.$store.commit(types.show.MUTATIONS.SET_COMMENTS, [])
+    },
   }
 </script>
 

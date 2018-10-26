@@ -94,6 +94,9 @@
         console.info('[VUE] Mount Timeline.vue')
         this.getList()
       },
+      destroyed () {
+        this.$store.commit(types.timeline.MUTATIONS.SET_EVENTS, [])
+      },
     }
 </script>
 

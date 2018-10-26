@@ -273,6 +273,9 @@
         }
       })
     },
+    destroyed () {
+      this.$store.commit(types.stats.MUTATIONS.SET_STATS, [])
+    },
   }
 </script>
 
