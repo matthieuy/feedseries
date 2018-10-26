@@ -274,8 +274,10 @@
       })
     },
     beforeRouteUpdate (to, from, next) {
-      this.$store.commit(types.show.MUTATIONS.SET_SHOW, false)
-      this.loadShow(to)
+      if (!this.show || this.show._id !== to.params.id) {
+        this.$store.commit(types.show.MUTATIONS.SET_SHOW, false)
+        this.loadShow(to)
+      }
       next()
     },
   }
