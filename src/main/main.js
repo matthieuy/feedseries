@@ -127,6 +127,13 @@ function createWindow () {
     return false
   })
 
+  // Catch error
+  mainWindow.on('unresponsive', () => { log.error('[UNRESPONSIVE]', arguments) })
+  mainWindow.on('responsive', () => { log.error('[RESPONSIVE]', arguments) })
+  mainWindow.webContents.on('crashed', () => { log.error('[CRASH CONTENT]', arguments) })
+  mainWindow.webContents.on('plugin-crashed', () => { log.error('[CRASH PLUGINS]', arguments) })
+
+  // Update icon from option webContent
   ipcMain.on('update-icon', () => {
     mainWindow.setIcon(localStore.getIconPath())
   })
@@ -140,21 +147,21 @@ function createWindow () {
   })
 
   // App full loaded
-  ipcMain.on('app-ready', () => {
+  ipcMain.once('app-ready', () => {
     log.debug('App is ready')
     // Create systray
     systray = require('./system/systray').default
     systray.init(mainWindow)
 
-    // Show app
-    if (mainWindow && !global.silentStart) {
-      mainWindow.show()
-    }
-
     // Check update
     Updater.init(mainWindow)
     if (process.env.NODE_ENV !== 'development' && parseInt(localStore.get(localStore.key.UPDATE.INTERVAL, 1))) {
       Updater.check(false)
+    }
+
+    // Show app
+    if (mainWindow && !global.silentStart) {
+      mainWindow.show()
     }
   })
 }
@@ -172,7 +179,7 @@ function getUrl (argv) {
     url += '#' + localStore.get(localStore.key.ROUTE.LAST)
   }
 
-  log.info('Load URL :', url)
+  log.debug('Load URL :', url)
   return url
 }
 
@@ -190,7 +197,7 @@ function registerShortcutClearCache (active) {
         db.clearDb('episodes'),
         db.clearDb('subtitles'),
       ]
-      Promise.race(promises).then(() => {
+      Promise.all(promises).then(() => {
         mainWindow.reload()
       }).catch(() => {
         mainWindow.reload()

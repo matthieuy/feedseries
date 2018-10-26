@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import localStore from '../../renderer/store/local'
+import log from 'electron-log'
 
 export default {
   win: null,
@@ -55,8 +56,14 @@ export default {
     this.win.loadURL(this.url, {
       userAgent: global.userAgent,
     })
+
+    this.win.on('unresponsive', () => { log.error('[SPLASH UNRESPONSIVE]', arguments) })
+    this.win.on('responsive', () => { log.error('[SPLASH RESPONSIVE]', arguments) })
+
     this.win.on('ready-to-show', () => {
       this.win.show()
+      this.win.webContents.on('crashed', () => { log.error('[SPLASH CRASH CONTENT]', arguments) })
+      this.win.webContents.on('plugin-crashed', () => { log.error('[SPLASH CRASH PLUGINS]', arguments) })
       ipcMain.emit('splashscreen-display')
     })
 

@@ -9,7 +9,7 @@ import log from 'electron-log'
 process.env.NODE_ENV = 'development'
 app.isQuiting = true
 log.transports.console.level = 'debug'
-log.transports.file.level = 'debug'
+log.transports.file.level = 'info'
 global.winURL = 'http://localhost:9080'
 global.userAgent = 'FeedSeries (dev)'
 log.debug('Environment : dev')
