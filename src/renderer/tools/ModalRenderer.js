@@ -54,8 +54,8 @@ class ModalRenderer {
 
   openModal (url, options) {
     // Open modal
-    console.log('[MODAL] Open ', name)
-    ipcRenderer.send('open-modal', name, url, options)
+    console.log('[MODAL] Open ', this.name)
+    ipcRenderer.send('open-modal', this.name, url, options)
 
     // On close
     ipcRenderer.once('modal-close', (event, modalName) => {
