@@ -52,6 +52,11 @@ export default {
       minimizable: false,
       resizable: false,
       maximizable: false,
+      webPreferences: {
+        plugins: false,
+        webgl: false,
+        webaudio: false,
+      },
     })
     this.win.loadURL(this.url, {
       userAgent: global.userAgent,

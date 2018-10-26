@@ -40,6 +40,9 @@ export default {
       modal: true,
       webPreferences: {
         devTools: true,
+        plugins: false,
+        webgl: false,
+        webaudio: false,
       },
     }, options)
 

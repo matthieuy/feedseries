@@ -96,6 +96,9 @@ function createWindow () {
     width: 1000,
     webPreferences: {
       devTools: true,
+      plugins: false,
+      webgl: false,
+      webaudio: false,
     },
   })
 
