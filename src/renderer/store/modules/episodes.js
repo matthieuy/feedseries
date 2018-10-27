@@ -183,12 +183,18 @@ const actions = {
     promises.reverse(() => {
       Episode.markView(episode, !isView)
       Stat.markView(!isView)
+      if (episode.show && episode.show.runtime) {
+        Stat.addTimeView(episode.show.runtime, !isView)
+      }
       promises.callThen()
     })
 
     // DB
     promises.addPromise(Episode.markView(episode, isView))
     Stat.markView(isView)
+    if (episode.show && episode.show.runtime) {
+      Stat.addTimeView(episode.show.runtime, isView)
+    }
 
     // Update episode in state
     promises.then((episode) => {

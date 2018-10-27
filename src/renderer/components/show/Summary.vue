@@ -151,6 +151,7 @@
           })
           Promise.all(promises).then(() => {
             Stat.incrementValue('v', isView, promises.length - 1)
+            Stat.incrementValue('t', isView, this.show.runtime * (promises.length - 1))
           })
         }
       },

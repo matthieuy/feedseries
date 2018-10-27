@@ -274,9 +274,17 @@
       })
     },
     beforeRouteUpdate (to, from, next) {
-      this.$store.commit(types.show.MUTATIONS.SET_SHOW, false)
-      this.loadShow(to)
+      if (!this.show || this.show._id !== to.params.id) {
+        this.$store.commit(types.show.MUTATIONS.SET_SHOW, false)
+        this.loadShow(to)
+      }
       next()
+    },
+    destroyed () {
+      this.$store.commit(types.show.MUTATIONS.SET_SHOW, false)
+      this.$store.commit(types.show.MUTATIONS.SET_CHARACTERS, [])
+      this.$store.commit(types.show.MUTATIONS.SET_SIMILARS, [])
+      this.$store.commit(types.show.MUTATIONS.SET_COMMENTS, [])
     },
   }
 </script>

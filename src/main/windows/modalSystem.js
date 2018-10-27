@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, globalShortcut } from 'electron'
 import { localStore } from '../../renderer/store'
+import log from 'electron-log'
 
 export default {
   windows: {},
@@ -39,6 +40,9 @@ export default {
       modal: true,
       webPreferences: {
         devTools: true,
+        plugins: false,
+        webgl: false,
+        webaudio: false,
       },
     }, options)
 
@@ -48,7 +52,12 @@ export default {
       userAgent: global.userAgent,
     })
     win.setMenu(null)
-    win.once('ready-to-show', () => { win.show() })
+    win.once('ready-to-show', () => {
+      log.debug('[MODAL] Open', name)
+      win.on('unresponsive', () => { log.error('[MODAL UNRESPONSIVE]', name) })
+      win.on('responsive', () => { log.error('[MODAL RESPONSIVE]', name) })
+      win.show()
+    })
 
     // Close event
     if (!globalShortcut.isRegistered('Escape') && (typeof options.escape === 'undefined' || options.escape)) {
@@ -58,13 +67,18 @@ export default {
     }
 
     win.once('close', () => {
-      console.log('[MODAL] Close ', name)
+      log.debug('[MODAL] Close', name)
       this.parent.webContents.send('modal-close', name)
       if (globalShortcut.isRegistered('Escape')) {
         globalShortcut.unregister('Escape')
       }
+      win.removeAllListeners('unresponsive')
+      win.removeAllListeners('responsive')
     })
-    win.once('closed', () => { delete this.windows[name] })
+    win.once('closed', () => {
+      win.destroy()
+      delete this.windows[name]
+    })
     if (process.env.NODE_ENV === 'development' && localStore.get(localStore.key.DEVTOOLS, false)) {
       win.openDevTools()
     }

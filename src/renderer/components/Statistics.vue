@@ -231,7 +231,7 @@
             this.period = moment().startOf('day')
             break
           case '7d': // 1 week
-            this.period = period.subtract(7, 'days')
+            this.period = period.subtract(7, 'days').add('10', 'seconds')
             this.labelFormat = 'ddd DD'
             break
           case '1m': // 1 month
@@ -272,6 +272,9 @@
           console.log('[STATS] First :', this.firstStat, 'days ago')
         }
       })
+    },
+    destroyed () {
+      this.$store.commit(types.stats.MUTATIONS.SET_STATS, [])
     },
   }
 </script>
