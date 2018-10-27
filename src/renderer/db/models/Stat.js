@@ -4,6 +4,7 @@ import { Document } from 'camo'
  * Type :
  *   v: episodes view
  *   d: episodes download
+ *   t: time view
  *   a: show add
  *   r: show archive
  *   s: srt download
@@ -46,6 +47,15 @@ class Stat extends Document {
    */
   static markView (isView) {
     return this.incrementValue('v', isView, 1)
+  }
+
+  /**
+   * Add time view
+   * @param {Integer} minute
+   * @param {Boolean} isAdd
+   */
+  static addTimeView (minute, isAdd) {
+    return this.incrementValue('t', isAdd, minute)
   }
 
   /**
