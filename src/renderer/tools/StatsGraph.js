@@ -162,6 +162,13 @@ class StatsGraph {
         })
         this._data[name] = this._data[name].filter((a) => a.dataPoints.length)
 
+        for (let i = 0; i < this._data[name].length; i++) {
+          // Edit dataPoint with callback
+          if (this._data[name][i].hasOwnProperty('convertDataPoints')) {
+            this._data[name][i].dataPoints = this._data[name][i].convertDataPoints(this._data[name][i].dataPoints)
+          }
+        }
+
         // if (this._graphs[name].options.hasOwnProperty('addNullPoint') && this._graphs[name].options.addNullPoint) {
         //   for (let i = 0; i < this._data[name].length; i++) {
         //     let dateCurrent = moment(this._startDate.toDate())

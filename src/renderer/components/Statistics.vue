@@ -21,7 +21,7 @@
           </span>
 
           <span class="binfo">
-            <i class="fa fa-clock"></i>
+            <i class="fa fa-clock" style="color: #b1b400;"></i>
             {{ sum.t|duration_tv }}
             <span v-show="iteration">aujourd'hui</span>
           </span>
@@ -72,6 +72,11 @@
         <div v-show="firstStat > 1">
           <div style="width: 90%; margin: auto;">
             <div id="graphepisodes" class="graph-stats"></div>
+            <div class="clearfix"></div>
+          </div>
+
+          <div style="width: 90%; margin: auto;">
+            <div id="graphtime" class="graph-stats"></div>
             <div class="clearfix"></div>
           </div>
 
@@ -137,6 +142,7 @@
           .setStartDate(this.period)
           .setLabelFormat(this.labelFormat, 'episodes')
           .setLabelFormat(this.labelFormat, 'shows')
+          .setLabelFormat(this.labelFormat, 'times')
           .setStats(stats)
         console.log('[GRAPH] Update')
       },
@@ -181,6 +187,31 @@
           .addSerie('vus', 'v', { color: '#0a67ac' })
           .addSerie('récupérés', 'd', { color: '#885dbb' })
           .addSerie('sous-titres', 's', { color: '#91bb2b' })
+
+        // Time
+        graphs
+          .addGraph('times', 'graphtime', 'Temps passé', {
+            axisY: {
+              suffix: 'h',
+            },
+            toolTip: {
+              contentFormatter: (e) => {
+                let point = e.entries[0]
+                return `<span>${point.dataPoint.label}</span><br>
+                  <span style="color:${point.dataSeries.color}">${this.$options.filters.duration_tv(point.dataPoint.y * 60)}</span>`
+              },
+            },
+          })
+          .addSerie('Durée', 't', {
+            color: '#b1b400',
+            showInLegend: false,
+            convertDataPoints: (dataPoints) => {
+              for (let i = 0; i < dataPoints.length; i++) {
+                dataPoints[i].y /= 60
+              }
+              return dataPoints
+            },
+          })
 
         // Shows
         graphs
