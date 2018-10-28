@@ -238,6 +238,16 @@
           .addSerie('Vus', 'v', {
             type: 'doughnut',
             showInLegend: false,
+            convertDataPoints: (dataPoints) => {
+              let colorSet = ['#369EAD', '#C24642', '#7F6084', '#86B402', '#C8B631', '#948e91', '#FFA500']
+              dataPoints = dataPoints.sort((a, b) => moment(a.date).format('e') - moment(b.date).format('e'))
+              for (let i = 0; i < dataPoints.length; i++) {
+                let day = moment(dataPoints[i].date).format('e')
+                dataPoints[i].color = colorSet[day]
+                dataPoints[i].indexLabelFontColor = colorSet[day]
+              }
+              return dataPoints
+            },
           })
           .setLabelFormat('dddd')
         console.log('[GRAPH] Create')
