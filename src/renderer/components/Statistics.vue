@@ -20,6 +20,12 @@
             <span v-show="iteration">aujourd'hui</span>
           </span>
 
+          <span class="binfo">
+            <i class="fa fa-clock"></i>
+            {{ sum.t|duration_tv }}
+            <span v-show="iteration">aujourd'hui</span>
+          </span>
+
           <span class="binfo" v-show="sum.d">
             <i class="fa fa-download"></i>
             <span v-show="sum.d > 0">{{ sum.d|plurialize('épisode récupéré', 'épisodes récupérés') }}</span>
