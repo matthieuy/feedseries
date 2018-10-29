@@ -73,6 +73,10 @@ class Stat extends Document {
    * @param {Integer} value
    */
   static incrementValue (type, increment, value) {
+    if (!value) {
+      return Promise.resolve()
+    }
+
     return new Promise((resolve, reject) => {
       this.findOne({
         ts: this._getCurrentTs(),

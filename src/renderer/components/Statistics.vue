@@ -20,6 +20,12 @@
             <span v-show="iteration">aujourd'hui</span>
           </span>
 
+          <span class="binfo">
+            <i class="fa fa-clock" style="color: #b1b400;"></i>
+            {{ sum.t|duration_tv }}
+            <span v-show="iteration">aujourd'hui</span>
+          </span>
+
           <span class="binfo" v-show="sum.d">
             <i class="fa fa-download"></i>
             <span v-show="sum.d > 0">{{ sum.d|plurialize('épisode récupéré', 'épisodes récupérés') }}</span>
@@ -70,11 +76,17 @@
           </div>
 
           <div style="width: 90%; margin: auto;">
+            <div id="graphtime" class="graph-stats"></div>
+            <div class="clearfix"></div>
+          </div>
+
+          <div style="width: 90%; margin: auto;">
             <div id="graphshow" class="graph-stats"></div>
           </div>
 
           <div style="width: 90%; margin: auto;">
-            <div id="graphweek" class="graph-stats"></div>
+            <div id="graphweek" class="graph-stats fleft" style="width: 350px;margin-right: 20px;"></div>
+            <div id="graphweektime" class="graph-stats fleft" style="width: 350px;"></div>
           </div>
         </div>
       </div>
@@ -130,9 +142,10 @@
         graphs
           .setStartDate(this.period)
           .setLabelFormat(this.labelFormat, 'episodes')
+          .setLabelFormat(this.labelFormat, 'times')
           .setLabelFormat(this.labelFormat, 'shows')
           .setStats(stats)
-        console.log('[GRAPH] Update')
+        console.log('[GRAPH] Update', stats)
       },
       /**
        * Calculate sums for a period
@@ -152,6 +165,9 @@
 
         return sums
       },
+      /**
+       * Draw the graphs
+       */
       drawGraph () {
         // Episodes
         graphs
@@ -172,9 +188,45 @@
               },
             },
           })
-          .addSerie('vus', 'v', { color: '#0a67ac' })
+          .addSerie('vus', 'v', {
+            color: '#0a67ac',
+            convertDataPoints: (dataPoints) => {
+              for (let i = 0; i < dataPoints.length; i++) {
+                if (!dataPoints[i].y) {
+                  dataPoints[i].color = '#FF0000'
+                }
+              }
+              return dataPoints
+            },
+          })
           .addSerie('récupérés', 'd', { color: '#885dbb' })
           .addSerie('sous-titres', 's', { color: '#91bb2b' })
+
+        // Time
+        graphs
+          .addGraph('times', 'graphtime', 'Temps passé', {
+            axisY: {
+              suffix: 'h',
+            },
+            toolTip: {
+              contentFormatter: (e) => {
+                let point = e.entries[0].dataPoint
+                let duration = (point.y) ? this.$options.filters.duration_tv(point.y * 60) : 'aucun épisode vu'
+                return `<span>${point.label}</span><br><span style="color:${e.entries[0].dataSeries.color}">${duration}</span>`
+              },
+            },
+          })
+          .addSerie('Durée', 't', {
+            color: '#b1b400',
+            showInLegend: false,
+            convertDataPoints: (dataPoints) => {
+              for (let i = 0; i < dataPoints.length; i++) {
+                dataPoints[i].duration = this.$options.filters.duration_tv(dataPoints[i].y)
+                dataPoints[i].y /= 60
+              }
+              return dataPoints
+            },
+          })
 
         // Shows
         graphs
@@ -192,7 +244,7 @@
 
         // Week
         graphs
-          .addGraph('week', 'graphweek', 'Répartition', {
+          .addGraph('week', 'graphweek', 'Répartition (nombre)', {
             width: 350,
             toolTip: {
               content: `<span style='"'color: {color};'"'>{y} épisodes vus le {label}</span> (#percent%)`,
@@ -201,6 +253,42 @@
           .addSerie('Vus', 'v', {
             type: 'doughnut',
             showInLegend: false,
+            addEmptyPoint: false,
+            convertDataPoints: (dataPoints) => {
+              let colorSet = ['#369EAD', '#C24642', '#7F6084', '#86B402', '#C8B631', '#948e91', '#FFA500']
+              dataPoints = dataPoints.sort((a, b) => moment(a.date).format('e') - moment(b.date).format('e'))
+              for (let i = 0; i < dataPoints.length; i++) {
+                let day = moment(dataPoints[i].date).format('e')
+                dataPoints[i].color = colorSet[day]
+                dataPoints[i].indexLabelFontColor = colorSet[day]
+              }
+              return dataPoints
+            },
+          })
+          .setLabelFormat('dddd')
+
+        graphs
+          .addGraph('weektime', 'graphweektime', 'Répartition (temps)', {
+            width: 350,
+            toolTip: {
+              content: `<span style='"'color: {color};'"'>Temps passé le {label} : {duration}</span> (#percent%)`,
+            },
+          })
+          .addSerie('Durée', 't', {
+            type: 'doughnut',
+            showInLegend: false,
+            addEmptyPoint: false,
+            convertDataPoints: (dataPoints) => {
+              let colorSet = ['#369EAD', '#C24642', '#7F6084', '#86B402', '#C8B631', '#948e91', '#FFA500']
+              dataPoints = dataPoints.sort((a, b) => moment(a.date).format('e') - moment(b.date).format('e'))
+              for (let i = 0; i < dataPoints.length; i++) {
+                let day = moment(dataPoints[i].date).format('e')
+                dataPoints[i].color = colorSet[day]
+                dataPoints[i].indexLabelFontColor = colorSet[day]
+                dataPoints[i].duration = this.$options.filters.duration_tv(dataPoints[i].y)
+              }
+              return dataPoints
+            },
           })
           .setLabelFormat('dddd')
         console.log('[GRAPH] Create')
@@ -228,7 +316,7 @@
         let period = moment().startOf('day')
         switch (value) {
           case '1d': // Today
-            this.period = moment().startOf('day')
+            this.period = period
             break
           case '7d': // 1 week
             this.period = period.subtract(7, 'days').add('10', 'seconds')
@@ -247,7 +335,7 @@
             this.labelFormat = 'MMM YYYY'
             break
         }
-        console.log('[Stats] >=', this.period.format('DD/MM/YYYY'))
+        console.log('[Stats] >=', this.period.format('DD/MM/YYYY HH:mm'))
 
         // Save and update graph
         if (value !== localStore.get(localStore.key.STATS.PERIOD, '7d')) {
@@ -292,7 +380,7 @@
   .graph-stats {
     min-height: 300px;
     margin-bottom: 25px;
-    width: 95%;
+    /*width: 95%;*/
     .canvasjs-chart-container {
       /*width: 600px;*/
       margin: auto;

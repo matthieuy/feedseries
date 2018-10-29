@@ -69,7 +69,6 @@ class StatsGraph {
         text: title,
       },
       axisX: {
-        margin: 0,
         labelAutoFit: true,
         labelWrap: true,
         labelAngle: -45,
@@ -121,6 +120,7 @@ class StatsGraph {
       showInLegend: true,
       dataPoints: [],
       statType: statType,
+      addEmptyPoint: true,
     }
 
     let options = (typeof opts !== 'undefined') ? jQuery.extend(true, {}, optionsDefault, opts) : optionsDefault
@@ -160,30 +160,36 @@ class StatsGraph {
             }
           }
         })
-        this._data[name] = this._data[name].filter((a) => a.dataPoints.length)
 
-        // if (this._graphs[name].options.hasOwnProperty('addNullPoint') && this._graphs[name].options.addNullPoint) {
-        //   for (let i = 0; i < this._data[name].length; i++) {
-        //     let dateCurrent = moment(this._startDate.toDate())
-        //     do {
-        //       let label = dateCurrent.format(this._labelFormat[name])
-        //       console.log('Test', label)
-        //       let index = this._data[name][i].dataPoints.findIndex((a) => a.label === label)
-        //       if (index === -1) {
-        //         this._data[name][i].dataPoints.push({
-        //           label: label,
-        //           y: 0,
-        //           date: dateCurrent.toDate(),
-        //         })
-        //         console.log('Add', label)
-        //       }
-        //       dateCurrent = dateCurrent.add(1, 'days')
-        //     } while (dateCurrent.isBefore(moment.now()))
-        //     this._data[name][i].dataPoints = this._data[name][i].dataPoints.sort((a, b) => a.date - b.date)
-        //     console.log(this._data[name][i].dataPoints)
-        //   }
-        // }
+        for (let i = 0; i < this._data[name].length; i++) {
+          // Hide graph if empty
+          this._data[name][i].visible = (this._data[name][i].dataPoints.length > 0)
 
+          // Add empty points
+          if (this._data[name][i].addEmptyPoint) {
+            let dateCurrent = moment(this._startDate.toDate())
+            do {
+              let label = dateCurrent.format(this._labelFormat[name])
+              let index = this._data[name][i].dataPoints.findIndex((a) => a.label === label)
+              if (index === -1 && !dateCurrent.seconds()) {
+                this._data[name][i].dataPoints.push({
+                  label: label,
+                  y: 0,
+                  date: dateCurrent.toDate(),
+                })
+              }
+              dateCurrent = dateCurrent.add(1, 'days').startOf('day')
+            } while (dateCurrent.isBefore(moment.now()))
+            this._data[name][i].dataPoints = this._data[name][i].dataPoints.sort((a, b) => a.date - b.date)
+          }
+
+          // Edit dataPoint with callback
+          if (this._data[name][i].hasOwnProperty('convertDataPoints')) {
+            this._data[name][i].dataPoints = this._data[name][i].convertDataPoints(this._data[name][i].dataPoints)
+          }
+        }
+
+        console.log(name, this._data[name])
         this.render(name)
       }
     }
