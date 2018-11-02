@@ -14,10 +14,10 @@ Allez sur la page des [releases](https://github.com/matthieuy/feedseries/release
 
 ## Screenshots
 
-![Mes épisodes](/doc/screenshot1.png)  
+![Mes episodes](/doc/screenshot1.png)  
 ![Calendrier](/doc/screenshot2.png)  
-![Série](/doc/screenshot3.png)
-
+![Serie](/doc/screenshot3.png)  
+![Statistiques](/doc/screenshot4.png)  
 
 ## Credits
 
