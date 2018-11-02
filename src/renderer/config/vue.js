@@ -39,7 +39,7 @@ Vue.filter('defaut', (value, defaultValue) => {
 
 function plurialize (value, singular, plurial) {
   if (typeof value === 'undefined') {
-    return plurial
+    return `0 ${singular}`
   }
   return (value <= 1) ? `${value} ${singular}` : `${new Intl.NumberFormat().format(value)} ${plurial}`
 }
@@ -101,6 +101,9 @@ Vue.filter('statusColor', (value) => {
 })
 
 Vue.filter('duration_tv', (value) => {
+  if (!value) {
+    return '0 minute'
+  }
   let duration = moment.duration(parseInt(value), 'minutes')
   let time = []
 
