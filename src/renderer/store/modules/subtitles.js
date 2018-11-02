@@ -123,7 +123,7 @@ let downloadSubtitleFile = (filepath, subtitle) => {
   req.pipe(out)
 
   req.on('end', () => {
-    Stat.incrementValue('s', true)
+    Stat.incrementValue('s', true, 1)
     let notif = new window.Notification('Sous-titre téléchargé', {
       body: filepath,
       icon: localStore.getIconPath(true),
