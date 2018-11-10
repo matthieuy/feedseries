@@ -145,7 +145,6 @@
           .setLabelFormat(this.labelFormat, 'times')
           .setLabelFormat(this.labelFormat, 'shows')
           .setStats(stats)
-        console.log('[GRAPH] Update', stats)
       },
       /**
        * Calculate sums for a period
@@ -188,17 +187,7 @@
               },
             },
           })
-          .addSerie('vus', 'v', {
-            color: '#0a67ac',
-            convertDataPoints: (dataPoints) => {
-              for (let i = 0; i < dataPoints.length; i++) {
-                if (!dataPoints[i].y) {
-                  dataPoints[i].color = '#FF0000'
-                }
-              }
-              return dataPoints
-            },
-          })
+          .addSerie('vus', 'v', { color: '#0a67ac' })
           .addSerie('récupérés', 'd', { color: '#885dbb' })
           .addSerie('sous-titres', 's', { color: '#91bb2b' })
 
@@ -212,7 +201,8 @@
               contentFormatter: (e) => {
                 let point = e.entries[0].dataPoint
                 let duration = (point.y) ? this.$options.filters.duration_tv(point.y * 60) : 'aucun épisode vu'
-                return `<span>${point.label}</span><br><span style="color:${e.entries[0].dataSeries.color}">${duration}</span>`
+                let color = (point.y) ? e.entries[0].dataSeries.color : '#FF0000'
+                return `<span>${point.label}</span><br><span style="color:${color}">${duration}</span>`
               },
             },
           })
@@ -223,6 +213,9 @@
               for (let i = 0; i < dataPoints.length; i++) {
                 dataPoints[i].duration = this.$options.filters.duration_tv(dataPoints[i].y)
                 dataPoints[i].y /= 60
+                if (!dataPoints[i].y) {
+                  dataPoints[i].color = '#FF0000'
+                }
               }
               return dataPoints
             },
