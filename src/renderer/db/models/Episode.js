@@ -26,7 +26,7 @@ class Episode extends Document {
    * @return {Promise}
    */
   static getUnseen () {
-    return this.find({isSeen: false}, {populate: true, sort: '_id'}).then((episodes) => {
+    return this.find({ isSeen: false }, { populate: true, sort: '_id' }).then((episodes) => {
       episodes = episodes.filter((episode) => {
         return episode.show && episode.show.in_account && episode.show.isArchived === false
       })
@@ -61,7 +61,7 @@ class Episode extends Document {
       let show = episodeSaved.show
 
       // Update show.remaining and show.progress after mark episode
-      self.find({show: show._id}).then((episodes) => {
+      self.find({ show: show._id }).then((episodes) => {
         // Get show
         if (!episodes.length) {
           return false

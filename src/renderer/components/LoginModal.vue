@@ -146,7 +146,7 @@
       watch: {
         isLogged (value) {
           if (!value && this.$route.name !== 'homepage') {
-            this.$router.push({name: 'homepage'})
+            this.$router.push({ name: 'homepage' })
           }
         },
       },

@@ -1,7 +1,7 @@
 /**
  * Common file for dev and prod environment
  */
-import {app, BrowserWindow, globalShortcut, ipcMain} from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import log from 'electron-log'
 import Updater from './system/update'
 import localStore from '../renderer/store/local'

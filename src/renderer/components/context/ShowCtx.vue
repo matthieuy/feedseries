@@ -66,7 +66,7 @@
        * @param show
        */
       gotoShow (show) {
-        this.$router.push({name: 'show', params: {id: show._id}})
+        this.$router.push({ name: 'show', params: { id: show._id } })
       },
       /**
        * On open context menu

@@ -133,7 +133,7 @@
             icon: localStore.getIconPath(true),
           })
           notif.onclick = () => {
-            this.$router.push({name: 'recommendations'})
+            this.$router.push({ name: 'recommendations' })
           }
         }
         this.recommendationNotif = nbRecommendations

@@ -36,7 +36,7 @@ export default {
           show.unseen.forEach(async (episode) => {
             // Update episode
             let p = new Promise((resolve, reject) => {
-              Episode.findOneAndUpdate({_id: episode.id + ''}, Episode.cleanProperties(episode), {upsert: true}).then((episodeSaved) => {
+              Episode.findOneAndUpdate({ _id: episode.id + '' }, Episode.cleanProperties(episode), { upsert: true }).then((episodeSaved) => {
                 episodes.push(episodeSaved)
                 resolve()
               })
@@ -46,7 +46,7 @@ export default {
             // Update subtitles
             episode.subtitles.forEach((subtitle) => {
               nbSubtitles++
-              Subtitle.findOneAndUpdate({_id: subtitle.id + ''}, Subtitle.cleanProperties(subtitle, episode), {upsert: true})
+              Subtitle.findOneAndUpdate({ _id: subtitle.id + '' }, Subtitle.cleanProperties(subtitle, episode), { upsert: true })
             })
           })
         })

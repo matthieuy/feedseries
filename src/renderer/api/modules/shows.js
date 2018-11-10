@@ -29,7 +29,7 @@ export default {
 
           member.shows.forEach((show) => {
             let p = new Promise((resolve, reject) => {
-              Show.findOneAndUpdate({_id: show.id + ''}, Show.cleanProperties(show), {upsert: true}).then((showSaved) => {
+              Show.findOneAndUpdate({ _id: show.id + '' }, Show.cleanProperties(show), { upsert: true }).then((showSaved) => {
                 resolve(showSaved)
               })
             })
@@ -74,7 +74,7 @@ export default {
       episodes.forEach(async (episode) => {
         // Update episode
         let p = new Promise((resolve, reject) => {
-          Episode.findOneAndUpdate({_id: episode.id + ''}, Episode.cleanProperties(episode), {upsert: true}).then((episodeSaved) => {
+          Episode.findOneAndUpdate({ _id: episode.id + '' }, Episode.cleanProperties(episode), { upsert: true }).then((episodeSaved) => {
             nbEpisodes++
             resolve(episodeSaved)
           })
@@ -154,7 +154,7 @@ export default {
       })
       .catch((e) => {
         if (e.data && e.data.hasOwnProperty('errors') && e.data.errors.length && e.data.errors[0].code === 2003) {
-          Cache.invalidateByTags({show: show._id})
+          Cache.invalidateByTags({ show: show._id })
           return Promise.resolve(show)
         }
         console.error('Error add show', e)
@@ -168,7 +168,7 @@ export default {
    */
   delete (show) {
     console.info('[API] Shows::delete', show)
-    Cache.invalidateByTags({show: show._id})
+    Cache.invalidateByTags({ show: show._id })
     Cache.invalidate('episodes_unseen')
     return Vue.http.delete('/shows/show', {
       params: {
@@ -287,7 +287,7 @@ export default {
       },
     }).then((response) => {
       let characters = response.data.characters
-      Cache.set(cacheId, characters, 1440, {show: show._id})
+      Cache.set(cacheId, characters, 1440, { show: show._id })
 
       return Promise.resolve(characters)
     })
@@ -318,7 +318,7 @@ export default {
       similars.forEach((similar) => {
         results.push(Show.cleanProperties(similar.show))
       })
-      Cache.set(cacheId, results, 1440, {show: show._id})
+      Cache.set(cacheId, results, 1440, { show: show._id })
 
       return Promise.resolve(results)
     })
@@ -369,6 +369,6 @@ export default {
    * @private
    */
   setCache (show) {
-    Cache.set('show_summary-' + show._id, show, 720, {show: show._id})
+    Cache.set('show_summary-' + show._id, show, 720, { show: show._id })
   },
 }

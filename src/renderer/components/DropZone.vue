@@ -78,11 +78,11 @@
         })
       },
       gotoShow () {
-        this.$router.push({name: 'show', params: {id: this.episode.show_id}})
+        this.$router.push({ name: 'show', params: { id: this.episode.show_id } })
         this.close()
       },
       addShow () {
-        this.$store.dispatch(types.shows.ACTIONS.ADD, {_id: this.episode.show_id}).then(() => {
+        this.$store.dispatch(types.shows.ACTIONS.ADD, { _id: this.episode.show_id }).then(() => {
           this.close()
         })
       },
@@ -97,7 +97,7 @@
         })
       },
       markView () {
-        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {_id: this.episode.id}).then(() => {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, { _id: this.episode.id }).then(() => {
           this.close()
         })
       },

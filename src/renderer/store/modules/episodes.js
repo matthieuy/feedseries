@@ -88,7 +88,7 @@ const actions = {
     promises.addPromise(api.shows.getEpisodes(show))
 
     // DB
-    promises.addPromise(Episode.find({show: show._id}))
+    promises.addPromise(Episode.find({ show: show._id }))
 
     promises.then((episodes) => {
       context.commit(types.MUTATIONS.SET_EPISODES, episodes)
