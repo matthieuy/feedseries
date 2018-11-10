@@ -45,7 +45,8 @@
           </li>
           <li v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</li>
           <li v-show="!isLoading" v-for="episode in episodes" class="list-group-item" @contextmenu.prevent="$refs.EpisodeCtx.$refs.ctx.open($event, episode)">
-            <div class="pull-left media-body date">
+            <div class="pull-left media-body date" :class="{future: isFuture(episode.date) && !episode.isSeen }">
+              <i class="fa"></i>
               <span v-show="episode.date" v-tooltip="$options.filters.formatDate(episode.date , 'ddd DD MMM YYYY')">{{ episode.date | formatDate('ddd DD MMM') }}</span>
               <span v-show="!episode.date">Pas de date</span>
             </div>
@@ -120,6 +121,9 @@
       },
       avatarURL (userId) {
         return api.members.getAvatarURL(userId, 20)
+      },
+      isFuture (date) {
+        return this.$options.filters.isFuture(date)
       },
     },
     watch: {

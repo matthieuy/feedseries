@@ -239,7 +239,8 @@ const getters = {
 
     // Filter
     episodes = episodes.filter((episode) => {
-      if (!episode.show || episode.show.isArchived || episode.isSeen || (episode.date && moment(String(episode.date)).isAfter(moment.now()))) {
+      // Base filter
+      if (!episode.show || episode.show.isArchived || episode.isSeen) {
         return false
       }
 
@@ -248,7 +249,17 @@ const getters = {
         return false
       }
 
-      return (filterName === 'all' || (filterName === 'get' && !episode.isDownloaded) || (filterName === 'view' && !episode.isSeen && episode.isDownloaded))
+      // Show futur episode only if downloaded and "to seen view"
+      let isFutur = (episode.date && moment(String(episode.date)).isAfter(moment.now()))
+      if (filterName !== 'view' && isFutur) {
+        return false
+      }
+
+      return (
+        filterName === 'all' || // All
+        (filterName === 'get' && !episode.isDownloaded) || // not downloaded
+        (filterName === 'view' && !episode.isSeen && episode.isDownloaded) // download
+      )
     })
 
     // Order
