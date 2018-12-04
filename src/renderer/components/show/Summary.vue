@@ -84,7 +84,7 @@
   import { mapState, mapGetters } from 'vuex'
 
   import api from '../../api'
-  import { Stat } from '../../db'
+  // import { Stat } from '../../db'
   import { types } from '../../store'
   import ShowTr from '../ShowTr'
   import EpisodeCtx from '../context/EpisodeCtx'
@@ -131,7 +131,7 @@
             promises.push(p)
           })
           Promise.all(promises).then(() => {
-            Stat.incrementValue('d', isDL, promises.length - 1)
+            // Stat.incrementValue('d', isDL, episodes.length - 1)
           })
         }
       },
@@ -150,8 +150,8 @@
             promises.push(this.$store.dispatch(action, episode))
           })
           Promise.all(promises).then(() => {
-            Stat.incrementValue('v', isView, promises.length - 1)
-            Stat.incrementValue('t', isView, this.show.runtime * (promises.length - 1))
+            // Stat.incrementValue('v', isView, episodes.length - 1)
+            // Stat.incrementValue('t', isView, this.show.runtime * (episodes.length - 1))
           })
         }
       },

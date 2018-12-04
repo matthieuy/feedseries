@@ -250,8 +250,8 @@ const getters = {
       }
 
       // Show futur episode only if downloaded and "to seen view"
-      let isFutur = (episode.date && moment(String(episode.date)).isAfter(moment.now()))
-      if (filterName !== 'view' && isFutur) {
+      let isFutur = (moment(String(episode.date)).isAfter(moment.now()))
+      if (isFutur) {
         return false
       }
 
