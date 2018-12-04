@@ -266,7 +266,11 @@ const getters = {
     if (typeof order !== 'undefined') {
       episodes.sort((a, b) => {
         if (order === 'alpha') {
-          return a.show.title.localeCompare(b.show.title)
+          if (a.show.title !== b.show.title) {
+            return a.show.title.localeCompare(b.show.title)
+          }
+
+          return a.global - b.global
         } else {
           // No date
           if (!a.date) { return -1 }
