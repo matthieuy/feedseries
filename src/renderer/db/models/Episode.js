@@ -14,6 +14,7 @@ class Episode extends Document {
       episode: Number,
       global: Number,
       special: Boolean,
+      note: Number,
       isDownloaded: Boolean,
       isSeen: Boolean,
       friends: Array,
@@ -26,7 +27,7 @@ class Episode extends Document {
    * @return {Promise}
    */
   static getUnseen () {
-    return this.find({isSeen: false}, {populate: true, sort: '_id'}).then((episodes) => {
+    return this.find({ isSeen: false }, { populate: true, sort: '_id' }).then((episodes) => {
       episodes = episodes.filter((episode) => {
         return episode.show && episode.show.in_account && episode.show.isArchived === false
       })
@@ -61,7 +62,7 @@ class Episode extends Document {
       let show = episodeSaved.show
 
       // Update show.remaining and show.progress after mark episode
-      self.find({show: show._id}).then((episodes) => {
+      self.find({ show: show._id }).then((episodes) => {
         // Get show
         if (!episodes.length) {
           return false
@@ -94,6 +95,7 @@ class Episode extends Document {
       season: episode.season,
       episode: episode.episode,
       global: episode.global,
+      note: Math.floor(episode.note.mean || 0),
       special: episode.special === 1,
       isDownloaded: episode.user.downloaded || false,
       isSeen: episode.user.seen || false,

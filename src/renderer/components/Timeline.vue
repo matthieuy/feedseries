@@ -47,7 +47,7 @@
           console.log('Event :', event)
           e.preventDefault()
           if (this.isLinkEnabled(event)) {
-            this.$router.push({name: 'show', params: { id: event.ref }})
+            this.$router.push({ name: 'show', params: { id: event.ref } })
           }
         },
         getList () {

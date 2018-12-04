@@ -55,15 +55,6 @@
     .fa {
       margin-left: 3px;
     }
-
-    .date.future {
-      color: #b4171f;
-      i:before {
-        font-size: 8px;
-        content: '\f071';
-        padding-right: 3px;
-      }
-    }
     .icon-mark-view {
       .fa {
         font-size: 12px;

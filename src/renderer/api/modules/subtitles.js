@@ -22,7 +22,7 @@ export default {
       let promiseList = []
       subtitles.forEach((srt) => {
         if ((srtVFOnly && (srt.language === 'VF')) || !srtVFOnly) {
-          let p = Subtitle.findOneAndUpdate({_id: srt.id + ''}, Subtitle.cleanProperties(srt), {upsert: true})
+          let p = Subtitle.findOneAndUpdate({ _id: srt.id + '' }, Subtitle.cleanProperties(srt), { upsert: true })
           promiseList.push(p)
         }
       })

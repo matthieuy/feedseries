@@ -133,7 +133,7 @@
             icon: localStore.getIconPath(true),
           })
           notif.onclick = () => {
-            this.$router.push({name: 'recommendations'})
+            this.$router.push({ name: 'recommendations' })
           }
         }
         this.recommendationNotif = nbRecommendations
@@ -152,6 +152,7 @@
         let txt = (show.status === 'Ended') ? `C'était le dernier épisode de la saison de "${show.title}" !` : `C'était l'épisode final de "${show.title}" !`
         remote.dialog.showMessageBox(remote.getCurrentWindow(), {
           title: 'Archiver une série',
+          icon: localStore.getIconPath(),
           buttons: ['Oui', 'Non'],
           defaultId: 0,
           message: txt + `\nVoulez-vous archiver la série maintenant ?`,

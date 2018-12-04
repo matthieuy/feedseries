@@ -140,7 +140,7 @@ const actions = {
   [types.ACTIONS.ADD] (context, show) {
     return api.shows.add(show).then((showAdded) => {
       context.commit(types.MUTATIONS.ADD, showAdded)
-      Cache.invalidateByTags({show: showAdded.id})
+      Cache.invalidateByTags({ show: showAdded.id })
       Cache.invalidate('summary')
       Stat.addShow(true)
 
@@ -163,7 +163,7 @@ const actions = {
   [types.ACTIONS.DELETE] (context, show) {
     return api.shows.delete(show).then((showDeleted) => {
       context.commit(types.MUTATIONS.DELETE, showDeleted)
-      Cache.invalidateByTags({show: showDeleted.id})
+      Cache.invalidateByTags({ show: showDeleted.id })
       Cache.invalidate('summary')
       Stat.addShow(false)
 
@@ -264,7 +264,7 @@ const actions = {
     promises.then((showArchived) => {
       Cache.invalidate('summary')
       if (showArchived) {
-        Cache.invalidateByTags({show: showArchived.id})
+        Cache.invalidateByTags({ show: showArchived.id })
         context.commit(types.MUTATIONS.UPDATE_SHOW, showArchived)
       }
     })
@@ -299,7 +299,7 @@ const actions = {
 
     promises.then((show) => {
       if (show) {
-        Cache.invalidateByTags({show: show._id})
+        Cache.invalidateByTags({ show: show._id })
         context.commit(types.MUTATIONS.UPDATE_SHOW, show)
       }
     })

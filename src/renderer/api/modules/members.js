@@ -10,7 +10,7 @@ export default {
    * @returns {Promise}
    */
   getInfos (summary) {
-    let params = (summary === true) ? {summary: true} : {only: 'shows'}
+    let params = (summary === true) ? { summary: true } : { only: 'shows' }
 
     // Get from cache
     let cacheId = 'summary'
@@ -32,7 +32,7 @@ export default {
         // Save shows in DB
         if (member.hasOwnProperty('shows') && member.shows.length) {
           member.shows.forEach(async (show) => {
-            await Show.findOneAndUpdate({_id: show.id + ''}, Show.cleanProperties(show), {upsert: true})
+            await Show.findOneAndUpdate({ _id: show.id + '' }, Show.cleanProperties(show), { upsert: true })
           })
           console.info(`[DB] Update ${member.shows.length} shows`)
           delete member.shows
