@@ -13,9 +13,6 @@ const types = {
     LOAD_EPISODES: 'episodes.load.season',
     MARK_DL: 'episodes.markdl',
     MARK_VIEW: 'episodes.view',
-    MARK_VIEW_ALL: 'episodes.view_all',
-    UNMARK_VIEW: 'episodes.unview',
-    UNMARK_VIEW_ALL: 'episodes.unview_all',
   },
   MUTATIONS: {
     SET_EPISODES: 'episodes.list',
@@ -137,50 +134,10 @@ const actions = {
   /**
    * Mark episode as view
    * @param context
-   * @param {Episode} episode
+   * @param {Object} obj (episode, isView, nbEpisode)
    * @return {Promise}
    */
-  [types.ACTIONS.MARK_VIEW] (context, episode) {
-    return context.dispatch('markViewAction', {
-      episode: episode,
-      isView: true,
-    })
-  },
-  [types.ACTIONS.MARK_VIEW_ALL] (context, episode) {
-    return context.dispatch('markViewAction', {
-      episode: episode,
-      isView: true,
-      nbEpisode: 0,
-    })
-  },
-
-  /**
-   * Unmark episode as view
-   * @param context
-   * @param {Episode} episode
-   * @return {Promise}
-   */
-  [types.ACTIONS.UNMARK_VIEW] (context, episode) {
-    return context.dispatch('markViewAction', {
-      episode: episode,
-      isView: false,
-    })
-  },
-  [types.ACTIONS.UNMARK_VIEW_ALL] (context, episode) {
-    return context.dispatch('markViewAction', {
-      episode: episode,
-      isView: false,
-      nbEpisode: 0,
-    })
-  },
-
-  /**
-   * Mark/Unmark episode as view
-   * @param context
-   * @param {Object} obj Episode and isView, nbEpisode
-   * @return {Promise}
-   */
-  markViewAction (context, obj) {
+  [types.ACTIONS.MARK_VIEW] (context, obj) {
     let { episode, isView, nbEpisode } = obj
     if (typeof nbEpisode === 'undefined') {
       nbEpisode = 1

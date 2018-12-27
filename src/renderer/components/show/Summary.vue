@@ -147,8 +147,11 @@
         if (episodes.length) {
           let promises = []
           episodes.forEach((episode) => {
-            let action = (isView) ? types.episodes.ACTIONS.MARK_VIEW_ALL : types.episodes.ACTIONS.UNMARK_VIEW_ALL
-            promises.push(this.$store.dispatch(action, episode))
+            promises.push(this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {
+              episode: episode,
+              isView: isView,
+              nbEpisode: 0,
+            }))
           })
           Promise.all(promises).then(() => {
             Stat.incrementValue('v', isView, episodes.length)

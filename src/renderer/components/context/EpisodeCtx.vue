@@ -2,8 +2,8 @@
   <context-menu ref="ctx" @ctx-open="onOpen" @ctx-close="onCtxClose" @ctx-cancel="onCtxClose">
     <li class="ctx-header">{{ episode.show.title }} - {{ episode.code }}</li>
     <li class="ctx-divider"></li>
-    <li class="ctx-item" v-show="episode.show.in_account && !episode.isSeen && !episode.show.isArchived" @click="markView(episode)"><i class="fa fa-eye"></i> Marquer "vu"</li>
-    <li class="ctx-item" v-show="episode.show.in_account && episode.isSeen && !episode.show.isArchived" @click="unmarkView(episode)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
+    <li class="ctx-item" v-show="episode.show.in_account && !episode.isSeen && !episode.show.isArchived" @click="markView(episode, true)"><i class="fa fa-eye"></i> Marquer "vu"</li>
+    <li class="ctx-item" v-show="episode.show.in_account && episode.isSeen && !episode.show.isArchived" @click="markView(episode, false)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
     <li class="ctx-item" v-show="episode.show.in_account && !episode.isDownloaded && !episode.isSeen" @click="markDL(episode, true)"><i class="fa fa-download"></i> Marquer "récupéré"</li>
     <li class="ctx-item" v-show="episode.show.in_account && episode.isDownloaded && !episode.isSeen" @click="markDL(episode, false)">
       <span class="fa-stack" style="font-size: 9px;">
@@ -41,19 +41,13 @@
       /**
        * Mark episode as view
        * @param {Episode} episode The episode
+       * @param {Boolean} isView
        */
-      markView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode).then((result) => {
-          this.$emit('ctx-episode-close', result)
-          this.episode = result
-        })
-      },
-      /**
-       * Mark episode as no view
-       * @param {Episode} episode The episode
-       */
-      unmarkView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode).then((result) => {
+      markView (episode, isView) {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {
+          episode: episode,
+          isView: isView,
+        }).then((result) => {
           this.$emit('ctx-episode-close', result)
           this.episode = result
         })
