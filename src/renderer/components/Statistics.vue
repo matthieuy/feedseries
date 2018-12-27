@@ -201,8 +201,9 @@
               contentFormatter: (e) => {
                 let point = e.entries[0].dataPoint
                 let duration = (point.y) ? this.$options.filters.duration_tv(point.y * 60) : 'aucun épisode vu'
+                let hours = (point.y > 24) ? '(' + Math.round(point.y) + ' heures)' : ''
                 let color = (point.y) ? e.entries[0].dataSeries.color : '#FF0000'
-                return `<span>${point.label}</span><br><span style="color:${color}">${duration}</span>`
+                return `<span>${point.label}</span><br><span style="color:${color}">${duration} ${hours}</span>`
               },
             },
           })
@@ -321,11 +322,11 @@
             break
           case '3m': // 3 month
             this.period = period.subtract(3, 'months').startOf('week')
-            this.labelFormat = '[S]w (MMM)'
+            this.labelFormat = '[Semaine] w'
             break
           case '1y': // 1 year
             this.period = period.startOf('month').subtract(1, 'years')
-            this.labelFormat = 'MMM YYYY'
+            this.labelFormat = 'MMM YY'
             break
         }
         console.log('[Stats] >=', this.period.format('DD/MM/YYYY HH:mm'))
