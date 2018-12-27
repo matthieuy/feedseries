@@ -6,7 +6,7 @@
     <li class="ctx-item" v-show="episode.show.in_account && episode.isSeen && !episode.show.isArchived" @click="markView(episode, false)"><i class="fa fa-eye-slash"></i> Marquer "non-vu"</li>
     <li class="ctx-item" v-show="episode.show.in_account && !episode.isDownloaded && !episode.isSeen" @click="markDL(episode, true)"><i class="fa fa-download"></i> Marquer "récupéré"</li>
     <li class="ctx-item" v-show="episode.show.in_account && episode.isDownloaded && !episode.isSeen" @click="markDL(episode, false)">
-      <span class="fa-stack" style="font-size: 9px;">
+      <span class="fa-stack" style="font-size: 8px;">
         <i class="fa fa-download fa-stack-1x" style="font-size: 12px;"></i>
         <i class="fa fa-ban fa-stack-2x" style="opacity: 0.7;"></i>
       </span> Marquer "non récupéré"
@@ -14,12 +14,12 @@
     <li class="ctx-divider" v-show="episode.show.in_account"></li>
     <li class="ctx-item" v-show="!hideShow && !episode.show.isArchived" @click="archive(episode.show)"><i class="fa fa-archive"></i> Archiver la série</li>
     <li class="ctx-divider" v-show="!hideShow"></li>
-    <li v-for="link in links" @click="openWeb(link.url)" class="ctx-item" v-show="!hideShow">
+    <li v-for="link in links" @click="openWeb(link.url)" class="ctx-item ctx-icon" v-show="!hideShow">
       <img :src="link.icon" width="16" height="16" onerror="this.src='static/empty.png'"> {{ link.name }}
     </li>
     <li class="ctx-item" v-show="!hideShow" @click="gotoShow(episode.show)"><i class="fa fa-id-card"></i> Fiche de la série</li>
-    <li class="ctx-item" v-show="episode.youtube" @click="openWeb('https://www.youtube-nocookie.com/embed/' + episode.youtube)"><img src="static/links/youtube.png" /> Voir sur YouTube</li>
-    <li class="ctx-item" @click="openWeb(episode)"><img src="static/links/bs.png" /> Voir l'épisode sur BS</li>
+    <li class="ctx-item ctx-icon" v-show="episode.youtube" @click="openWeb('https://www.youtube-nocookie.com/embed/' + episode.youtube)"><img src="static/links/youtube.png" /> Voir sur YouTube</li>
+    <li class="ctx-item ctx-icon" @click="openWeb(episode)"><img src="static/links/bs.png" /> Voir l'épisode sur BS</li>
   </context-menu>
 </template>
 
