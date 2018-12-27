@@ -84,7 +84,7 @@
   import { mapState, mapGetters } from 'vuex'
 
   import api from '../../api'
-  // import { Stat } from '../../db'
+  import { Stat } from '../../db'
   import { types } from '../../store'
   import ShowTr from '../ShowTr'
   import EpisodeCtx from '../context/EpisodeCtx'
@@ -127,11 +127,12 @@
             let p = this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
               episode: episode,
               isDL: isDL,
+              nbEpisode: 0,
             })
             promises.push(p)
           })
           Promise.all(promises).then(() => {
-            // Stat.incrementValue('d', isDL, episodes.length - 1)
+            Stat.incrementValue('d', isDL, episodes.length)
           })
         }
       },
@@ -146,12 +147,12 @@
         if (episodes.length) {
           let promises = []
           episodes.forEach((episode) => {
-            let action = (isView) ? types.episodes.ACTIONS.MARK_VIEW : types.episodes.ACTIONS.UNMARK_VIEW
+            let action = (isView) ? types.episodes.ACTIONS.MARK_VIEW_ALL : types.episodes.ACTIONS.UNMARK_VIEW_ALL
             promises.push(this.$store.dispatch(action, episode))
           })
           Promise.all(promises).then(() => {
-            // Stat.incrementValue('v', isView, episodes.length - 1)
-            // Stat.incrementValue('t', isView, this.show.runtime * (episodes.length - 1))
+            Stat.incrementValue('v', isView, episodes.length)
+            Stat.incrementValue('t', isView, this.show.runtime * episodes.length)
           })
         }
       },
