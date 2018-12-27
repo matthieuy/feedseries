@@ -2,7 +2,7 @@
   "name": "feedseries",
   "desktopName": "FeedSeries",
   "productName": "FeedSeries",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "author": {
     "name": "Matthieu YK",
     "email": "matthieuy+git@riseup.net"
@@ -85,7 +85,7 @@
     "canvasjs": "github:matthieuy/canvasjs#master",
     "electron-log": "^2.2.17",
     "electron-store": "^2.0.0",
-    "electron-updater": "^4.0.0",
+    "electron-updater": "^4.0.6",
     "fullcalendar": "^3.9.0",
     "is-electron-renderer": "^2.0.1",
     "jquery": "^3.3.1",

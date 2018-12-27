@@ -53,6 +53,9 @@ class Updater {
       this._webcontent = event.sender
       autoUpdater.downloadUpdate()
     })
+    ipcMain.on('close-update', (event) => {
+      this._webcontent = null
+    })
 
     // Interval check
     if (process.env.NODE_ENV !== 'development') {
@@ -130,8 +133,8 @@ class Updater {
    * @param {Object} infos
    */
   noUpdate = (infos) => {
-    log.info('[UPDATE] App is up-to-date')
     if (this._byUser) {
+      log.info('[UPDATE] App is up-to-date')
       dialog.showMessageBox(this._mainWindow, {
         type: 'info',
         buttons: ['OK'],
@@ -176,10 +179,12 @@ class Updater {
    */
   progress = (progress) => {
     let percent = Math.round(progress.percent)
-    let message = `Download speed: ${progress.bytesPerSecond} - Downloaded ${percent}% (${progress.transferred} / ${progress.total})`
-    log.info(message, progress)
     this._mainWindow.setProgressBar(percent / 100)
     if (this._percent !== percent) {
+      if (percent % 10 === 0) {
+        let message = `Download speed: ${progress.bytesPerSecond} - Downloaded ${percent}% (${progress.transferred} / ${progress.total})`
+        log.info(message)
+      }
       this._mainWindow.setTitle(`FeedSeries - Téléchargement : ${percent}%`)
       this._percent = percent
       if (this._webcontent) {
