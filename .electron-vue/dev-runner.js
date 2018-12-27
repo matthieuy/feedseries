@@ -1,5 +1,7 @@
 'use strict'
 
+process.env.ELECTRON_LOG_ASAR_READS = '1'
+
 const chalk = require('chalk')
 const electron = require('electron')
 const path = require('path')

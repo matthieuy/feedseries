@@ -11,7 +11,7 @@
       <div class="binfo" v-show="show.friends">
         Suivi par :
         <div v-for="friend in show.friends" class="friends-list">
-          <img class="avatars" :src="avatarURL(friend.id)" width="20" height="20">
+          <img class="avatars" :src="avatarURL(friend.id)" onerror="this.src='static/empty.png'" width="20" height="20">
           {{ friend.login }}
         </div>
       </div>
@@ -84,7 +84,7 @@
   import { mapState, mapGetters } from 'vuex'
 
   import api from '../../api'
-  // import { Stat } from '../../db'
+  import { Stat } from '../../db'
   import { types } from '../../store'
   import ShowTr from '../ShowTr'
   import EpisodeCtx from '../context/EpisodeCtx'
@@ -127,11 +127,12 @@
             let p = this.$store.dispatch(types.episodes.ACTIONS.MARK_DL, {
               episode: episode,
               isDL: isDL,
+              nbEpisode: 0,
             })
             promises.push(p)
           })
           Promise.all(promises).then(() => {
-            // Stat.incrementValue('d', isDL, episodes.length - 1)
+            Stat.incrementValue('d', isDL, episodes.length)
           })
         }
       },
@@ -146,12 +147,15 @@
         if (episodes.length) {
           let promises = []
           episodes.forEach((episode) => {
-            let action = (isView) ? types.episodes.ACTIONS.MARK_VIEW : types.episodes.ACTIONS.UNMARK_VIEW
-            promises.push(this.$store.dispatch(action, episode))
+            promises.push(this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {
+              episode: episode,
+              isView: isView,
+              nbEpisode: 0,
+            }))
           })
           Promise.all(promises).then(() => {
-            // Stat.incrementValue('v', isView, episodes.length - 1)
-            // Stat.incrementValue('t', isView, this.show.runtime * (episodes.length - 1))
+            Stat.incrementValue('v', isView, episodes.length)
+            Stat.incrementValue('t', isView, this.show.runtime * episodes.length)
           })
         }
       },

@@ -13,7 +13,6 @@ const types = {
     LOAD_EPISODES: 'episodes.load.season',
     MARK_DL: 'episodes.markdl',
     MARK_VIEW: 'episodes.view',
-    UNMARK_VIEW: 'episodes.unview',
   },
   MUTATIONS: {
     SET_EPISODES: 'episodes.list',
@@ -100,11 +99,14 @@ const actions = {
   /**
    * Mark episode as DL or not
    * @param context
-   * @param {Object} data (episode and isDL)
+   * @param {Object} data (episode and isDL, nbEpisode)
    * @returns {Promise}
    */
   [types.ACTIONS.MARK_DL] (context, data) {
-    let { episode, isDL } = data
+    let { episode, isDL, nbEpisode } = data
+    if (typeof nbEpisode === 'undefined') {
+      nbEpisode = 1
+    }
     let promises = new ConcurentPromise()
 
     // API
@@ -113,13 +115,13 @@ const actions = {
       .addPromise(promiseAPI)
       .reverse(() => {
         Episode.markDL(episode, !isDL)
-        Stat.markDl(!isDL)
+        Stat.markDl(!isDL, nbEpisode)
         promises.callThen(episode)
       })
 
     // DB
     promises.addPromise(Episode.markDL(episode, isDL))
-    Stat.markDl(isDL)
+    Stat.markDl(isDL, nbEpisode)
 
     // Update episode in state
     promises.then((episode) => {
@@ -132,37 +134,14 @@ const actions = {
   /**
    * Mark episode as view
    * @param context
-   * @param {Episode} episode
+   * @param {Object} obj (episode, isView, nbEpisode)
    * @return {Promise}
    */
-  [types.ACTIONS.MARK_VIEW] (context, episode) {
-    return context.dispatch('markViewAction', {
-      episode: episode,
-      isView: true,
-    })
-  },
-
-  /**
-   * Unmark episode as view
-   * @param context
-   * @param {Episode} episode
-   * @return {Promise}
-   */
-  [types.ACTIONS.UNMARK_VIEW] (context, episode) {
-    return context.dispatch('markViewAction', {
-      episode: episode,
-      isView: false,
-    })
-  },
-
-  /**
-   * Mark/Unmark episode as view
-   * @param context
-   * @param {Object} obj Episode and isView
-   * @return {Promise}
-   */
-  markViewAction (context, obj) {
-    let { episode, isView } = obj
+  [types.ACTIONS.MARK_VIEW] (context, obj) {
+    let { episode, isView, nbEpisode } = obj
+    if (typeof nbEpisode === 'undefined') {
+      nbEpisode = 1
+    }
     let promises = new ConcurentPromise()
 
     // API
@@ -182,18 +161,18 @@ const actions = {
 
     promises.reverse(() => {
       Episode.markView(episode, !isView)
-      Stat.markView(!isView)
+      Stat.markView(!isView, nbEpisode)
       if (episode.show && episode.show.runtime) {
-        Stat.addTimeView(episode.show.runtime, !isView)
+        Stat.addTimeView(episode.show.runtime, !isView, nbEpisode)
       }
       promises.callThen()
     })
 
     // DB
     promises.addPromise(Episode.markView(episode, isView))
-    Stat.markView(isView)
+    Stat.markView(isView, nbEpisode)
     if (episode.show && episode.show.runtime) {
-      Stat.addTimeView(episode.show.runtime, isView)
+      Stat.addTimeView(episode.show.runtime, isView, nbEpisode)
     }
 
     // Update episode in state
@@ -250,8 +229,8 @@ const getters = {
       }
 
       // Show futur episode only if downloaded and "to seen view"
-      let isFutur = (moment(String(episode.date)).isAfter(moment.now()))
-      if (isFutur) {
+      let date = moment(String(episode.date), 'YYYY-MM-DD')
+      if (!date.isValid() || date.isAfter(moment.now())) {
         return false
       }
 

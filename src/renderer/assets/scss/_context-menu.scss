@@ -15,7 +15,10 @@
     cursor: pointer;
     padding: 3px 7px;
     i.fa {
-      margin-right: 5px;
+      margin: 0 4px;
+    }
+    .fa-stack {
+      margin-right: 8px;
     }
     img {
       margin-right: 3px;
@@ -50,5 +53,8 @@
     border: 0 solid $ctxBg;
     //background-color: whitesmoke;
     box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+  }
+  .ctx-icon img {
+    margin: 0 4px;
   }
 }

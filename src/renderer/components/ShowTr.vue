@@ -18,8 +18,8 @@
       </div>
     </td>
     <td class="pull-right icon-mark-view" v-show="show.in_account">
-      <i class="fa fa-eye cursor" @click="markView(episode)" v-show="!episode.isSeen && !show.isArchived" v-tooltip="'Marquer vu'"></i>
-      <i class="fa fa-eye-slash cursor" @click="unmarkView(episode)" v-show="episode.isSeen && !show.isArchived" v-tooltip="'Marquer non-vu'"></i>
+      <i class="fa fa-eye cursor" @click="markView(episode, true)" v-show="!episode.isSeen && !show.isArchived" v-tooltip="'Marquer vu'"></i>
+      <i class="fa fa-eye-slash cursor" @click="markView(episode, false)" v-show="episode.isSeen && !show.isArchived" v-tooltip="'Marquer non-vu'"></i>
     </td>
   </tr>
 </template>
@@ -34,11 +34,11 @@
     },
     props: ['show', 'episode'],
     methods: {
-      markView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, episode)
-      },
-      unmarkView (episode) {
-        this.$store.dispatch(types.episodes.ACTIONS.UNMARK_VIEW, episode)
+      markView (episode, isView) {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {
+          episode: episode,
+          isView: isView,
+        })
       },
       getSubtitles (episode) {
         return this.$store.getters[types.subtitles.GETTERS.SUBTITLES](episode)

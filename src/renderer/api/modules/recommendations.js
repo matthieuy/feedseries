@@ -44,6 +44,7 @@ export default {
         let recommendation = response.data.recommendation
         Cache.invalidate(this.cacheId)
         Cache.invalidate('episodes_unseen')
+        Cache.invalidateByTags({ show: recommendation._id })
         return Promise.resolve(recommendation)
       }
     }).catch((e) => {

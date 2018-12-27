@@ -1,7 +1,7 @@
 /**
  * Common file for dev and prod environment
  */
-import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain, session } from 'electron'
 import log from 'electron-log'
 import Updater from './system/update'
 import localStore from '../renderer/store/local'
@@ -27,6 +27,22 @@ app.on('ready', () => {
   } else {
     createWindow()
   }
+
+  // Session
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    details.requestHeaders['User-Agent'] = global.userAgent
+    let response = { cancel: false, requestHeaders: details.requestHeaders }
+    callback(response)
+  })
+
+  // Catch 404 img
+  const filter = {
+    urls: ['https://api.betaseries.com/pictures/members*'],
+  }
+  session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
+    let response = { cancel: (details.statusCode !== 200) }
+    callback(response)
+  })
 })
 
 // All windows closed => exit (except macOS)

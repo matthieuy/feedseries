@@ -97,7 +97,10 @@
         })
       },
       markView () {
-        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, { _id: this.episode.id }).then(() => {
+        this.$store.dispatch(types.episodes.ACTIONS.MARK_VIEW, {
+          episode: { _id: this.episode.id },
+          isView: true,
+        }).then(() => {
           this.close()
         })
       },

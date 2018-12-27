@@ -44,26 +44,29 @@ class Stat extends Document {
   /**
    * Mark View
    * @param {Boolean} isView
+   * @param {Integer} nb
    */
-  static markView (isView) {
-    return this.incrementValue('v', isView, 1)
+  static markView (isView, nb) {
+    return this.incrementValue('v', isView, nb)
   }
 
   /**
    * Add time view
    * @param {Integer} minute
    * @param {Boolean} isAdd
+   * @param {Integer} nb
    */
-  static addTimeView (minute, isAdd) {
-    return this.incrementValue('t', isAdd, minute)
+  static addTimeView (minute, isAdd, nb) {
+    return this.incrementValue('t', isAdd, minute * nb)
   }
 
   /**
    * Mark DL
    * @param {Boolean} isDL
+   * @param {Integer} nb
    */
-  static markDl (isDL) {
-    return this.incrementValue('d', isDL, 1)
+  static markDl (isDL, nb) {
+    return this.incrementValue('d', isDL, nb)
   }
 
   /**

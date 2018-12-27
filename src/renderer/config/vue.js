@@ -19,7 +19,8 @@ Vue.filter('formatDate', (value, format) => {
   if (typeof value === 'undefined') {
     return false
   }
-  return moment(String(value)).format(format)
+  let date = moment(String(value))
+  return (date.isValid()) ? date.format(format) : value
 })
 
 Vue.filter('isFuture', (value) => {

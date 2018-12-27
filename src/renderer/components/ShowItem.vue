@@ -52,9 +52,6 @@
 
         return logins.join(', ')
       },
-      avatarURL (userId) {
-        return api.members.getAvatarURL(userId, 20)
-      },
     },
     mounted () {
       fetch(api.shows.getShowImgUrl(this.show._id, 100, 147)).then((response) => {
