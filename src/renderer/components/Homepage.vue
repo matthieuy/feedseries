@@ -2,7 +2,7 @@
     <div class="profil">
       <div>
         <div class="fleft">
-          <img :src="stats.avatar" alt="" class="avatar" v-show="stats.id">
+          <img :src="stats.avatar" onerror="this.src='static/empty.png'" alt="" class="avatar" v-show="stats.id">
           <img src="static/empty.png" class="avatar" v-show="!stats.id">
         </div>
         <div class="fleft cols">

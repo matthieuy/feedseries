@@ -4,7 +4,7 @@
 
     <div>
       <div class="comment" v-for="comment in rootComments">
-        <img :src="comment.avatar" v-if="comment.avatar" width="40" height="40" />
+        <img :src="comment.avatar" onerror="this.src='static/empty.png'" v-if="comment.avatar" width="40" height="40" />
         <img src="static/empty.png" v-if="!comment.avatar" width="40" height="40" />
         <span class="author">par {{ comment.login }}, <span v-tooltip="$options.filters.formatDate(comment.date, 'ddd DD MMM YYYY à HH:mm')">{{ comment.date|fromNow }}</span></span>
         <span class="note" v-if="comment.user_note"><i class="fa fa-star" v-for="star in comment.user_note"></i></span>
@@ -13,7 +13,7 @@
 
         <div v-if="comment.replies" style="margin-left: 30px;">
           <div class="comment" v-for="reply in getReplies(comment.inner_id)">
-            <img :src="reply.avatar" v-if="reply.avatar" width="40" height="40" />
+            <img :src="reply.avatar" onerror="this.src='static/empty.png'" v-if="reply.avatar" width="40" height="40" />
             <img src="static/empty.png" v-if="!reply.avatar" width="40" height="40" />
             <span class="author">par {{ reply.login }}, <span v-tooltip="$options.filters.formatDate(reply.date, 'ddd DD MMM YYYY à HH:mm')">{{ reply.date|fromNow }}</span></span>
             <span class="note" v-if="reply.user_note"><i class="fa fa-star" v-for="star in reply.user_note"></i></span>

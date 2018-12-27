@@ -11,7 +11,7 @@
       <div class="binfo" v-show="show.friends">
         Suivi par :
         <div v-for="friend in show.friends" class="friends-list">
-          <img class="avatars" :src="avatarURL(friend.id)" width="20" height="20">
+          <img class="avatars" :src="avatarURL(friend.id)" onerror="this.src='static/empty.png'" width="20" height="20">
           {{ friend.login }}
         </div>
       </div>

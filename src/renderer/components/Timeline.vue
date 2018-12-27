@@ -4,7 +4,7 @@
     <div class="window-content">
       <ul>
         <li v-for="event in timeline.events" class="event">
-          <img :class="'event-avatar-' + event.id" :src="userAvatar(event)" alt="" width="24" height="24" />
+          <img :class="'event-avatar-' + event.id" :src="userAvatar(event)" onerror="this.src='static/empty.png'" alt="" width="24" height="24" />
           <i class="type-icon fa" :class="iconType(event.type)"></i>
           <span v-tooltip="$options.filters.formatDate(event.date, 'ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
           {{ event.user }} <span v-html="event.html" :class="{link: isLinkEnabled(event)}" @click="clickLink(event, $event)"></span>

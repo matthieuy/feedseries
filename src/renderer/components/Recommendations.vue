@@ -43,7 +43,7 @@
           <li v-for="recommendation in recommendations" class="list-group-item" @contextmenu.prevent="$refs.RecommendationCtx.$refs.ctx.open($event, recommendation)">
             <span v-show="recommendation.to_id === userId">
               <i class="fa" :class="faIcon(recommendation.status)"></i>
-              <img :src="userAvatar(recommendation.from_id)" class="avatar">
+              <img :src="userAvatar(recommendation.from_id)" onerror="this.src='static/empty.png'" width="24" height="24" class="avatar">
               {{ userName(recommendation.from_id) }}
               <span v-if="recommendation.status === 'wait'">vous recommande</span>
               <span v-else>vous a recommandé</span>
