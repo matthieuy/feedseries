@@ -1,6 +1,7 @@
 'use strict'
 
 process.env.BABEL_ENV = 'main'
+process.env.ELECTRON_LOG_ASAR_READS = '1'
 
 const path = require('path')
 const { dependencies } = require('../package.json')
