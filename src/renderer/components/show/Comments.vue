@@ -59,7 +59,7 @@
       bbcode (text) {
         text = text.replace(/\r\n/gi, '<br>')
         text = text.replace(/\[i\](.*)\[\/i\]/gi, '<i>$1</i>')
-        text = text.replace(/https:\/\/(.*)/gi, '<a class="link">https://$1</a>')
+        text = text.replace(/(\b(https?):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/gim, '<a class="link">$1</a>')
         text = text.replace(/\[spoiler\](.*)\[\/spoiler\]/gi, '<span class="spoiler"><button class="btn btn-nav spoiler-link"><span class="fa fa-exclamation-triangle"></span>Voir le spoiler</button><span class="spoiler-content">$1</span></span>')
         return text
       },
