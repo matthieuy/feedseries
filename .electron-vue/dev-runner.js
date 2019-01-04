@@ -1,6 +1,7 @@
 'use strict'
 
 process.env.ELECTRON_LOG_ASAR_READS = '1'
+process.env.APPIMAGE = '/tmp'
 
 const chalk = require('chalk')
 const electron = require('electron')

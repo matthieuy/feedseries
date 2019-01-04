@@ -6,7 +6,7 @@
     <div class="infos">
       <div class="current">Version actuelle : v{{ version }}</div>
       <div class="text-center">
-        <button class="btn btn-nav" v-show="lastVersion && percent === 0 && !isInstalling" @click="startDownload()">Télécharger "FeedSeries v{{ lastVersion }}"</button>
+        <button class="btn btn-nav" v-show="lastVersion && percent === 0 && !isInstalling && !isDownload" @click="startDownload()">Télécharger "FeedSeries v{{ lastVersion }}"</button>
         <div id="progress" v-show="percent">
           <div id="prg">
             <div id="line" :style="`width: ${percent}%;`"></div>
@@ -39,11 +39,15 @@
         percent: 0,
         speed: 0,
         isInstalling: false,
+        isDownload: false,
       }
     },
     methods: {
       startDownload () {
-        ipcRenderer.send('start-update')
+        if (!this.isDownload) {
+          ipcRenderer.send('start-update')
+        }
+        this.isDownload = true
       },
       clickNote (event) {
         event.preventDefault()
@@ -55,13 +59,13 @@
        * Close the modal
        */
       close () {
+        ipcRenderer.send('close-update')
         remote.getCurrentWindow().close()
       },
     },
     mounted () {
       console.log('[VUE] Mount modal/Update.vue')
       this.updates = localStore.get(localStore.key.UPDATE.NOTE, [])
-      // localStore.delete(localStore.key.UPDATE.NOTE)
       if (this.updates.length) {
         this.lastVersion = this.updates[0].version
       }
@@ -71,6 +75,7 @@
       })
       ipcRenderer.on('start-install', () => {
         this.isInstalling = true
+        this.isDownload = false
         this.percent = 0
       })
     },
