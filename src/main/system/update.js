@@ -71,7 +71,7 @@ class Updater {
       let notif = new Notification({
         title: app.getName(),
         body: 'Vous utilisez maintenant la version v' + app.getVersion(),
-        icon: localStore.getIconPath(true),
+        icon: localStore.getIconPath(true, true),
       })
       notif.show()
       localStore.set(localStore.key.UPDATE.FIRST_RUN, false)
@@ -115,7 +115,7 @@ class Updater {
     let notif = new Notification({
       title: app.getName(),
       body: 'Mise à jour disponible : v' + infos.version,
-      icon: localStore.getIconPath(true),
+      icon: localStore.getIconPath(true, true),
     })
     notif.show()
 

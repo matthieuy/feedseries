@@ -120,7 +120,7 @@
             /* eslint-disable no-new */
             new window.Notification(remote.app.getName(), {
               body: 'Aucune nouvelle notification',
-              icon: localStore.getIconPath(true),
+              icon: localStore.getIconPath(true, true),
             })
           }
           this.isChecking = false

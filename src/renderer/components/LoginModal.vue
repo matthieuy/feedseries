@@ -139,7 +139,7 @@
           /* eslint-disable no-new */
           new window.Notification('FeedSeries', {
             body: txt,
-            icon: localStore.getIconPath(true),
+            icon: localStore.getIconPath(true, true),
           })
         },
       },

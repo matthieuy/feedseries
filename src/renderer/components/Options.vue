@@ -394,7 +394,7 @@
         /* eslint-disable no-new */
         new window.Notification(remote.app.getName(), {
           body: text,
-          icon: localStore.getIconPath(true),
+          icon: localStore.getIconPath(true, true),
         })
       },
     },
