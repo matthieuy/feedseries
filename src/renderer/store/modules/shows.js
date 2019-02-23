@@ -147,7 +147,7 @@ const actions = {
       /* eslint-disable no-new */
       new window.Notification('FeedSeries', {
         body: 'Série ajouté avec succès',
-        icon: localStore.getIconPath(true),
+        icon: localStore.getIconPath(true, true),
       })
 
       return Promise.resolve(showAdded)
@@ -170,7 +170,7 @@ const actions = {
       /* eslint-disable no-new */
       new window.Notification('FeedSeries', {
         body: 'Série supprimé avec succès',
-        icon: localStore.getIconPath(true),
+        icon: localStore.getIconPath(true, true),
       })
 
       return Promise.resolve(showDeleted)

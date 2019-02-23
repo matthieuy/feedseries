@@ -126,7 +126,7 @@ let downloadSubtitleFile = (filepath, subtitle) => {
     Stat.incrementValue('s', true, 1)
     let notif = new window.Notification('Sous-titre téléchargé', {
       body: filepath,
-      icon: localStore.getIconPath(true),
+      icon: localStore.getIconPath(true, true),
     })
     notif.onclick = (event) => {
       event.preventDefault()

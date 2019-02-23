@@ -2,7 +2,7 @@
   "name": "feedseries",
   "desktopName": "FeedSeries",
   "productName": "FeedSeries",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "author": {
     "name": "Matthieu YK",
     "email": "matthieuy+git@riseup.net"
@@ -70,6 +70,7 @@
         }
       ]
     },
+    "generateUpdatesFilesForAllChannels": true,
     "publish": [
       {
         "provider": "github",
@@ -87,7 +88,6 @@
     "electron-store": "^2.0.0",
     "electron-updater": "^4.0.6",
     "fullcalendar": "^3.9.0",
-    "is-electron-renderer": "^2.0.1",
     "jquery": "^3.3.1",
     "md5": "^2.2.1",
     "moment": "^2.22.2",
@@ -116,7 +116,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^4.0.0",
-    "electron-builder": "^20.38.4",
+    "electron-builder": "^20.38.5",
     "electron-devtools-installer": "^2.2.0",
     "eslint": "^5.9.0",
     "eslint-config-standard": "^12.0.0",

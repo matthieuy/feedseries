@@ -2,7 +2,6 @@
  * Local storage
  */
 import ElectronStore from 'electron-store'
-let isRenderer = require('is-electron-renderer')
 
 // List of keys
 const key = {
@@ -130,10 +129,13 @@ store.purge = () => {
 
 /**
  * Get icon
+ * @param {Boolean} png is Png or ico
+ * @param {Boolean} notif is HTML notification
+ * @return {string} Path to icon
  */
-store.getIconPath = (png) => {
+store.getIconPath = (png, notif) => {
   let whiteIcon = (store.get(key.WHITE_ICON, true)) ? '-w' : '-b'
-  let staticPath = (isRenderer) ? 'static' : __static
+  let staticPath = (notif) ? 'static' : __static
 
   if (png || process.platform !== 'win32') {
     return `${staticPath}/icons/icon${whiteIcon}.png`

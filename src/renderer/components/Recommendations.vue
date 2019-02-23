@@ -79,7 +79,7 @@
 
   import RecommendationCtx from './context/Recommandation'
   import api from '../api'
-  import { Show } from '../db'
+  import { Cache, Show } from '../db'
   import { types, localStore } from '../store'
 
   export default {
@@ -115,12 +115,13 @@
         this.isChecking = true
 
         this.$store.dispatch(types.recommendations.ACTIONS.INTERVAL_RECOMMENDATION)
+        Cache.invalidate('recommendation')
         this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS).then((recommendations) => {
           if (!this.nbRecommendations) {
             /* eslint-disable no-new */
             new window.Notification(remote.app.getName(), {
               body: 'Aucune nouvelle notification',
-              icon: localStore.getIconPath(true),
+              icon: localStore.getIconPath(true, true),
             })
           }
           this.isChecking = false

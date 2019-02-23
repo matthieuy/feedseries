@@ -13,7 +13,7 @@ export default {
   getList () {
     if (Cache.isValid(this.cacheId)) {
       let list = Cache.get(this.cacheId)
-      console.log('[API Cache] Recommendations:getList')
+      console.log('[API Cache] Recommendations:getList', list)
       return Promise.resolve(list)
     }
 
@@ -44,7 +44,7 @@ export default {
         let recommendation = response.data.recommendation
         Cache.invalidate(this.cacheId)
         Cache.invalidate('episodes_unseen')
-        Cache.invalidateByTags({ show: recommendation._id })
+        Cache.invalidateByTags({ show: recommendation.show_id })
         return Promise.resolve(recommendation)
       }
     }).catch((e) => {

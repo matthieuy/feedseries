@@ -56,7 +56,7 @@
               /* eslint-disable no-new */
               new window.Notification('FeedSeries', {
                 body: `Recommandation envoyée à ${friend.login}`,
-                icon: localStore.getIconPath(true),
+                icon: localStore.getIconPath(true, true),
               })
             })
             .catch((e) => {

@@ -130,7 +130,7 @@
           // if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
           let notif = new window.Notification(remote.app.getName(), {
             body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
-            icon: localStore.getIconPath(true),
+            icon: localStore.getIconPath(true, true),
           })
           notif.onclick = () => {
             this.$router.push({ name: 'recommendations' })

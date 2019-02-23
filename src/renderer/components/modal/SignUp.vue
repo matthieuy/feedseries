@@ -68,7 +68,7 @@
           /* eslint-disable no-new */
           new window.Notification('FeedSeries', {
             body: error.text,
-            icon: localStore.getIconPath(true),
+            icon: localStore.getIconPath(true, true),
           })
           this.isLoading = false
         })
