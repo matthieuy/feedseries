@@ -13,7 +13,7 @@ class Updater {
   constructor () {
     autoUpdater.autoDownload = false
     autoUpdater.fullChangelog = true
-    autoUpdater.allowPrerelease = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
+    this.setChannel(localStore.get(localStore.key.UPDATE.PRERELEASE, 'latest'))
     if (process.env.NODE_ENV === 'development') {
       autoUpdater.updateConfigPath = require('path').join(__dirname, '../../../.electron-vue/dev-app-update.yml')
       autoUpdater.currentVersion = '0.0.1'
@@ -55,6 +55,9 @@ class Updater {
     })
     ipcMain.on('close-update', (event) => {
       this._webcontent = null
+    })
+    ipcMain.on('channel-update', (event, channel) => {
+      this.setChannel(channel)
     })
 
     // Interval check
@@ -101,6 +104,20 @@ class Updater {
       setInterval(() => {
         this.check(false)
       }, 3600000 * intervalCheck)
+    }
+  }
+
+  /**
+   * Set the update channel
+   * @param {String} channel (latest|beta|alpha)
+   */
+  setChannel = (channel) => {
+    if (!channel || channel === 'latest') {
+      autoUpdater.allowPrerelease = false
+      autoUpdater.channel = 'latest'
+    } else {
+      autoUpdater.allowPrerelease = true
+      autoUpdater.channel = channel
     }
   }
 

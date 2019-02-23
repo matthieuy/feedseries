@@ -107,7 +107,14 @@
       <fieldset>
         <legend>Mise à jour</legend>
         <div class="checkbox">
-          <label :class="{strikealpha: !updateAlpha}"><input type="checkbox" v-model="updateAlpha" readonly disabled />Récupérer les mises à jour intermédiaires</label>
+          <label>
+            Canal de mise à jour :
+            <select v-model="updateChannel">
+              <option value="latest">Stable (recommandé)</option>
+              <option value="beta">Beta (uniquement pour les tests)</option>
+              <option value="alpha">Alpha (déconseillé)</option>
+            </select>
+          </label>
         </div>
         <div class="form-group">
           <label>
@@ -266,7 +273,7 @@
         dlDir: '',
         dlAsk: true,
         updateInterval: 1,
-        updateAlpha: false,
+        updateChannel: 'latest',
         beforeArchive: 16,
       }
     },
@@ -298,7 +305,7 @@
         this.dlDir = localStore.get(localStore.key.DOWNLOAD.DIR, remote.app.getPath('downloads'))
         this.dlAsk = localStore.get(localStore.key.DOWNLOAD.ASK, true)
         this.updateInterval = localStore.get(localStore.key.UPDATE.INTERVAL, 1)
-        this.updateAlpha = localStore.get(localStore.key.UPDATE.PRERELEASE, false)
+        this.updateChannel = localStore.get(localStore.key.UPDATE.PRERELEASE, 'latest')
         this.beforeArchive = localStore.get(localStore.key.EPISODES.DAY_BEFORE_ARCHIVE, 16)
         launcher.isEnabled().then((enabled) => {
           this.autoload = enabled
@@ -523,9 +530,10 @@
           ipcRenderer.send('interval-update', value)
         }
       },
-      updateAlpha (value) {
-        if (value !== localStore.get(localStore.key.UPDATE.PRERELEASE, false)) {
+      updateChannel (value) {
+        if (value !== localStore.get(localStore.key.UPDATE.PRERELEASE, 'latest')) {
           localStore.set(localStore.key.UPDATE.PRERELEASE, value)
+          ipcRenderer.send('channel-update', value)
         }
       },
       beforeArchive (value) {

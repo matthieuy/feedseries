@@ -70,6 +70,7 @@
         }
       ]
     },
+    "generateUpdatesFilesForAllChannels": true,
     "publish": [
       {
         "provider": "github",
