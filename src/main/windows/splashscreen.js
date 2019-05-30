@@ -56,6 +56,7 @@ export default {
         plugins: false,
         webgl: false,
         webaudio: false,
+        nodeIntegration: true,
       },
     })
     this.win.loadURL(this.url, {

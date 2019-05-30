@@ -43,6 +43,7 @@ export default {
         plugins: false,
         webgl: false,
         webaudio: false,
+        nodeIntegration: true,
       },
     }, options)
 
@@ -52,6 +53,7 @@ export default {
       userAgent: global.userAgent,
     })
     win.setMenu(null)
+    win.setMenuBarVisibility(false)
     win.once('ready-to-show', () => {
       log.debug('[MODAL] Open', name)
       win.on('unresponsive', () => { log.error('[MODAL UNRESPONSIVE]', name) })
