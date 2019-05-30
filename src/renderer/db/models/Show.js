@@ -121,7 +121,10 @@ class Show extends Document {
     if (show.user.hasOwnProperty('tags')) {
       properties.tags = []
       show.user.tags.split(',').forEach((tag) => {
-        properties.tags.push(tag.replace(/^\s+|\s+$/g, ''))
+        tag = tag.replace(/^\s+|\s+$/g, '')
+        if (tag.length) {
+          properties.tags.push(tag)
+        }
       })
     }
 
