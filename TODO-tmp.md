@@ -6,7 +6,6 @@ This is a temporary TODO file need to be reorganize
   - [ ] Change email
   - [ ] Delete account
 - [ ] Membre notification
-- [ ] Mark season as watched
 - [ ] Tags
 - [ ] Show page :
   - [ ] Videos
