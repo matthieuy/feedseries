@@ -8,37 +8,39 @@ export default {
   cacheTime: 60,
   /**
    * Get list of timeline
+   * @param {string|int} showId
    * @returns {Promise}
    */
-  getList () {
+  getList (showId = '') {
     // Get from cache
-    if (Cache.isValid(this.cacheId)) {
-      let events = Cache.get(this.cacheId)
-      console.info('[API Cache] Timeline::getList', events)
+    if (Cache.isValid(this.cacheId + showId)) {
+      let events = Cache.get(this.cacheId + showId)
+      console.info('[API Cache] Timeline::getList', showId, events)
       return Promise.resolve(events)
     }
 
     // API Request and cache
-    console.info('[API] Timeline::getList')
-    return this.request({}).then((events) => {
-      Cache.set(this.cacheId, events, this.cacheTime)
+    console.info('[API] Timeline::getList', showId)
+    return this.request({}, showId).then((events) => {
+      Cache.set(this.cacheId + showId, events, this.cacheTime)
       return Promise.resolve(events)
     })
   },
   /**
    * Load more event
    * @param event The last event
+   * @param {string|int} showId
    * @returns {Promise}
    */
-  getMore (event) {
-    console.info('[API] Timeline::getMore', event)
+  getMore (event, showId = '') {
+    console.info('[API] Timeline::getMore', showId, event)
     return this.request({
       since_id: event.id,
-    }).then((events) => {
+    }, showId).then((events) => {
       // Update cache
-      if (Cache.isValid(this.cacheId)) {
-        let cacheEvents = Cache.get(this.cacheId, []).concat(events)
-        Cache.update(this.cacheId, cacheEvents)
+      if (Cache.isValid(this.cacheId + showId)) {
+        let cacheEvents = Cache.get(this.cacheId + showId, []).concat(events)
+        Cache.update(this.cacheId + showId, cacheEvents)
       }
 
       return Promise.resolve(events)
@@ -47,18 +49,23 @@ export default {
   /**
    * Request timeline API
    * @param params
+   * @param showId
    * @private
    * @returns {Promise}
    */
-  request (params) {
+  request (params, showId = '') {
     // Default params
     params = Object.assign({
       nbpp: localStore.get(localStore.key.TIMELINE.NB, 30),
       self: localStore.get(localStore.key.TIMELINE.HIMSELF, 0),
     }, params)
+    if (showId) {
+      params.id = showId
+    }
 
     // API Request
-    return Vue.http.get('/timeline/friends', {
+    let url = (showId) ? '/timeline/show' : '/timeline/friends'
+    return Vue.http.get(url, {
       params,
     }).then((response) => {
       let events = []
