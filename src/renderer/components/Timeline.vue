@@ -1,12 +1,12 @@
 <template>
-  <div class="window timeline">
+  <div class="timeline">
     <div v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</div>
     <div class="window-content">
       <ul>
         <timeline-event :event="event" v-for="event in timeline.events"></timeline-event>
       </ul>
     </div>
-    <footer class="toolbar toolbar-footer" @click="loadMore()" v-show="!isLoading">
+    <footer class="toolbar toolbar-footer" @click="loadMore()" v-show="!isLoading && !show">
         <h1 class="title" :class="{disabled: disableMore}">
             <span class="fa" :class="[disableMore ? 'fa-spinner fa-spin' : 'fa-plus-circle']"></span> Plus d'activités
         </h1>
@@ -24,6 +24,9 @@
       components: {
         TimelineEvent,
       },
+      props: {
+        show: { type: Object, required: false },
+      },
       data () {
         return {
           isLoading: true,
@@ -38,7 +41,7 @@
       methods: {
         getList () {
           this.isLoading = true
-          this.$store.dispatch(types.timeline.ACTIONS.LOAD).then(() => {
+          this.$store.dispatch(types.timeline.ACTIONS.LOAD, this.getShowId()).then(() => {
             this.isLoading = false
             this.disableMore = false
           })
@@ -48,9 +51,12 @@
             return false
           }
           this.disableMore = true
-          this.$store.dispatch(types.timeline.ACTIONS.LOAD_MORE).then(() => {
+          this.$store.dispatch(types.timeline.ACTIONS.LOAD_MORE, this.getShowId()).then(() => {
             this.disableMore = false
           })
+        },
+        getShowId () {
+          return (this.show) ? this.show._id : ''
         },
       },
       mounted () {

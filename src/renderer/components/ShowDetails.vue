@@ -22,6 +22,9 @@
           <router-link :to="{name: 'show.suggest', params: { id: $route.params.id }}" :class="{active: $route.name === 'show.suggest'}" class="nav-group-item">
             <i class="fa fa-thumbs-up"></i> Recommander
           </router-link>
+          <router-link :to="{name: 'show.timeline', params: { id: $route.params.id }}" :class="{active: $route.name === 'show.timeline'}" class="nav-group-item">
+            <i class="fa fa-history"></i> Historique
+          </router-link>
         </nav>
         <nav class="nav-group">
           <h5 class="nav-group-title">Actions</h5>

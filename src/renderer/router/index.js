@@ -66,6 +66,12 @@ const router = new Router({
           name: 'show.suggest',
           component: require('@/components/show/Suggest').default,
         },
+        // Show timeline
+        {
+          path: 'timeline',
+          name: 'show.timeline',
+          component: require('@/components/show/TimelineShow').default,
+        },
       ],
     },
     // Timeline

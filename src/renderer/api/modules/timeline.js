@@ -4,25 +4,24 @@ import { Cache } from '../../db'
 import localStore from '../../store/local'
 
 export default {
-  cacheId: 'timeline',
   cacheTime: 60,
   /**
    * Get list of timeline
-   * @param {string|int} showId
+   * @param {int|null} showId
    * @returns {Promise}
    */
-  getList (showId = '') {
+  getList (showId) {
     // Get from cache
-    if (Cache.isValid(this.cacheId + showId)) {
-      let events = Cache.get(this.cacheId + showId)
-      console.info('[API Cache] Timeline::getList', showId, events)
+    if (Cache.isValid(this.getCacheId(showId))) {
+      let events = Cache.get(this.getCacheId(showId))
+      console.info('[API Cache] Timeline::getList', events)
       return Promise.resolve(events)
     }
 
     // API Request and cache
     console.info('[API] Timeline::getList', showId)
     return this.request({}, showId).then((events) => {
-      Cache.set(this.cacheId + showId, events, this.cacheTime)
+      Cache.set(this.getCacheId(showId), events, this.cacheTime)
       return Promise.resolve(events)
     })
   },
@@ -32,15 +31,15 @@ export default {
    * @param {string|int} showId
    * @returns {Promise}
    */
-  getMore (event, showId = '') {
+  getMore (event, showId) {
     console.info('[API] Timeline::getMore', showId, event)
     return this.request({
       since_id: event.id,
     }, showId).then((events) => {
       // Update cache
-      if (Cache.isValid(this.cacheId + showId)) {
-        let cacheEvents = Cache.get(this.cacheId + showId, []).concat(events)
-        Cache.update(this.cacheId + showId, cacheEvents)
+      if (Cache.isValid(this.getCacheId(showId))) {
+        let cacheEvents = Cache.get(this.getCacheId(showId), []).concat(events)
+        Cache.update(this.getCacheId(showId), cacheEvents)
       }
 
       return Promise.resolve(events)
@@ -53,7 +52,7 @@ export default {
    * @private
    * @returns {Promise}
    */
-  request (params, showId = '') {
+  request (params, showId) {
     // Default params
     params = Object.assign({
       nbpp: localStore.get(localStore.key.TIMELINE.NB, 30),
@@ -84,5 +83,13 @@ export default {
 
       return Promise.resolve(events)
     })
+  },
+  /**
+   * Get cache id
+   * @param showId
+   * @return {string}
+   */
+  getCacheId (showId) {
+    return (showId) ? 'timeline' + showId : 'timeline'
   },
 }
