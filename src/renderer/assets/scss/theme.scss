@@ -108,3 +108,38 @@ img.avatars {
     padding-right: 3px;
   }
 }
+
+li.event {
+  list-style: none;
+  line-height: 24px;
+  margin-bottom: 5px;
+  padding: 0 15px;
+  width: 100%;
+  &:hover {
+    background-color: $navActiveBg;
+  }
+  img {
+    border-radius: 12px;
+    vertical-align: middle;
+    margin-right: 5px;
+    width: 24px;
+    height: 24px;
+  }
+  .type-icon {
+    margin-right: 3px;
+  }
+  a {
+    color: inherit;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: default;
+  }
+  .link a {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .fa-star, .fa-thumbs-up { color: #b4af12; }
+  .fa-plus-circle { color: #195625; }
+  .fa-trash { color: #fb1710; }
+  .fa-trophy { color: #ecf000; }
+}

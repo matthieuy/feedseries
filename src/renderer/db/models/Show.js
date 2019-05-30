@@ -32,6 +32,7 @@ class Show extends Document {
       image: String,
       note: Number,
       friends: Array,
+      tags: [String],
     })
   }
 
@@ -113,6 +114,14 @@ class Show extends Document {
           id: friend.id,
           login: friend.login,
         })
+      })
+    }
+
+    // Tags
+    if (show.user.hasOwnProperty('tags')) {
+      properties.tags = []
+      show.user.tags.split(',').forEach((tag) => {
+        properties.tags.push(tag.replace(/^\s+|\s+$/g, ''))
       })
     }
 

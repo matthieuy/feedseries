@@ -115,6 +115,7 @@ function createWindow () {
       plugins: false,
       webgl: false,
       webaudio: false,
+      nodeIntegration: true,
     },
   })
 

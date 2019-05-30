@@ -28,16 +28,17 @@ const mutations = {
 
 const actions = {
   // First load
-  [types.ACTIONS.LOAD] (context) {
-    return api.timeline.getList().then((events) => {
+  [types.ACTIONS.LOAD] (context, showId) {
+    console.log('load', showId)
+    return api.timeline.getList(showId).then((events) => {
       context.commit(types.MUTATIONS.SET_EVENTS, events)
       return Promise.resolve()
     })
   },
   // Load more events
-  [types.ACTIONS.LOAD_MORE] (context) {
+  [types.ACTIONS.LOAD_MORE] (context, showId) {
     let lastEvent = context.state.events[context.state.events.length - 1]
-    return api.timeline.getMore(lastEvent).then((events) => {
+    return api.timeline.getMore(lastEvent, showId).then((events) => {
       context.commit(types.MUTATIONS.ADD_EVENTS, events)
       return Promise.resolve()
     })
