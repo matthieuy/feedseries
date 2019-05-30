@@ -1,7 +1,7 @@
 <template>
   <div v-show="show" class="timeline">
     <h1 class="text-center">Historique</h1>
-    <timeline :show="show"></timeline>
+    <timeline :show="show" :displayAvatar="false" :linkEnable="false"></timeline>
   </div>
 </template>
 
