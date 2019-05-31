@@ -60,9 +60,7 @@
           </div>
         </nav>
         <nav class="nav-group" v-show="show">
-          <h5 class="nav-group-title">
-            Liens
-          </h5>
+          <h5 class="nav-group-title">Liens</h5>
           <a v-for="link in links" @click="openURL(link)" class="nav-group-item">
             <img :src="link.icon" width="16" height="16" onerror="this.src='static/empty.png'"> {{ link.name }}
           </a>

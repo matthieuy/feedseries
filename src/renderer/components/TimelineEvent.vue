@@ -1,8 +1,8 @@
 <template>
   <li class="event">
-    <img :class="'event-avatar-' + event.id" :src="userAvatar()" onerror="this.src='static/empty.png'" alt="" width="24" height="24" />
+    <img :class="'event-avatar-' + event.id" :src="userAvatar()" onerror="this.src='static/empty.png'" v-show="displayAvatar" alt="" width="24" height="24" />
     <i class="type-icon fa" :class="iconType(event.type)"></i>
-    <span v-tooltip="$options.filters.formatDate(event.date, 'ddd DD à HH[h]mm')">{{ event.date | fromNow }}</span>,
+    <span v-tooltip="$options.filters.formatDate(event.date, 'ddd DD MMM à HH[h]mm')">{{ event.date | fromNow }}</span>,
     {{ event.user }} <span v-html="event.html" :class="{link: isLinkEnabled()}" @click="clickLink($event)"></span>
     <span class="fa fa-star" v-show="event.note" v-for="star in event.note"></span>
   </li>
@@ -15,6 +15,7 @@
     props: {
       event: { type: Object, required: true },
       linkEnable: { default: true },
+      displayAvatar: { default: true },
     },
     methods: {
       userAvatar () {
