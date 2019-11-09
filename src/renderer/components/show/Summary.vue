@@ -60,8 +60,8 @@
               <i class="fa fa-download fa-stack-1x"></i>
               <i class="fa fa-ban fa-stack-2x"></i>
             </span>
-            <i v-show="season.progress !== 100" class="fa fa-eye cursor" v-tooltip="'Marquer la saison comme vu'" @click="markSeasonView(season.number, true)"></i>
-            <i v-show="season.progress !== 0" class="fa fa-eye-slash cursor" v-tooltip="'Marquer la saison comme non-vu'" @click="markSeasonView(season.number, false)"></i>
+            <i v-show="!show.isArchived && season.progress !== 100" class="fa fa-eye cursor" v-tooltip="'Marquer la saison comme vu'" @click="markSeasonView(season.number, true)"></i>
+            <i v-show="!show.isArchived && season.progress !== 0" class="fa fa-eye-slash cursor" v-tooltip="'Marquer la saison comme non-vu'" @click="markSeasonView(season.number, false)"></i>
           </div>
         </h3>
 

@@ -3,7 +3,7 @@
     <div v-show="isLoading" class="text-center ellipse-loading">Chargement en cours</div>
     <div class="window-content">
       <ul>
-        <timeline-event :event="event" v-for="event in timeline.events" :link-enable="linkEnable" :display-avatar="displayAvatar"></timeline-event>
+        <timeline-event :event="event" v-for="event in timeline.events" :key="timeline.id" :link-enable="linkEnable" :display-avatar="displayAvatar"></timeline-event>
       </ul>
     </div>
     <footer class="toolbar toolbar-footer" @click="loadMore()" v-show="!isLoading && !show">

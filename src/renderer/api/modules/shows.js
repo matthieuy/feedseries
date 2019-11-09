@@ -19,13 +19,15 @@ export default {
     }
 
     // Get number of shows
-    let memberInfos = Cache.get('summary', {})
+    let memberInfos = Cache.get('summary', { error: true })
     let nbShows = 0
     if (memberInfos.hasOwnProperty('stats') && memberInfos.stats.hasOwnProperty('shows')) {
       nbShows = memberInfos.stats.shows
+    } else if (memberInfos.error) {
+      require('./members').default.getInfos()
     }
     let perPage = 199
-    let pages = Math.ceil(nbShows / perPage)
+    let pages = Math.max(1, Math.ceil(nbShows / perPage))
     console.info('[API] Shows::getList (number of shows : ' + nbShows + ' - Requests : ' + pages + ')')
 
     let showsList = []
@@ -64,7 +66,10 @@ export default {
     }
 
     return Promise.all(promises).then(() => {
-      Cache.set(this.CACHE_ID, showsList, this.CACHE_TTL)
+      if (nbShows) {
+        Cache.set(this.CACHE_ID, showsList, this.CACHE_TTL)
+      }
+      console.log('Get shows', showsList)
       return Promise.resolve(showsList)
     })
   },

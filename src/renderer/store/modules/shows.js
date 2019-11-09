@@ -12,6 +12,7 @@ const types = {
     UPDATE_SHOW: 'shows.update',
     ADD: 'shows.add',
     DELETE: 'shows.delete',
+    SET_SHOW: 'show.set', // From show
   },
   ACTIONS: {
     LOAD_LIST: 'shows.list',
@@ -266,6 +267,7 @@ const actions = {
       if (showArchived) {
         Cache.invalidateByTags({ show: showArchived.id })
         context.commit(types.MUTATIONS.UPDATE_SHOW, showArchived)
+        context.commit(types.MUTATIONS.SET_SHOW, showArchived)
       }
     })
 
