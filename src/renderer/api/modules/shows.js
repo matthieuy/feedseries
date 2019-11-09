@@ -4,52 +4,68 @@ import { Cache, Episode, Show, Subtitle } from '../../db'
 import store, { localStore, types } from '../../store'
 
 export default {
+  CACHE_ID: 'shows_list',
+  CACHE_TTL: 60 * 4,
+
   /**
    * Get all shows
    * @return {Promise}
    */
   getList () {
-    console.info('[API] Shows::getList')
-    return Vue.http.get('/members/infos', {
-      params: {
-        only: 'shows',
-      },
-    }).then((response) => {
-      if (response.status === 200 && response.data.hasOwnProperty('member')) {
-        let member = response.data.member
+    // Get from cache
+    if (Cache.isValid(this.CACHE_ID)) {
+      console.info('[API Cache] Shows::getList')
+      return Promise.resolve(Cache.get(this.CACHE_ID, []))
+    }
 
-        // Options
-        if (member.hasOwnProperty('options') && member.options.hasOwnProperty('specials')) {
-          localStore.set(localStore.key.EPISODES.SPECIAL, member.options.specials)
-        }
+    // Get number of shows
+    let memberInfos = Cache.get('summary', {})
+    let nbShows = 0
+    if (memberInfos.hasOwnProperty('stats') && memberInfos.stats.hasOwnProperty('shows')) {
+      nbShows = memberInfos.stats.shows
+    }
+    let perPage = 199
+    let pages = Math.ceil(nbShows / perPage)
+    console.info('[API] Shows::getList (number of shows : ' + nbShows + ' - Requests : ' + pages + ')')
 
-        // Save shows in DB
-        if (member.hasOwnProperty('shows')) {
-          let promises = []
+    let showsList = []
+    let promises = []
+    for (let i = 0; i < pages; i++) {
+      let promise = Vue.http.get('/shows/member', {
+        params: {
+          order: 'progression',
+          limit: perPage,
+          offset: i * perPage,
+        },
+      }).then((response) => {
+        if (response.status === 200 && response.data.hasOwnProperty('shows')) {
+          let shows = response.data.shows
+          let promisesShows = []
 
-          member.shows.forEach((show) => {
+          shows.forEach((show) => {
             let p = new Promise((resolve, reject) => {
               Show.findOneAndUpdate({ _id: show.id + '' }, Show.cleanProperties(show), { upsert: true }).then((showSaved) => {
+                showsList.push(showSaved)
                 resolve(showSaved)
               })
             })
-            promises.push(p)
+            promisesShows.push(p)
           })
 
-          // Cache summary
-          delete member.shows
-          delete member.favorites
-          delete member.favorite_movies
-          Cache.set('summary', member, 30)
-
-          // Resolve all promises
-          return Promise.all(promises)
+          return Promise.all(promisesShows)
         } else {
           return Promise.reject(new Error('Impossible de récupérer la liste des séries'))
         }
-      }
-    }).catch(() => {
-      return Promise.reject(new Error('Impossible de récupérer la liste des séries'))
+      }).catch(() => {
+        return Promise.reject(new Error('Impossible de récupérer la liste des séries'))
+      })
+
+      promises.push(promise)
+    }
+
+    return Promise.all(promises).then(() => {
+      Cache.set(this.CACHE_ID, showsList, this.CACHE_TTL)
+      return Promise.resolve(showsList)
     })
   },
   /**
@@ -134,6 +150,7 @@ export default {
       return Promise.reject(e)
     })
   },
+
   /**
    * Add a show
    * @param {Show} show
@@ -142,6 +159,8 @@ export default {
   add (show) {
     console.info('[API] Shows::add', show)
     Cache.invalidate('episodes_unseen')
+    Cache.invalidate(this.CACHE_ID)
+
     return Vue.http.post('/shows/show', {
       id: show._id,
     })
@@ -170,6 +189,8 @@ export default {
     console.info('[API] Shows::delete', show)
     Cache.invalidateByTags({ show: show._id })
     Cache.invalidate('episodes_unseen')
+    Cache.invalidate(this.CACHE_ID)
+
     return Vue.http.delete('/shows/show', {
       params: {
         id: show._id,
@@ -197,6 +218,8 @@ export default {
   archive (show) {
     console.info('[API] Shows::archive', show)
     Cache.invalidate('episodes_unseen')
+    Cache.invalidate(this.CACHE_ID)
+
     return Vue.http.post('/shows/archive', {
       id: show._id,
     })
@@ -217,6 +240,8 @@ export default {
   unarchive (show) {
     console.info('[API] Shows::unarchive', show)
     Cache.invalidate('episodes_unseen')
+    Cache.invalidate(this.CACHE_ID)
+
     return Vue.http.delete('/shows/archive', {
       params: {
         id: show._id,
@@ -225,6 +250,7 @@ export default {
       .then((response) => {
         let show = Show.cleanProperties(response.data.show)
         this.setCache(show)
+
         return Show.findOne({ _id: show.id })
       })
       .catch(() => {
@@ -243,6 +269,8 @@ export default {
     }).then((response) => {
       let show = Show.cleanProperties(response.data.show)
       this.setCache(show)
+      Cache.invalidate(this.CACHE_ID)
+
       return Show.findOne({ _id: show.id })
     }).catch(() => {
       return Promise.reject(new Error('Impossible de mettre la série en favoris'))

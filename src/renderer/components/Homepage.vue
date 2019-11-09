@@ -95,7 +95,7 @@
     methods: {
       // Load member stats
       loadStats () {
-        api.members.getInfos(true).then((response) => {
+        api.members.getInfos().then((response) => {
           this.stats = Object.assign(response.stats, {
             id: response.id,
             avatar: response.avatar,

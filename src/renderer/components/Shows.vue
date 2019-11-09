@@ -112,8 +112,8 @@
       },
       loadList () {
         this.isLoading = true
-        this.$store.dispatch(types.shows.ACTIONS.LOAD_LIST).then((episodes) => {
-          if (episodes.length) {
+        this.$store.dispatch(types.shows.ACTIONS.LOAD_LIST).then((result) => {
+          if (result.length) {
             this.isLoading = false
           }
         })
