@@ -84,7 +84,7 @@
       return {
         isLoading: true,
         filterQuery: '',
-        status: 'current',
+        status: localStore.get(localStore.key.SHOWS.FILTER, 'current'),
         order: localStore.get(localStore.key.SHOWS.ORDER, 'alphabetical'),
         orderReverse: localStore.get(localStore.key.SHOWS.REVERSE, false),
       }
@@ -120,6 +120,9 @@
       },
     },
     watch: {
+      status (status) {
+        localStore.set(localStore.key.SHOWS.FILTER, status)
+      },
       order (order) {
         localStore.set(localStore.key.SHOWS.ORDER, order)
       },
