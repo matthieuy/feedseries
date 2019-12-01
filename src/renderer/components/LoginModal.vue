@@ -78,7 +78,7 @@
           }).catch((error) => { // NOK
             this.isLoading = false
             console.log(error)
-            remote.dialog.showErrorBox(remote.app.getName(), error.text)
+            remote.dialog.showErrorBox(remote.app.name, error.text)
             this.password = ''
             document.getElementById('password').focus()
           })

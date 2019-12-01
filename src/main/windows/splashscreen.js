@@ -42,7 +42,7 @@ export default {
       width: 330,
       center: true,
       frame: false,
-      title: app.getName(),
+      title: app.name,
       backgroundColor: '#36393E',
       movable: false,
       skipTaskbar: true,

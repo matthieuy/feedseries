@@ -42,7 +42,7 @@
 
         // Only one file
         if (files.length > 1) {
-          remote.dialog.showErrorBox(remote.app.getName(), 'Merci de déposer un seul fichier à la fois !')
+          remote.dialog.showErrorBox(remote.app.name, 'Merci de déposer un seul fichier à la fois !')
           console.error('[DRAG] Plusieurs fichiers !')
           return this.close()
         }
@@ -72,7 +72,7 @@
         }).catch((error) => {
           this.isSearching = false
           if (error.code === 4001) {
-            remote.dialog.showErrorBox(remote.app.getName(), error.text)
+            remote.dialog.showErrorBox(remote.app.name, error.text)
             this.close()
           }
         })

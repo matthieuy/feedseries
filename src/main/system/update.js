@@ -72,7 +72,7 @@ class Updater {
     if (localStore.get(localStore.key.UPDATE.FIRST_RUN, false)) {
       /* eslint-disable no-new */
       let notif = new Notification({
-        title: app.getName(),
+        title: app.name,
         body: 'Vous utilisez maintenant la version v' + app.getVersion(),
         icon: localStore.getIconPath(true, true),
       })
@@ -130,7 +130,7 @@ class Updater {
     localStore.set(localStore.key.UPDATE.NOTE, infos.releaseNotes)
 
     let notif = new Notification({
-      title: app.getName(),
+      title: app.name,
       body: 'Mise à jour disponible : v' + infos.version,
       icon: localStore.getIconPath(true, true),
     })

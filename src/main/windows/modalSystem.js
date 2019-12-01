@@ -24,7 +24,7 @@ export default {
 
     // Default options
     options = Object.assign({
-      title: app.getName(),
+      title: app.name,
       backgroundColor: '#181A1F',
       useContentSize: true,
       center: true,

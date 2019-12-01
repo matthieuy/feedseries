@@ -128,7 +128,7 @@
         if (nbRecommendations) {
           console.log('notif')
           // if (this.recommendationNotif !== nbRecommendations && nbRecommendations > 0 && this.$route.name !== 'recommendations') {
-          let notif = new window.Notification(remote.app.getName(), {
+          let notif = new window.Notification(remote.app.name, {
             body: `Vous avez ${nbRecommendations} recommandation(s) en attente`,
             icon: localStore.getIconPath(true, true),
           })

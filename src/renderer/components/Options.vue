@@ -239,7 +239,7 @@
   import { localStore, types } from '../store'
 
   let launcher = new Autolauch({
-    name: remote.app.getName(),
+    name: remote.app.name,
     isHidden: true,
   })
 
@@ -356,7 +356,7 @@
           type: 'warning',
           buttons: ['Oui', 'Non'],
           defaultId: 1,
-          title: remote.app.getName(),
+          title: remote.app.name,
           icon: localStore.getIconPath(),
           message: `Êtes-vous sûr de vouloir purger la base de donnée "${name}" ?`,
           cancelId: 1,
@@ -399,7 +399,7 @@
        */
       addNotification (text) {
         /* eslint-disable no-new */
-        new window.Notification(remote.app.getName(), {
+        new window.Notification(remote.app.name, {
           body: text,
           icon: localStore.getIconPath(true, true),
         })
@@ -432,7 +432,7 @@
       hideMenu (value) {
         if (value !== localStore.get(localStore.key.HIDE_MENU, true)) {
           let win = remote.getCurrentWindow()
-          win.setAutoHideMenuBar(value)
+          win.autoHideMenuBar = value
           win.setMenuBarVisibility(!value)
           localStore.set(localStore.key.HIDE_MENU, value)
         }
