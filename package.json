@@ -81,7 +81,7 @@
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "camo": "^0.12.3",
     "canvasjs": "github:matthieuy/canvasjs#master",
     "electron-log": "^2.2.17",
