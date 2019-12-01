@@ -32,8 +32,7 @@
     "productName": "FeedSeries",
     "appId": "com.matthieuy.feedseries",
     "asar": {
-      "smartUnpack": true,
-      "ordering": "/tmp/electron-access-log.txt"
+      "smartUnpack": true
     },
     "directories": {
       "output": "build"
