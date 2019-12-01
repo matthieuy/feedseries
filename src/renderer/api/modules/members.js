@@ -1,20 +1,17 @@
 import Vue from 'vue'
 
-import { Cache, Show } from '../../db'
+import { Cache } from '../../db'
 import { localStore } from '../../store'
 
 export default {
   /**
    * Get member summary + refresh show list in DB
-   * @param summary {Boolean} Get only summary informations without shows
    * @returns {Promise}
    */
-  getInfos (summary) {
-    let params = (summary === true) ? { summary: true } : { only: 'shows' }
-
+  getInfos () {
     // Get from cache
     let cacheId = 'summary'
-    if (summary === true && Cache.isValid(cacheId)) {
+    if (Cache.isValid(cacheId)) {
       let infos = Cache.get(cacheId)
       console.info('[API Cache] Members::getInfos', infos)
       return Promise.resolve(infos)
@@ -22,21 +19,10 @@ export default {
 
     // API Request
     console.info('[API] Members::getInfos')
-    return Vue.http.get('/members/infos', {
-      params,
-    }).then((response) => {
+    return Vue.http.get('/members/infos').then((response) => {
       if (response.status === 200 && response.data.hasOwnProperty('member')) {
         let member = response.data.member
         localStore.set(localStore.key.ID_USER, member.id)
-
-        // Save shows in DB
-        if (member.hasOwnProperty('shows') && member.shows.length) {
-          member.shows.forEach(async (show) => {
-            await Show.findOneAndUpdate({ _id: show.id + '' }, Show.cleanProperties(show), { upsert: true })
-          })
-          console.info(`[DB] Update ${member.shows.length} shows`)
-          delete member.shows
-        }
 
         // Options
         if (member.hasOwnProperty('options') && member.options.hasOwnProperty('specials')) {

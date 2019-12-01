@@ -119,7 +119,7 @@
         this.$store.dispatch(types.recommendations.ACTIONS.LOAD_RECOMMENDATIONS).then((recommendations) => {
           if (!this.nbRecommendations) {
             /* eslint-disable no-new */
-            new window.Notification(remote.app.getName(), {
+            new window.Notification(remote.app.name, {
               body: 'Aucune nouvelle notification',
               icon: localStore.getIconPath(true, true),
             })

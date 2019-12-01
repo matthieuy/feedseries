@@ -45,7 +45,7 @@ export default {
       this.mainWindow = mainWindow
       this.tray = new Tray(localStore.getIconPath())
       this.contextMenu = Menu.buildFromTemplate(template)
-      this.tray.setToolTip(app.getName())
+      this.tray.setToolTip(app.name)
 
       // Left click : show mainWindow
       this.tray.on('click', () => {

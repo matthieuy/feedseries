@@ -105,7 +105,7 @@ function createWindow () {
     useContentSize: true,
     icon: localStore.getIconPath(),
     center: true,
-    title: app.getName(),
+    title: app.name,
     backgroundColor: '#36393E',
     fullscreenable: false,
     show: false,

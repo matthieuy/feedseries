@@ -56,6 +56,18 @@ class ConcurentPromise {
 
     return Promise.race(this.promises)
   }
+
+  /**
+   * Do all promises
+   * @return {Promise}
+   */
+  all () {
+    for (let i = 0; i < this.promises.length; i++) {
+      this.promises[i].then(this._then)
+    }
+
+    return Promise.all(this.promises)
+  }
 }
 
 export default ConcurentPromise

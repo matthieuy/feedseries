@@ -35,6 +35,7 @@ const key = {
   },
   SHOWS: {
     ORDER: 'shows.order', // {String} (alphabetical|progression|remaining_time|remaining_episodes) Order of shows
+    FILTER: 'shows.filter', // {String} (current|active|archived|ended)
     REVERSE: 'shows.reverse', // {Boolean} Reverse order
   },
   ROUTE: {

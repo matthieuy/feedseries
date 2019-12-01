@@ -96,7 +96,7 @@ export default {
     Menu.setApplicationMenu(menu)
 
     let hide = localStore.get(localStore.key.HIDE_MENU, true)
-    win.setAutoHideMenuBar(hide)
+    win.autoHideMenuBar = hide
     win.setMenuBarVisibility(!hide)
 
     // Fullscreen
