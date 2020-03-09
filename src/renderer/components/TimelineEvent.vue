@@ -39,6 +39,8 @@
             return 'fa-trash'
           case 'badge':
             return 'fa-trophy'
+          case 'comment':
+            return 'fa-pencil-alt'
         }
       },
       isLinkEnabled () {
