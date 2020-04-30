@@ -87,7 +87,7 @@
     "electron-store": "^2.0.0",
     "electron-updater": "^4.0.6",
     "fullcalendar": "^3.9.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "md5": "^2.2.1",
     "moment": "^2.22.2",
     "nedb": "^1.8.0",
