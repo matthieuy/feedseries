@@ -85,7 +85,6 @@ class Show extends Document {
       nb_episodes: parseInt(show.episodes),
       nb_seasons: parseInt(show.seasons),
       followers: parseInt(show.followers),
-      genres: show.genres,
       in_account: show.in_account,
       runtime: parseInt(show.length),
       network: show.network,
@@ -115,6 +114,17 @@ class Show extends Document {
           login: friend.login,
         })
       })
+    }
+
+    // Patch genre
+    if (show.hasOwnProperty('genres') && typeof show.genres !== 'string') {
+      let genres = []
+      for (let i in show.genres) {
+        genres.push(show.genres[i])
+      }
+      properties.genres = genres
+    } else {
+      properties.genres = show.genres
     }
 
     // Tags
